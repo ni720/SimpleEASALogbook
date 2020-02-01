@@ -22,8 +22,12 @@ namespace SimpleEASALogbook
 
         private void button5_Click(object sender, EventArgs e)
         {
+            toolStripStatusLabel1.Text = "saving...";
             button5.Enabled = false;
+            Form1.ActiveForm.Enabled = false;
             SaveTable();
+            toolStripStatusLabel1.Text = "";
+            Form1.ActiveForm.Enabled = true;
             button5.Enabled = true;
         }
 
@@ -63,6 +67,19 @@ namespace SimpleEASALogbook
                 pi.SetValue(dataGridView1, true, null);
             }
             LoadDB();
+            /*foreach(DataGridViewRow row in dataGridView1.Rows)
+            {
+                foreach(DataGridViewCell cell in row.Cells)
+                {
+                    if(cell.Value!=null)
+                    {
+                        if(cell.Value.Equals("00:00"))
+                        {
+                            cell.Value = "";
+                        }
+                    }
+                }
+            }*/
         }
         private void Form1_OnResize(object sender, EventArgs e)
         {
@@ -90,10 +107,10 @@ namespace SimpleEASALogbook
                     {
                         if(flight.DateOfSim.Equals(DateTime.MinValue))
                         {
-                            dataGridView1.Rows.Add(dataGridView1.Rows.Count.ToString(), flight.OffBlockTime.ToShortDateString(), flight.DepartureAirport, flight.OffBlockTime.ToShortTimeString(), flight.DestinationAirport, flight.OnBlockTime.ToShortTimeString(), flight.TypeOfAircraft, flight.AircraftRegistration, flight.SEPTime.ToString().Substring(0, 5), flight.MEPTime.ToString().Substring(0, 5), flight.MultiPilotTime.ToString().Substring(0, 5), flight.TotalTimeOfFlight.ToString().Substring(0, 5), flight.PilotInCommand, flight.DayLandings.ToString(), flight.NightLandings.ToString(), flight.NightTime.ToString().Substring(0, 5), flight.IFRTime.ToString().Substring(0, 5), flight.PICTime.ToString().Substring(0, 5), flight.CopilotTime.ToString().Substring(0, 5), flight.DualTime.ToString().Substring(0, 5), flight.InstructorTime.ToString().Substring(0, 5), "", "", "", flight.Remarks);
+                            dataGridView1.Rows.Add(dataGridView1.Rows.Count.ToString(), flight.OffBlockTime.ToShortDateString(), flight.DepartureAirport, flight.getOffBlockTimeString(), flight.DestinationAirport, flight.getOnBlockTimeString(), flight.TypeOfAircraft, flight.AircraftRegistration, flight.getSEPTimeString(), flight.getMEPTimeString(), flight.getMultiPilotTimeString(), flight.getTotalTimeString(), flight.PilotInCommand, flight.getDayLDGString(), flight.getNightLDGString(), flight.getNightTimeString(), flight.getIFRTimeString(), flight.getPICTimeString(), flight.getCopilotTimeString(), flight.getDualTimeString(), flight.getInstructorTimeString(), "", "", "", flight.Remarks);
                         }else
                         {
-                            dataGridView1.Rows.Add(dataGridView1.Rows.Count.ToString(), flight.OffBlockTime.ToShortDateString(), flight.DepartureAirport, flight.OffBlockTime.ToShortTimeString(), flight.DestinationAirport, flight.OnBlockTime.ToShortTimeString(), flight.TypeOfAircraft, flight.AircraftRegistration, flight.SEPTime.ToString().Substring(0, 5), flight.MEPTime.ToString().Substring(0, 5), flight.MultiPilotTime.ToString().Substring(0, 5), flight.TotalTimeOfFlight.ToString().Substring(0, 5), flight.PilotInCommand, flight.DayLandings.ToString(), flight.NightLandings.ToString(), flight.NightTime.ToString().Substring(0, 5), flight.IFRTime.ToString().Substring(0, 5), flight.PICTime.ToString().Substring(0, 5), flight.CopilotTime.ToString().Substring(0, 5), flight.DualTime.ToString().Substring(0, 5), flight.InstructorTime.ToString().Substring(0, 5), flight.DateOfSim.ToShortDateString(), flight.TypeOfSim, flight.SimTime.ToString().Substring(0, 5), flight.Remarks);
+                            dataGridView1.Rows.Add(dataGridView1.Rows.Count.ToString(), flight.OffBlockTime.ToShortDateString(), flight.DepartureAirport, flight.getOffBlockTimeString(), flight.DestinationAirport, flight.getOnBlockTimeString(), flight.TypeOfAircraft, flight.AircraftRegistration, flight.getSEPTimeString(), flight.getMEPTimeString(), flight.getMultiPilotTimeString(), flight.getTotalTimeString(), flight.PilotInCommand, flight.getDayLDGString(), flight.getNightLDGString(), flight.getNightTimeString(), flight.getIFRTimeString(), flight.getPICTimeString(), flight.getCopilotTimeString(), flight.getDualTimeString(), flight.getInstructorTimeString(), flight.DateOfSim.ToShortDateString(), flight.TypeOfSim, flight.SimTime.ToString().Substring(0, 5), flight.Remarks);
                         }
                         if (flight.nextpageafter)
                         {
@@ -175,12 +192,17 @@ namespace SimpleEASALogbook
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             dataGridView1.Rows.Clear();
+            Flights = new List<Flight>();
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            toolStripStatusLabel1.Text = "saving...";
             saveToolStripMenuItem.Enabled = false;
+            Form1.ActiveForm.Enabled = false;            
             SaveTable();
+            toolStripStatusLabel1.Text = "";
+            Form1.ActiveForm.Enabled = true;
             saveToolStripMenuItem.Enabled = true;
         }
 
@@ -205,6 +227,33 @@ namespace SimpleEASALogbook
                     }
                 }
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if(dataGridView1.Rows.Count>1)
+            {
+                toolStripStatusLabel1.Text = "deleting row...";
+                Form1.ActiveForm.Enabled = false;                
+                dataGridView1.Rows.RemoveAt(dataGridView1.SelectedRows[0].Index);
+                toolStripStatusLabel1.Text = "";
+                Form1.ActiveForm.Enabled = true;
+            }
+        }
+
+        private void bindingSource1_CurrentChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripStatusLabel1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

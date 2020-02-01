@@ -60,6 +60,183 @@ namespace SimpleEASALogbook
             nextpageafter = nextpage;
         }
 
+        public string getOffBlockTimeString()
+        {
+            if (OnBlockTime.Equals(DateTime.MinValue))
+            {
+                return "";
+            }
+            else
+            {
+                return OffBlockTime.ToShortTimeString();
+            }
+        }
+
+        public string getOnBlockTimeString()
+        {
+            if (OnBlockTime.Equals(DateTime.MinValue))
+            {
+                return "";
+            }
+            else
+            {
+                return OnBlockTime.ToShortTimeString();
+            }
+        }
+
+        public string getSEPTimeString()
+        {
+            if (SEPTime.Equals(TimeSpan.Zero))
+            {
+                return "";
+            }
+            else
+            {
+                return SEPTime.ToString().Substring(0, 5);
+            }
+        }
+        public string getMEPTimeString()
+        {
+            if (MEPTime.Equals(TimeSpan.Zero))
+            {
+                return "";
+            }
+            else
+            {
+                return MEPTime.ToString().Substring(0, 5);
+            }
+        }
+
+        public string getMultiPilotTimeString()
+        {
+            if (MultiPilotTime.Equals(TimeSpan.Zero))
+            {
+                return "";
+            }
+            else
+            {
+                return MultiPilotTime.ToString().Substring(0, 5);
+            }
+        }
+
+        public string getTotalTimeString()
+        {
+            if (TotalTimeOfFlight.Equals(TimeSpan.Zero))
+            {
+                return "";
+            }
+            else
+            {
+                return TotalTimeOfFlight.ToString().Substring(0, 5);
+            }
+        }
+
+        public string getDayLDGString()
+        {
+            if (DayLandings > 0)
+            {
+                return DayLandings.ToString();
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        public string getNightLDGString()
+        {
+            if (NightLandings > 0)
+            {
+                return NightLandings.ToString();
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        public string getNightTimeString()
+        {
+            if (NightTime.Equals(TimeSpan.Zero))
+            {
+                return "";
+            }
+            else
+            {
+                return NightTime.ToString().Substring(0, 5);
+            }
+        }
+
+        public string getIFRTimeString()
+        {
+            if (IFRTime.Equals(TimeSpan.Zero))
+            {
+                return "";
+            }
+            else
+            {
+                return IFRTime.ToString().Substring(0, 5);
+            }
+        }
+
+        public string getPICTimeString()
+        {
+            if (PICTime.Equals(TimeSpan.Zero))
+            {
+                return "";
+            }
+            else
+            {
+                return PICTime.ToString().Substring(0, 5);
+            }
+        }
+
+        public string getCopilotTimeString()
+        {
+            if (CopilotTime.Equals(TimeSpan.Zero))
+            {
+                return "";
+            }
+            else
+            {
+                return CopilotTime.ToString().Substring(0, 5);
+            }
+        }
+        public string getDualTimeString()
+        {
+            if (DualTime.Equals(TimeSpan.Zero))
+            {
+                return "";
+            }
+            else
+            {
+                return DualTime.ToString().Substring(0, 5);
+            }
+        }
+        public string getInstructorTimeString()
+        {
+            if (InstructorTime.Equals(TimeSpan.Zero))
+            {
+                return "";
+            }
+            else
+            {
+                return InstructorTime.ToString().Substring(0, 5);
+            }
+        }
+
+        public string getSimTimeString()
+        {
+            if (SimTime.Equals(TimeSpan.Zero))
+            {
+                return "";
+            }
+            else
+            {
+                return SimTime.ToString().Substring(0, 5);
+            }
+        }
+
         public int CompareTo(object obj)
         {
             Flight orderToCompare = obj as Flight;
