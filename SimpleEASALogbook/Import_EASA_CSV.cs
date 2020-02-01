@@ -62,7 +62,7 @@ namespace SimpleEASALogbook
             if (csvline[0].Length > 0 && csvline[2].Length > 0)
             {
                 Starttime = new DateTime(int.Parse(csvline[0].Substring(6, 4)), int.Parse(csvline[0].Substring(3, 2)), int.Parse(csvline[0].Substring(0, 2)), int.Parse(csvline[2].Substring(0, 2)), int.Parse(csvline[2].Substring(3, 2)), 0);
-            
+                //DateTime.TryParse(csvline[0], out Starttime);
             }
             else
             {

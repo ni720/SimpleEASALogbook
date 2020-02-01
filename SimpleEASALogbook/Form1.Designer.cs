@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -44,13 +44,6 @@
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
-            this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -76,6 +69,28 @@
             this.Column23 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column24 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column25 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
+            this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
+            this.previousExpecienceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fliteBookToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lHPDFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.brusselsPDFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mCCPilotLogCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.eASAHTMLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.eASAPDFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sFlightLogFliteBookToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mCCPilotLogCSVToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.easaLogbookCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.howToLogYourFlightToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.statisticsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -153,29 +168,45 @@
             // importToolStripMenuItem
             // 
             this.importToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.eASALogToolStripMenuItem});
-            this.importToolStripMenuItem.Enabled = false;
+            this.lHPDFToolStripMenuItem,
+            this.brusselsPDFToolStripMenuItem,
+            this.fliteBookToolStripMenuItem,
+            this.eASALogToolStripMenuItem,
+            this.mCCPilotLogCSVToolStripMenuItem,
+            this.previousExpecienceToolStripMenuItem});
             this.importToolStripMenuItem.Name = "importToolStripMenuItem";
             this.importToolStripMenuItem.Size = new System.Drawing.Size(55, 20);
             this.importToolStripMenuItem.Text = "&Import";
             // 
             // eASALogToolStripMenuItem
             // 
+            this.eASALogToolStripMenuItem.Enabled = false;
             this.eASALogToolStripMenuItem.Name = "eASALogToolStripMenuItem";
-            this.eASALogToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
-            this.eASALogToolStripMenuItem.Text = "EASA Log";
+            this.eASALogToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.eASALogToolStripMenuItem.Text = "EASA Logbook CSV";
             this.eASALogToolStripMenuItem.Click += new System.EventHandler(this.eASALogToolStripMenuItem_Click);
             // 
             // exportToolStripMenuItem
             // 
-            this.exportToolStripMenuItem.Enabled = false;
+            this.exportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.eASAHTMLToolStripMenuItem,
+            this.easaLogbookCSVToolStripMenuItem,
+            this.eASAPDFToolStripMenuItem,
+            this.mCCPilotLogCSVToolStripMenuItem1,
+            this.sFlightLogFliteBookToolStripMenuItem,
+            this.statisticsToolStripMenuItem});
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
             this.exportToolStripMenuItem.Size = new System.Drawing.Size(53, 20);
             this.exportToolStripMenuItem.Text = "&Export";
+            this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
-            this.helpToolStripMenuItem.Enabled = false;
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.howToLogYourFlightToolStripMenuItem,
+            this.toolStripMenuItem2,
+            this.aboutToolStripMenuItem,
+            this.aboutToolStripMenuItem1});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "&Help";
@@ -211,14 +242,14 @@
             this.Column23,
             this.Column24,
             this.Column25});
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle14;
             this.dataGridView1.Location = new System.Drawing.Point(12, 26);
             this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
@@ -226,82 +257,16 @@
             this.dataGridView1.Size = new System.Drawing.Size(760, 481);
             this.dataGridView1.TabIndex = 2;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            this.dataGridView1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEndEdit);
             this.dataGridView1.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dataGridView1_CellValidating);
             this.dataGridView1.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dataGridView1_RowsAdded);
-            // 
-            // button1
-            // 
-            this.button1.Enabled = false;
-            this.button1.Location = new System.Drawing.Point(12, 513);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "+";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(94, 514);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 4;
-            this.button2.Text = "-";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // button3
-            // 
-            this.button3.Enabled = false;
-            this.button3.Location = new System.Drawing.Point(176, 514);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 5;
-            this.button3.Text = "✏ edit";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // button4
-            // 
-            this.button4.Enabled = false;
-            this.button4.Location = new System.Drawing.Point(257, 513);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 6;
-            this.button4.Text = "↕ sort";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(616, 513);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 23);
-            this.button5.TabIndex = 7;
-            this.button5.Text = "💾 &save";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
-            // 
-            // button6
-            // 
-            this.button6.Location = new System.Drawing.Point(697, 513);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(75, 23);
-            this.button6.TabIndex = 8;
-            this.button6.Text = "✔ &close";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
-            // 
-            // bindingSource1
-            // 
-            this.bindingSource1.CurrentChanged += new System.EventHandler(this.bindingSource1_CurrentChanged);
             // 
             // Column1
             // 
             this.Column1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.Column1.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.Column1.DefaultCellStyle = dataGridViewCellStyle13;
             this.Column1.HeaderText = "#";
             this.Column1.Name = "Column1";
             this.Column1.ReadOnly = true;
@@ -475,6 +440,178 @@
             this.Column25.Name = "Column25";
             this.Column25.Width = 74;
             // 
+            // button1
+            // 
+            this.button1.Enabled = false;
+            this.button1.Location = new System.Drawing.Point(12, 513);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 3;
+            this.button1.Text = "+";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(94, 514);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 4;
+            this.button2.Text = "-";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button3
+            // 
+            this.button3.Enabled = false;
+            this.button3.Location = new System.Drawing.Point(176, 514);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 5;
+            this.button3.Text = "✏ edit";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // button4
+            // 
+            this.button4.Enabled = false;
+            this.button4.Location = new System.Drawing.Point(257, 513);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(75, 23);
+            this.button4.TabIndex = 6;
+            this.button4.Text = "↕ sort";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(616, 513);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(75, 23);
+            this.button5.TabIndex = 7;
+            this.button5.Text = "💾 &save";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(697, 513);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(75, 23);
+            this.button6.TabIndex = 8;
+            this.button6.Text = "✔ &close";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
+            // bindingSource1
+            // 
+            this.bindingSource1.CurrentChanged += new System.EventHandler(this.bindingSource1_CurrentChanged);
+            // 
+            // previousExpecienceToolStripMenuItem
+            // 
+            this.previousExpecienceToolStripMenuItem.Enabled = false;
+            this.previousExpecienceToolStripMenuItem.Name = "previousExpecienceToolStripMenuItem";
+            this.previousExpecienceToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.previousExpecienceToolStripMenuItem.Text = "Previous Expecience";
+            // 
+            // fliteBookToolStripMenuItem
+            // 
+            this.fliteBookToolStripMenuItem.Enabled = false;
+            this.fliteBookToolStripMenuItem.Name = "fliteBookToolStripMenuItem";
+            this.fliteBookToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.fliteBookToolStripMenuItem.Text = "FliteBook";
+            // 
+            // lHPDFToolStripMenuItem
+            // 
+            this.lHPDFToolStripMenuItem.Enabled = false;
+            this.lHPDFToolStripMenuItem.Name = "lHPDFToolStripMenuItem";
+            this.lHPDFToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.lHPDFToolStripMenuItem.Text = "Austrian PDF";
+            this.lHPDFToolStripMenuItem.Click += new System.EventHandler(this.lHPDFToolStripMenuItem_Click);
+            // 
+            // brusselsPDFToolStripMenuItem
+            // 
+            this.brusselsPDFToolStripMenuItem.Enabled = false;
+            this.brusselsPDFToolStripMenuItem.Name = "brusselsPDFToolStripMenuItem";
+            this.brusselsPDFToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.brusselsPDFToolStripMenuItem.Text = "Brussels PDF";
+            // 
+            // mCCPilotLogCSVToolStripMenuItem
+            // 
+            this.mCCPilotLogCSVToolStripMenuItem.Enabled = false;
+            this.mCCPilotLogCSVToolStripMenuItem.Name = "mCCPilotLogCSVToolStripMenuItem";
+            this.mCCPilotLogCSVToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.mCCPilotLogCSVToolStripMenuItem.Text = "MCC PilotLog CSV";
+            // 
+            // eASAHTMLToolStripMenuItem
+            // 
+            this.eASAHTMLToolStripMenuItem.Enabled = false;
+            this.eASAHTMLToolStripMenuItem.Name = "eASAHTMLToolStripMenuItem";
+            this.eASAHTMLToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.eASAHTMLToolStripMenuItem.Text = "EASA HTML";
+            // 
+            // eASAPDFToolStripMenuItem
+            // 
+            this.eASAPDFToolStripMenuItem.Enabled = false;
+            this.eASAPDFToolStripMenuItem.Name = "eASAPDFToolStripMenuItem";
+            this.eASAPDFToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.eASAPDFToolStripMenuItem.Text = "EASA PDF";
+            // 
+            // sFlightLogFliteBookToolStripMenuItem
+            // 
+            this.sFlightLogFliteBookToolStripMenuItem.Enabled = false;
+            this.sFlightLogFliteBookToolStripMenuItem.Name = "sFlightLogFliteBookToolStripMenuItem";
+            this.sFlightLogFliteBookToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.sFlightLogFliteBookToolStripMenuItem.Text = "SFlightLog / FliteBook";
+            // 
+            // mCCPilotLogCSVToolStripMenuItem1
+            // 
+            this.mCCPilotLogCSVToolStripMenuItem1.Enabled = false;
+            this.mCCPilotLogCSVToolStripMenuItem1.Name = "mCCPilotLogCSVToolStripMenuItem1";
+            this.mCCPilotLogCSVToolStripMenuItem1.Size = new System.Drawing.Size(190, 22);
+            this.mCCPilotLogCSVToolStripMenuItem1.Text = "MCC PilotLog CSV";
+            // 
+            // easaLogbookCSVToolStripMenuItem
+            // 
+            this.easaLogbookCSVToolStripMenuItem.Enabled = false;
+            this.easaLogbookCSVToolStripMenuItem.Name = "easaLogbookCSVToolStripMenuItem";
+            this.easaLogbookCSVToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.easaLogbookCSVToolStripMenuItem.Text = "EASA Logbook CSV";
+            this.easaLogbookCSVToolStripMenuItem.Click += new System.EventHandler(this.easaLogbookCSVToolStripMenuItem_Click);
+            // 
+            // howToLogYourFlightToolStripMenuItem
+            // 
+            this.howToLogYourFlightToolStripMenuItem.Enabled = false;
+            this.howToLogYourFlightToolStripMenuItem.Name = "howToLogYourFlightToolStripMenuItem";
+            this.howToLogYourFlightToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.howToLogYourFlightToolStripMenuItem.Text = "How to log your flight";
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(188, 6);
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Enabled = false;
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.aboutToolStripMenuItem.Text = "Problems?";
+            // 
+            // aboutToolStripMenuItem1
+            // 
+            this.aboutToolStripMenuItem1.Enabled = false;
+            this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
+            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(191, 22);
+            this.aboutToolStripMenuItem1.Text = "About";
+            // 
+            // statisticsToolStripMenuItem
+            // 
+            this.statisticsToolStripMenuItem.Enabled = false;
+            this.statisticsToolStripMenuItem.Name = "statisticsToolStripMenuItem";
+            this.statisticsToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.statisticsToolStripMenuItem.Text = "Statistics";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -493,6 +630,7 @@
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Simple EASA Logbook";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_OnLoad);
             this.Resize += new System.EventHandler(this.Form1_OnResize);
             this.statusStrip1.ResumeLayout(false);
@@ -553,6 +691,21 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column23;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column24;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column25;
+        private System.Windows.Forms.ToolStripMenuItem previousExpecienceToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fliteBookToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem lHPDFToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem brusselsPDFToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mCCPilotLogCSVToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem eASAHTMLToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem easaLogbookCSVToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem eASAPDFToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mCCPilotLogCSVToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem sFlightLogFliteBookToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem howToLogYourFlightToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem statisticsToolStripMenuItem;
     }
 }
 

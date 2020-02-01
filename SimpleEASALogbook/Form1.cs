@@ -65,7 +65,10 @@ namespace SimpleEASALogbook
                 PropertyInfo pi = dgvType.GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic);
                 pi.SetValue(dataGridView1, true, null);
             }
+
             LoadDB();
+
+            // add rownumber to row #1
             dataGridView1.Rows[dataGridView1.Rows.Count - 1].Cells[0].Value = dataGridView1.Rows.Count.ToString();
 
         }
@@ -93,16 +96,17 @@ namespace SimpleEASALogbook
 
                     foreach (Flight flight in Flights)
                     {
-                        if(flight.DateOfSim.Equals(DateTime.MinValue))
+                        if (flight.DateOfSim.Equals(DateTime.MinValue))
                         {
                             dataGridView1.Rows.Add(dataGridView1.Rows.Count.ToString(), flight.OffBlockTime.ToShortDateString(), flight.DepartureAirport, flight.getOffBlockTimeString(), flight.DestinationAirport, flight.getOnBlockTimeString(), flight.TypeOfAircraft, flight.AircraftRegistration, flight.getSEPTimeString(), flight.getMEPTimeString(), flight.getMultiPilotTimeString(), flight.getTotalTimeString(), flight.PilotInCommand, flight.getDayLDGString(), flight.getNightLDGString(), flight.getNightTimeString(), flight.getIFRTimeString(), flight.getPICTimeString(), flight.getCopilotTimeString(), flight.getDualTimeString(), flight.getInstructorTimeString(), "", "", "", flight.Remarks);
-                        }else
+                        }
+                        else
                         {
                             dataGridView1.Rows.Add(dataGridView1.Rows.Count.ToString(), flight.OffBlockTime.ToShortDateString(), flight.DepartureAirport, flight.getOffBlockTimeString(), flight.DestinationAirport, flight.getOnBlockTimeString(), flight.TypeOfAircraft, flight.AircraftRegistration, flight.getSEPTimeString(), flight.getMEPTimeString(), flight.getMultiPilotTimeString(), flight.getTotalTimeString(), flight.PilotInCommand, flight.getDayLDGString(), flight.getNightLDGString(), flight.getNightTimeString(), flight.getIFRTimeString(), flight.getPICTimeString(), flight.getCopilotTimeString(), flight.getDualTimeString(), flight.getInstructorTimeString(), flight.DateOfSim.ToShortDateString(), flight.TypeOfSim, flight.SimTime.ToString().Substring(0, 5), flight.Remarks);
                         }
                         if (flight.nextpageafter)
                         {
-                            dataGridView1.Rows.Add(dataGridView1.Rows.Count.ToString(), "pagebreak", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*") ;
+                            dataGridView1.Rows.Add(dataGridView1.Rows.Count.ToString(), "pagebreak", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*");
                         }
 
                     }
@@ -118,14 +122,14 @@ namespace SimpleEASALogbook
         {
             Flights = new List<Flight>();
             string stringBuilder = "";
-            int i=0, j=0;
+            int i = 0, j = 0;
             try
             {
-                for (i = 0; i < dataGridView1.Rows.Count-1; i++)
+                for (i = 0; i < dataGridView1.Rows.Count - 1; i++)
                 {
                     for (j = 1; j < dataGridView1.Columns.Count; j++)
                     {
-                       if(dataGridView1.Rows[i].Cells[j].Value == null)
+                        if (dataGridView1.Rows[i].Cells[j].Value == null)
                         {
                             stringBuilder += ";";
                         }
@@ -143,13 +147,13 @@ namespace SimpleEASALogbook
                             i++;
                         }
                     }
-                    
+
                     stringBuilder += "\n";
                 }
             }
             catch
             {
-                
+
             }
 
             try
@@ -187,7 +191,7 @@ namespace SimpleEASALogbook
         {
             toolStripStatusLabel1.Text = "saving...";
             saveToolStripMenuItem.Enabled = false;
-            Form1.ActiveForm.Enabled = false;            
+            Form1.ActiveForm.Enabled = false;
             SaveTable();
             toolStripStatusLabel1.Text = "";
             Form1.ActiveForm.Enabled = true;
@@ -199,30 +203,80 @@ namespace SimpleEASALogbook
             Application.Exit();
         }
 
-        private void dataGridView1_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        private void validateCells(int rowIndex, int columnIndex)
         {
             //TODO Cell validation
-            var row = dataGridView1.Rows[e.RowIndex];
+            var row = dataGridView1.Rows[rowIndex];
             if (null != row)
             {
-                var cell = row.Cells[e.ColumnIndex];
+                var cell = row.Cells[columnIndex];
                 if (null != cell)
                 {
-                    object value = cell.Value;
-                    if (null != value)
+                    if (columnIndex == 1 || columnIndex == 21)
                     {
-                        // Do your test here in combination with columnindex etc
+                        object value = cell.Value;
+                        if (null != value && !value.Equals(string.Empty))
+                        {
+                            // Do your test here in combination with columnindex etc
+                            if (!DateTime.TryParse(value.ToString(), out DateTime dummy))
+                            {
+                                dataGridView1.Rows[rowIndex].Cells[columnIndex].ErrorText = "DateTime must be dd.mm.yyyy";
+                                dataGridView1.Rows[rowIndex].ErrorText = "Flightlog not complete, entry will not be saved";
+                            }
+                            else
+                            {
+                                dataGridView1.Rows[rowIndex].Cells[columnIndex].ErrorText = "";
+                            }
+                        }
                     }
+                    if (columnIndex == 3 || columnIndex == 5 || columnIndex == 8 || columnIndex == 9 || columnIndex == 10 || columnIndex == 11 || columnIndex == 15 || columnIndex == 16 || columnIndex == 17 || columnIndex == 18 || columnIndex == 19 || columnIndex == 20 || columnIndex == 23)
+                    {
+                        object value = cell.Value;
+                        if (null != value && !value.Equals(string.Empty))
+                        {
+                            // Do your test here in combination with columnindex etc
+                            if (!TimeSpan.TryParse(value.ToString(), out TimeSpan dummy))
+                            {
+                                dataGridView1.Rows[rowIndex].Cells[columnIndex].ErrorText = "Time must be hh:mm";
+                            }
+                            else
+                            {
+                                dataGridView1.Rows[rowIndex].Cells[columnIndex].ErrorText = "";
+                            }
+                        }
+                    }
+                    if (columnIndex == 13 || columnIndex == 14)
+                    {
+                        object value = cell.Value;
+                        if (null != value && !value.Equals(string.Empty))
+                        {
+                            // Do your test here in combination with columnindex etc
+                            if (!int.TryParse(value.ToString(), out int dummy))
+                            {
+                                dataGridView1.Rows[rowIndex].Cells[columnIndex].ErrorText = "must be a digit from 1 to 9";
+                            }
+                            else
+                            {
+                                dataGridView1.Rows[rowIndex].Cells[columnIndex].ErrorText = "";
+                            }
+                        }
+                    }
+
                 }
             }
         }
 
+        private void dataGridView1_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            validateCells(e.RowIndex, e.ColumnIndex);
+        }
+
         private void button2_Click(object sender, EventArgs e)
         {
-            if(dataGridView1.Rows.Count>1 && !dataGridView1.Rows[dataGridView1.Rows.Count-1].Equals(dataGridView1.SelectedRows[0]))
+            if (dataGridView1.Rows.Count > 1 && !dataGridView1.Rows[dataGridView1.Rows.Count - 1].Equals(dataGridView1.SelectedRows[0]))
             {
                 toolStripStatusLabel1.Text = "deleting row...";
-                Form1.ActiveForm.Enabled = false;                
+                Form1.ActiveForm.Enabled = false;
                 dataGridView1.Rows.RemoveAt(dataGridView1.SelectedRows[0].Index);
                 toolStripStatusLabel1.Text = "";
                 Form1.ActiveForm.Enabled = true;
@@ -246,7 +300,36 @@ namespace SimpleEASALogbook
 
         private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
+            // add rownumber to each new row
             dataGridView1.Rows[dataGridView1.Rows.Count - 1].Cells[0].Value = dataGridView1.Rows.Count.ToString();
+        }
+
+        private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            validateCells(e.RowIndex, e.ColumnIndex);
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if(MessageBox.Show("do you want to save before closing?","good bye",MessageBoxButtons.YesNo,MessageBoxIcon.Question).Equals(DialogResult.Yes))
+            {
+                SaveTable();
+            }
+        }
+
+        private void lHPDFToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void easaLogbookCSVToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
