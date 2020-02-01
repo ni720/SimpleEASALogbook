@@ -203,6 +203,24 @@ namespace SimpleEASALogbook
             Application.Exit();
         }
 
+        private void validateRows(int rowIndex)
+        {
+            bool error = false;
+            foreach(DataGridViewCell cell in dataGridView1.Rows[rowIndex].Cells)
+            {
+                if(cell != null)
+                {
+                    if(cell.ErrorText.Length>1)
+                    {
+                        error = true;
+                    }
+                }
+            }
+            if(!error)
+            {
+                dataGridView1.Rows[rowIndex].ErrorText = "";
+            }
+        }
         private void validateCells(int rowIndex, int columnIndex)
         {
             //TODO Cell validation
@@ -221,7 +239,7 @@ namespace SimpleEASALogbook
                             if (!DateTime.TryParse(value.ToString(), out DateTime dummy))
                             {
                                 dataGridView1.Rows[rowIndex].Cells[columnIndex].ErrorText = "DateTime must be dd.mm.yyyy";
-                                dataGridView1.Rows[rowIndex].ErrorText = "Flightlog not complete, entry will not be saved";
+                                dataGridView1.Rows[rowIndex].ErrorText = "error, entry will not be saved";
                             }
                             else
                             {
@@ -253,7 +271,7 @@ namespace SimpleEASALogbook
                             // Do your test here in combination with columnindex etc
                             if (!int.TryParse(value.ToString(), out int dummy))
                             {
-                                dataGridView1.Rows[rowIndex].Cells[columnIndex].ErrorText = "must be a digit from 1 to 9";
+                                dataGridView1.Rows[rowIndex].Cells[columnIndex].ErrorText = "must be a digit from 1 to 9, will not be saved otherwise";
                             }
                             else
                             {
@@ -261,7 +279,6 @@ namespace SimpleEASALogbook
                             }
                         }
                     }
-
                 }
             }
         }
@@ -269,6 +286,7 @@ namespace SimpleEASALogbook
         private void dataGridView1_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             validateCells(e.RowIndex, e.ColumnIndex);
+            validateRows(e.RowIndex);
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -307,6 +325,7 @@ namespace SimpleEASALogbook
         private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             validateCells(e.RowIndex, e.ColumnIndex);
+            validateRows(e.RowIndex);
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)

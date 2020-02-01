@@ -61,8 +61,23 @@ namespace SimpleEASALogbook
         {
             if (csvline[0].Length > 0 && csvline[2].Length > 0)
             {
-                Starttime = new DateTime(int.Parse(csvline[0].Substring(6, 4)), int.Parse(csvline[0].Substring(3, 2)), int.Parse(csvline[0].Substring(0, 2)), int.Parse(csvline[2].Substring(0, 2)), int.Parse(csvline[2].Substring(3, 2)), 0);
-                //DateTime.TryParse(csvline[0], out Starttime);
+                //Starttime = new DateTime(int.Parse(csvline[0].Substring(6, 4)), int.Parse(csvline[0].Substring(3, 2)), int.Parse(csvline[0].Substring(0, 2)), int.Parse(csvline[2].Substring(0, 2)), int.Parse(csvline[2].Substring(3, 2)), 0);
+                if (!DateTime.TryParse(csvline[0], out Starttime))
+                {
+                    throw new Exception("unable to parse date");
+                }
+                else
+                {
+                    TimeSpan begin;
+                    if (!TimeSpan.TryParse(csvline[2], out begin))
+                    {
+                        throw new Exception("unable to parse date");
+                    }
+                    else
+                    {
+                        Starttime.Add(begin);
+                    }
+                }
             }
             else
             {
@@ -76,7 +91,17 @@ namespace SimpleEASALogbook
 
             if (csvline[0].Length > 0 && csvline[4].Length > 0)
             {
-                Endtime = new DateTime(int.Parse(csvline[0].Substring(6, 4)), int.Parse(csvline[0].Substring(3, 2)), int.Parse(csvline[0].Substring(0, 2)), int.Parse(csvline[4].Substring(0, 2)), int.Parse(csvline[4].Substring(3, 2)), 0);
+                //Endtime = new DateTime(int.Parse(csvline[0].Substring(6, 4)), int.Parse(csvline[0].Substring(3, 2)), int.Parse(csvline[0].Substring(0, 2)), int.Parse(csvline[4].Substring(0, 2)), int.Parse(csvline[4].Substring(3, 2)), 0);
+                Endtime = Starttime;
+                    TimeSpan end;
+                    if(!TimeSpan.TryParse(csvline[4],out end))
+                    {
+                        throw new Exception("unable to parse date");
+                    }else
+                    {
+                        Endtime.Add(end);
+                    }
+                
             }
             else
             {
