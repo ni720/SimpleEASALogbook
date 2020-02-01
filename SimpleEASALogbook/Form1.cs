@@ -62,24 +62,12 @@ namespace SimpleEASALogbook
             if (!System.Windows.Forms.SystemInformation.TerminalServerSession)
             {
                 Type dgvType = dataGridView1.GetType();
-                PropertyInfo pi = dgvType.GetProperty("DoubleBuffered",
-                  BindingFlags.Instance | BindingFlags.NonPublic);
+                PropertyInfo pi = dgvType.GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic);
                 pi.SetValue(dataGridView1, true, null);
             }
             LoadDB();
-            /*foreach(DataGridViewRow row in dataGridView1.Rows)
-            {
-                foreach(DataGridViewCell cell in row.Cells)
-                {
-                    if(cell.Value!=null)
-                    {
-                        if(cell.Value.Equals("00:00"))
-                        {
-                            cell.Value = "";
-                        }
-                    }
-                }
-            }*/
+            dataGridView1.Rows[dataGridView1.Rows.Count - 1].Cells[0].Value = dataGridView1.Rows.Count.ToString();
+
         }
         private void Form1_OnResize(object sender, EventArgs e)
         {
@@ -231,7 +219,7 @@ namespace SimpleEASALogbook
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if(dataGridView1.Rows.Count>1)
+            if(dataGridView1.Rows.Count>1 && !dataGridView1.Rows[dataGridView1.Rows.Count-1].Equals(dataGridView1.SelectedRows[0]))
             {
                 toolStripStatusLabel1.Text = "deleting row...";
                 Form1.ActiveForm.Enabled = false;                
@@ -254,6 +242,11 @@ namespace SimpleEASALogbook
         private void toolStripStatusLabel1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            dataGridView1.Rows[dataGridView1.Rows.Count - 1].Cells[0].Value = dataGridView1.Rows.Count.ToString();
         }
     }
 }
