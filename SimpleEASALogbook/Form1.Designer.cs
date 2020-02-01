@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -40,9 +40,24 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lHPDFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.brusselsPDFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fliteBookToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.eASALogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mCCPilotLogCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.previousExpecienceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.eASAHTMLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.easaLogbookCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.eASAPDFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mCCPilotLogCSVToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.sFlightLogFliteBookToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.statisticsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.howToLogYourFlightToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -76,21 +91,6 @@
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.previousExpecienceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fliteBookToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.lHPDFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.brusselsPDFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mCCPilotLogCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.eASAHTMLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.eASAPDFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sFlightLogFliteBookToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mCCPilotLogCSVToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.easaLogbookCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.howToLogYourFlightToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.statisticsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -178,6 +178,28 @@
             this.importToolStripMenuItem.Size = new System.Drawing.Size(55, 20);
             this.importToolStripMenuItem.Text = "&Import";
             // 
+            // lHPDFToolStripMenuItem
+            // 
+            this.lHPDFToolStripMenuItem.Enabled = false;
+            this.lHPDFToolStripMenuItem.Name = "lHPDFToolStripMenuItem";
+            this.lHPDFToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.lHPDFToolStripMenuItem.Text = "Austrian PDF";
+            this.lHPDFToolStripMenuItem.Click += new System.EventHandler(this.lHPDFToolStripMenuItem_Click);
+            // 
+            // brusselsPDFToolStripMenuItem
+            // 
+            this.brusselsPDFToolStripMenuItem.Enabled = false;
+            this.brusselsPDFToolStripMenuItem.Name = "brusselsPDFToolStripMenuItem";
+            this.brusselsPDFToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.brusselsPDFToolStripMenuItem.Text = "Brussels PDF";
+            // 
+            // fliteBookToolStripMenuItem
+            // 
+            this.fliteBookToolStripMenuItem.Enabled = false;
+            this.fliteBookToolStripMenuItem.Name = "fliteBookToolStripMenuItem";
+            this.fliteBookToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.fliteBookToolStripMenuItem.Text = "FliteBook";
+            // 
             // eASALogToolStripMenuItem
             // 
             this.eASALogToolStripMenuItem.Enabled = false;
@@ -185,6 +207,20 @@
             this.eASALogToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
             this.eASALogToolStripMenuItem.Text = "EASA Logbook CSV";
             this.eASALogToolStripMenuItem.Click += new System.EventHandler(this.eASALogToolStripMenuItem_Click);
+            // 
+            // mCCPilotLogCSVToolStripMenuItem
+            // 
+            this.mCCPilotLogCSVToolStripMenuItem.Enabled = false;
+            this.mCCPilotLogCSVToolStripMenuItem.Name = "mCCPilotLogCSVToolStripMenuItem";
+            this.mCCPilotLogCSVToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.mCCPilotLogCSVToolStripMenuItem.Text = "MCC PilotLog CSV";
+            // 
+            // previousExpecienceToolStripMenuItem
+            // 
+            this.previousExpecienceToolStripMenuItem.Enabled = false;
+            this.previousExpecienceToolStripMenuItem.Name = "previousExpecienceToolStripMenuItem";
+            this.previousExpecienceToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.previousExpecienceToolStripMenuItem.Text = "Previous Expecience";
             // 
             // exportToolStripMenuItem
             // 
@@ -200,6 +236,49 @@
             this.exportToolStripMenuItem.Text = "&Export";
             this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
             // 
+            // eASAHTMLToolStripMenuItem
+            // 
+            this.eASAHTMLToolStripMenuItem.Enabled = false;
+            this.eASAHTMLToolStripMenuItem.Name = "eASAHTMLToolStripMenuItem";
+            this.eASAHTMLToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.eASAHTMLToolStripMenuItem.Text = "EASA HTML";
+            // 
+            // easaLogbookCSVToolStripMenuItem
+            // 
+            this.easaLogbookCSVToolStripMenuItem.Enabled = false;
+            this.easaLogbookCSVToolStripMenuItem.Name = "easaLogbookCSVToolStripMenuItem";
+            this.easaLogbookCSVToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.easaLogbookCSVToolStripMenuItem.Text = "EASA Logbook CSV";
+            this.easaLogbookCSVToolStripMenuItem.Click += new System.EventHandler(this.easaLogbookCSVToolStripMenuItem_Click);
+            // 
+            // eASAPDFToolStripMenuItem
+            // 
+            this.eASAPDFToolStripMenuItem.Enabled = false;
+            this.eASAPDFToolStripMenuItem.Name = "eASAPDFToolStripMenuItem";
+            this.eASAPDFToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.eASAPDFToolStripMenuItem.Text = "EASA PDF";
+            // 
+            // mCCPilotLogCSVToolStripMenuItem1
+            // 
+            this.mCCPilotLogCSVToolStripMenuItem1.Enabled = false;
+            this.mCCPilotLogCSVToolStripMenuItem1.Name = "mCCPilotLogCSVToolStripMenuItem1";
+            this.mCCPilotLogCSVToolStripMenuItem1.Size = new System.Drawing.Size(190, 22);
+            this.mCCPilotLogCSVToolStripMenuItem1.Text = "MCC PilotLog CSV";
+            // 
+            // sFlightLogFliteBookToolStripMenuItem
+            // 
+            this.sFlightLogFliteBookToolStripMenuItem.Enabled = false;
+            this.sFlightLogFliteBookToolStripMenuItem.Name = "sFlightLogFliteBookToolStripMenuItem";
+            this.sFlightLogFliteBookToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.sFlightLogFliteBookToolStripMenuItem.Text = "SFlightLog / FliteBook";
+            // 
+            // statisticsToolStripMenuItem
+            // 
+            this.statisticsToolStripMenuItem.Enabled = false;
+            this.statisticsToolStripMenuItem.Name = "statisticsToolStripMenuItem";
+            this.statisticsToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.statisticsToolStripMenuItem.Text = "Statistics";
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -211,9 +290,34 @@
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "&Help";
             // 
+            // howToLogYourFlightToolStripMenuItem
+            // 
+            this.howToLogYourFlightToolStripMenuItem.Enabled = false;
+            this.howToLogYourFlightToolStripMenuItem.Name = "howToLogYourFlightToolStripMenuItem";
+            this.howToLogYourFlightToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.howToLogYourFlightToolStripMenuItem.Text = "How to log your flight";
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(188, 6);
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Enabled = false;
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.aboutToolStripMenuItem.Text = "Problems?";
+            // 
+            // aboutToolStripMenuItem1
+            // 
+            this.aboutToolStripMenuItem1.Enabled = false;
+            this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
+            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(191, 22);
+            this.aboutToolStripMenuItem1.Text = "About";
+            // 
             // dataGridView1
             // 
-            this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -242,14 +346,14 @@
             this.Column23,
             this.Column24,
             this.Column25});
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView1.Location = new System.Drawing.Point(12, 26);
             this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
@@ -264,9 +368,9 @@
             // Column1
             // 
             this.Column1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.Column1.DefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.Column1.DefaultCellStyle = dataGridViewCellStyle1;
             this.Column1.HeaderText = "#";
             this.Column1.Name = "Column1";
             this.Column1.ReadOnly = true;
@@ -506,111 +610,6 @@
             // bindingSource1
             // 
             this.bindingSource1.CurrentChanged += new System.EventHandler(this.bindingSource1_CurrentChanged);
-            // 
-            // previousExpecienceToolStripMenuItem
-            // 
-            this.previousExpecienceToolStripMenuItem.Enabled = false;
-            this.previousExpecienceToolStripMenuItem.Name = "previousExpecienceToolStripMenuItem";
-            this.previousExpecienceToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
-            this.previousExpecienceToolStripMenuItem.Text = "Previous Expecience";
-            // 
-            // fliteBookToolStripMenuItem
-            // 
-            this.fliteBookToolStripMenuItem.Enabled = false;
-            this.fliteBookToolStripMenuItem.Name = "fliteBookToolStripMenuItem";
-            this.fliteBookToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
-            this.fliteBookToolStripMenuItem.Text = "FliteBook";
-            // 
-            // lHPDFToolStripMenuItem
-            // 
-            this.lHPDFToolStripMenuItem.Enabled = false;
-            this.lHPDFToolStripMenuItem.Name = "lHPDFToolStripMenuItem";
-            this.lHPDFToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
-            this.lHPDFToolStripMenuItem.Text = "Austrian PDF";
-            this.lHPDFToolStripMenuItem.Click += new System.EventHandler(this.lHPDFToolStripMenuItem_Click);
-            // 
-            // brusselsPDFToolStripMenuItem
-            // 
-            this.brusselsPDFToolStripMenuItem.Enabled = false;
-            this.brusselsPDFToolStripMenuItem.Name = "brusselsPDFToolStripMenuItem";
-            this.brusselsPDFToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
-            this.brusselsPDFToolStripMenuItem.Text = "Brussels PDF";
-            // 
-            // mCCPilotLogCSVToolStripMenuItem
-            // 
-            this.mCCPilotLogCSVToolStripMenuItem.Enabled = false;
-            this.mCCPilotLogCSVToolStripMenuItem.Name = "mCCPilotLogCSVToolStripMenuItem";
-            this.mCCPilotLogCSVToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
-            this.mCCPilotLogCSVToolStripMenuItem.Text = "MCC PilotLog CSV";
-            // 
-            // eASAHTMLToolStripMenuItem
-            // 
-            this.eASAHTMLToolStripMenuItem.Enabled = false;
-            this.eASAHTMLToolStripMenuItem.Name = "eASAHTMLToolStripMenuItem";
-            this.eASAHTMLToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-            this.eASAHTMLToolStripMenuItem.Text = "EASA HTML";
-            // 
-            // eASAPDFToolStripMenuItem
-            // 
-            this.eASAPDFToolStripMenuItem.Enabled = false;
-            this.eASAPDFToolStripMenuItem.Name = "eASAPDFToolStripMenuItem";
-            this.eASAPDFToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-            this.eASAPDFToolStripMenuItem.Text = "EASA PDF";
-            // 
-            // sFlightLogFliteBookToolStripMenuItem
-            // 
-            this.sFlightLogFliteBookToolStripMenuItem.Enabled = false;
-            this.sFlightLogFliteBookToolStripMenuItem.Name = "sFlightLogFliteBookToolStripMenuItem";
-            this.sFlightLogFliteBookToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-            this.sFlightLogFliteBookToolStripMenuItem.Text = "SFlightLog / FliteBook";
-            // 
-            // mCCPilotLogCSVToolStripMenuItem1
-            // 
-            this.mCCPilotLogCSVToolStripMenuItem1.Enabled = false;
-            this.mCCPilotLogCSVToolStripMenuItem1.Name = "mCCPilotLogCSVToolStripMenuItem1";
-            this.mCCPilotLogCSVToolStripMenuItem1.Size = new System.Drawing.Size(190, 22);
-            this.mCCPilotLogCSVToolStripMenuItem1.Text = "MCC PilotLog CSV";
-            // 
-            // easaLogbookCSVToolStripMenuItem
-            // 
-            this.easaLogbookCSVToolStripMenuItem.Enabled = false;
-            this.easaLogbookCSVToolStripMenuItem.Name = "easaLogbookCSVToolStripMenuItem";
-            this.easaLogbookCSVToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-            this.easaLogbookCSVToolStripMenuItem.Text = "EASA Logbook CSV";
-            this.easaLogbookCSVToolStripMenuItem.Click += new System.EventHandler(this.easaLogbookCSVToolStripMenuItem_Click);
-            // 
-            // howToLogYourFlightToolStripMenuItem
-            // 
-            this.howToLogYourFlightToolStripMenuItem.Enabled = false;
-            this.howToLogYourFlightToolStripMenuItem.Name = "howToLogYourFlightToolStripMenuItem";
-            this.howToLogYourFlightToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
-            this.howToLogYourFlightToolStripMenuItem.Text = "How to log your flight";
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(188, 6);
-            // 
-            // aboutToolStripMenuItem
-            // 
-            this.aboutToolStripMenuItem.Enabled = false;
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
-            this.aboutToolStripMenuItem.Text = "Problems?";
-            // 
-            // aboutToolStripMenuItem1
-            // 
-            this.aboutToolStripMenuItem1.Enabled = false;
-            this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
-            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(191, 22);
-            this.aboutToolStripMenuItem1.Text = "About";
-            // 
-            // statisticsToolStripMenuItem
-            // 
-            this.statisticsToolStripMenuItem.Enabled = false;
-            this.statisticsToolStripMenuItem.Name = "statisticsToolStripMenuItem";
-            this.statisticsToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-            this.statisticsToolStripMenuItem.Text = "Statistics";
             // 
             // Form1
             // 

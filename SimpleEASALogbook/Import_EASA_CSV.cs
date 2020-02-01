@@ -59,7 +59,11 @@ namespace SimpleEASALogbook
         }
         Flight CreateFlight(string[] csvline)
         {
-            if (csvline[0].Length > 0 && csvline[2].Length > 0)
+           /* if((csvline[0].Length<1 && csvline[2].Length<1 && csvline[4].Length <1 )||( csvline[20].Length<1 && csvline[22].Length<1))
+            {
+                throw new Exception("not enough data to store a flight");
+            }*/
+            if (csvline[0].Length>0)
             {
                 //Starttime = new DateTime(int.Parse(csvline[0].Substring(6, 4)), int.Parse(csvline[0].Substring(3, 2)), int.Parse(csvline[0].Substring(0, 2)), int.Parse(csvline[2].Substring(0, 2)), int.Parse(csvline[2].Substring(3, 2)), 0);
                 if (!DateTime.TryParse(csvline[0], out Starttime))
@@ -71,7 +75,7 @@ namespace SimpleEASALogbook
                     TimeSpan begin;
                     if (!TimeSpan.TryParse(csvline[2], out begin))
                     {
-                        throw new Exception("unable to parse date");
+                        throw new Exception("unable to parse time");
                     }
                     else
                     {
@@ -192,7 +196,7 @@ namespace SimpleEASALogbook
             }
             remarks = csvline[23];
 
-            if (csvline.Length > 25 )
+            if (csvline[24].Length >1 )
             {
                 //TODO: "pagebreak" as separator?
                     nextpageafter = true;                
