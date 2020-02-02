@@ -17,7 +17,7 @@ namespace SimpleEASALogbook
 
         private void button1_Click(object sender, EventArgs e)
         {
-
+            dataGridView1.Rows.Add(dataGridView1.Rows.Count.ToString());
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -289,6 +289,7 @@ namespace SimpleEASALogbook
         {
             validateCells(e.RowIndex, e.ColumnIndex);
             validateRows(e.RowIndex);
+            autoFillCellValue(e.RowIndex, e.ColumnIndex);
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -328,6 +329,7 @@ namespace SimpleEASALogbook
         {
             validateCells(e.RowIndex, e.ColumnIndex);
             validateRows(e.RowIndex);
+            autoFillCellValue(e.RowIndex, e.ColumnIndex);
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -351,6 +353,111 @@ namespace SimpleEASALogbook
         private void exportToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void dataGridView1_CellLeave(object sender, DataGridViewCellEventArgs e)
+        {
+            validateCells(e.RowIndex, e.ColumnIndex);
+            validateRows(e.RowIndex);
+            autoFillCellValue(e.RowIndex, e.ColumnIndex);
+        }
+
+        private void autoFillCellValue(int rowIndex, int columnIndex)
+        {
+            // auto calculate totalflighttime
+            try
+            {
+                if (dataGridView1.Rows[rowIndex].Cells[11].Value == null)
+                {
+                    if (dataGridView1.Rows[rowIndex].Cells[1].Value != null && dataGridView1.Rows[rowIndex].Cells[3].Value != null && dataGridView1.Rows[rowIndex].Cells[5].Value != null)
+                    {
+                        TimeSpan.TryParse(dataGridView1.Rows[rowIndex].Cells[3].Value.ToString(), out TimeSpan begin);
+                        TimeSpan.TryParse(dataGridView1.Rows[rowIndex].Cells[5].Value.ToString(), out TimeSpan end);
+                        if (end.Hours < begin.Hours)
+                        {
+                            end = end.Add(TimeSpan.FromHours(24));
+                        }
+                        dataGridView1.Rows[rowIndex].Cells[11].Value = end.Subtract(begin).ToString().Substring(0, 5);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                // ingore compilermessage
+                e.ToString();
+            }
+
+        }
+
+        // to easily populate with data
+        private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (e.ColumnIndex == 1)
+                {
+                    if (dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value == null)
+                    {
+                        dataGridView1.Rows[e.RowIndex].Cells[1].Value = DateTime.Now.ToShortDateString();
+                    }
+                }
+                if (e.ColumnIndex == 3)
+                {
+                    if (dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value == null)
+                    {
+                        dataGridView1.Rows[e.RowIndex].Cells[3].Value = DateTime.Now.ToShortTimeString();
+                    }
+                }
+                if (e.ColumnIndex == 5)
+                {
+                    if (dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value == null)
+                    {
+                        dataGridView1.Rows[e.RowIndex].Cells[5].Value = DateTime.Now.ToShortTimeString();
+                    }
+                }
+                if (e.ColumnIndex == 8 || e.ColumnIndex == 9 || e.ColumnIndex == 10 || e.ColumnIndex == 15 || e.ColumnIndex == 16 || e.ColumnIndex == 17 || e.ColumnIndex == 18 || e.ColumnIndex == 19 || e.ColumnIndex == 20)
+                {
+                    if (dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value == null && dataGridView1.Rows[e.RowIndex].Cells[11].Value != null && dataGridView1.Rows[e.RowIndex].Cells[11].ErrorText.Length<1)
+                    {
+                        dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = dataGridView1.Rows[e.RowIndex].Cells[11].Value;
+                    }else
+                    {
+                        if(dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null)
+                        {
+                            dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = "";
+                        }
+                    }
+                }
+                if (e.ColumnIndex == 21)
+                {
+                    if (dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value == null)
+                    {
+                        dataGridView1.Rows[e.RowIndex].Cells[21].Value = DateTime.Now.ToShortDateString();
+                    }
+                }
+            }
+            catch (Exception y)
+            {
+                // ingore compilermessage
+                y.ToString();
+            }
+
+        }
+
+        private void dataGridView1_SortCompare(object sender, DataGridViewSortCompareEventArgs e)
+        {
+            // Try to sort based on the cells in the current column.
+            e.SortResult = System.String.Compare(
+                e.CellValue1.ToString(), e.CellValue2.ToString());
+
+            // If the cells are equal, sort based on the ID column.
+            if (e.SortResult == 0 && e.Column.Index==1)
+            {
+                e.SortResult = System.String.Compare(
+                    dataGridView1.Rows[e.RowIndex1].Cells[3].Value.ToString(),
+                    dataGridView1.Rows[e.RowIndex2].Cells[3].Value.ToString());
+            }
+            e.Handled = true;
         }
     }
 }

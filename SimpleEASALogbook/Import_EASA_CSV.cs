@@ -51,7 +51,7 @@ namespace SimpleEASALogbook
                     catch (Exception exc)
                     {
                         Console.WriteLine("error parsing, skipping line: " + i.ToString());
-                        File.WriteAllText("logfile.txt", exc.ToString());
+                        File.AppendAllText("_error_logfile.txt", DateTime.Now.ToString()+": "+exc.ToString());
                     }
 
                     i++;

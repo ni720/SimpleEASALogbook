@@ -306,16 +306,29 @@ namespace SimpleEASALogbook
         {
             return nextpageafter;
         }
+
+        // this makes is possible to sort per date
         public int CompareTo(object obj)
         {
             Flight orderToCompare = obj as Flight;
-            if (orderToCompare.OffBlockTime < OffBlockTime)
+            if (orderToCompare.FlightDate < FlightDate)
             {
                 return 1;
             }
-            if (orderToCompare.OffBlockTime > OffBlockTime)
+            if (orderToCompare.FlightDate > FlightDate)
             {
                 return -1;
+            }
+            if(orderToCompare.FlightDate == FlightDate)
+            {
+                if (orderToCompare.DateOfSim < DateOfSim)
+                {
+                    return 1;
+                }
+                if (orderToCompare.DateOfSim > DateOfSim)
+                {
+                    return -1;
+                }
             }
             // The orders are equivalent.
             return 0;
