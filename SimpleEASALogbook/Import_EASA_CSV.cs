@@ -7,10 +7,11 @@ namespace SimpleEASALogbook
     class Import_EASA_CSV
     {
 
-        DateTime Starttime = DateTime.MinValue;
+        DateTime StartDate = DateTime.MinValue;
         string FROM = "";
-        DateTime Endtime = DateTime.MinValue;
+        TimeSpan beginTime = TimeSpan.Zero;
         string TO = "";
+        TimeSpan endTime = TimeSpan.Zero;
         string Aircraft = "";
         string Type = "";
         TimeSpan SETime = TimeSpan.Zero;
@@ -57,168 +58,40 @@ namespace SimpleEASALogbook
                 }
             }
         }
+
         Flight CreateFlight(string[] csvline)
         {
-           /* if((csvline[0].Length<1 && csvline[2].Length<1 && csvline[4].Length <1 )||( csvline[20].Length<1 && csvline[22].Length<1))
-            {
-                throw new Exception("not enough data to store a flight");
-            }*/
-            if (csvline[0].Length>0)
-            {
-                //Starttime = new DateTime(int.Parse(csvline[0].Substring(6, 4)), int.Parse(csvline[0].Substring(3, 2)), int.Parse(csvline[0].Substring(0, 2)), int.Parse(csvline[2].Substring(0, 2)), int.Parse(csvline[2].Substring(3, 2)), 0);
-                if (!DateTime.TryParse(csvline[0], out Starttime))
-                {
-                    throw new Exception("unable to parse date");
-                }
-                else
-                {
-                    TimeSpan begin;
-                    if (!TimeSpan.TryParse(csvline[2], out begin))
-                    {
-                        throw new Exception("unable to parse time");
-                    }
-                    else
-                    {
-                        Starttime.Add(begin);
-                    }
-                }
-            }
-            else
-            {
-                if (!DateTime.TryParse(csvline[20], out Starttime))
-                {
-                    date_of_sim = DateTime.MinValue;
-                }
-            }
-
+            DateTime.TryParse(csvline[0], out StartDate);
             FROM = csvline[1];
-
-            if (csvline[0].Length > 0 && csvline[4].Length > 0)
-            {
-                //Endtime = new DateTime(int.Parse(csvline[0].Substring(6, 4)), int.Parse(csvline[0].Substring(3, 2)), int.Parse(csvline[0].Substring(0, 2)), int.Parse(csvline[4].Substring(0, 2)), int.Parse(csvline[4].Substring(3, 2)), 0);
-                Endtime = Starttime;
-                    TimeSpan end;
-                    if(!TimeSpan.TryParse(csvline[4],out end))
-                    {
-                        throw new Exception("unable to parse date");
-                    }else
-                    {
-                        Endtime.Add(end);
-                    }
-                
-            }
-            else
-            {
-                if (!DateTime.TryParse(csvline[20], out Endtime))
-                {
-                    date_of_sim = DateTime.MinValue;
-                }
-            }
-
+            TimeSpan.TryParse(csvline[2], out beginTime);
             TO = csvline[3];
-
+            TimeSpan.TryParse(csvline[4], out endTime);
             Type = csvline[5];
-
             Aircraft = csvline[6];
-
-            if (!TimeSpan.TryParse(csvline[7], out SETime))
-            {
-                SETime = TimeSpan.Zero;
-            }
-
-            if (!TimeSpan.TryParse(csvline[8], out METime))
-            {
-                METime = TimeSpan.Zero;
-            }
-
-            if (!TimeSpan.TryParse(csvline[9], out MultiPilotTime))
-            {
-                MultiPilotTime = TimeSpan.Zero;
-            }
-
-            if (!TimeSpan.TryParse(csvline[10], out TotalTimeOfFlight))
-            {
-                TotalTimeOfFlight = TimeSpan.Zero;
-            }
-
+            TimeSpan.TryParse(csvline[7], out SETime);
+            TimeSpan.TryParse(csvline[8], out METime);
+            TimeSpan.TryParse(csvline[9], out MultiPilotTime);
+            TimeSpan.TryParse(csvline[10], out TotalTimeOfFlight);
             PIC = csvline[11];
-
-            if (!int.TryParse(csvline[12], out DayLanding))
-            {
-                DayLanding = 0;
-            }
-
-            if (!int.TryParse(csvline[13], out NightLanding))
-            {
-                NightLanding = 0;
-            }
-
-            if (!TimeSpan.TryParse(csvline[14], out NightTime))
-            {
-                NightTime = TimeSpan.Zero;
-            }
-
-            if (!TimeSpan.TryParse(csvline[15], out IFRTime))
-            {
-                IFRTime = TimeSpan.Zero;
-            }
-
-            if (!TimeSpan.TryParse(csvline[16], out PICTime))
-            {
-                PICTime = TimeSpan.Zero;
-            }
-
-            if (!TimeSpan.TryParse(csvline[17], out CopilotTime))
-            {
-                CopilotTime = TimeSpan.Zero;
-            }
-
-            if (!TimeSpan.TryParse(csvline[18], out DualTime))
-            {
-                DualTime = TimeSpan.Zero;
-            }
-
-            if (!TimeSpan.TryParse(csvline[19], out InstructorTime))
-            {
-                InstructorTime = TimeSpan.Zero;
-            }
-
-            if (!DateTime.TryParse(csvline[20], out date_of_sim))
-            {
-                date_of_sim = DateTime.MinValue;
-            }
-            
-
+            int.TryParse(csvline[12], out DayLanding);
+            int.TryParse(csvline[13], out NightLanding);
+            TimeSpan.TryParse(csvline[14], out NightTime);
+            TimeSpan.TryParse(csvline[15], out IFRTime);
+            TimeSpan.TryParse(csvline[16], out PICTime);
+            TimeSpan.TryParse(csvline[17], out CopilotTime);
+            TimeSpan.TryParse(csvline[18], out DualTime);
+            TimeSpan.TryParse(csvline[19], out InstructorTime);
+            DateTime.TryParse(csvline[20], out date_of_sim);
             Type_of_sim = csvline[21];
-            if (!TimeSpan.TryParse(csvline[22], out sim_time))
-            {
-                sim_time = TimeSpan.Zero;
-            }
+            TimeSpan.TryParse(csvline[22], out sim_time);
             remarks = csvline[23];
 
-            if (csvline[24].Length >1 )
+            if (csvline[24].Equals("pagebreak"))
             {
-                //TODO: "pagebreak" as separator?
-                    nextpageafter = true;                
-            }
-            else
-            {
-                nextpageafter = false;
+                nextpageafter = true;
             }
 
-            // ---
-
-            // SIM
-            if (csvline[20].Length > 1)
-            {
-                return new Flight(Starttime, "", DateTime.MinValue, "", Type, Aircraft, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, date_of_sim, Type_of_sim, sim_time, remarks, nextpageafter);
-            }
-            // No SIM
-            else
-            {
-                return new Flight(Starttime, FROM, Endtime, TO, Type, Aircraft, SETime, METime, MultiPilotTime, TotalTimeOfFlight, PIC, DayLanding, NightLanding, NightTime, IFRTime, PICTime, CopilotTime, DualTime, InstructorTime, DateTime.MinValue, "", TimeSpan.Zero, remarks, nextpageafter);
-            }
-
+            return new Flight(StartDate, beginTime, FROM, endTime, TO, Type, Aircraft, SETime, METime, MultiPilotTime, TotalTimeOfFlight, PIC, DayLanding, NightLanding, NightTime, IFRTime, PICTime, CopilotTime, DualTime, InstructorTime, date_of_sim, Type_of_sim, sim_time, remarks, nextpageafter);
         }
         public List<Flight> getFlightList()
         {

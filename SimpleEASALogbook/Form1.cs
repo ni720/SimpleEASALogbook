@@ -68,6 +68,9 @@ namespace SimpleEASALogbook
 
             LoadDB();
 
+            // workaround for mono-framework
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+
             // add rownumber to row #1
             dataGridView1.Rows[dataGridView1.Rows.Count - 1].Cells[0].Value = dataGridView1.Rows.Count.ToString();
 
@@ -75,7 +78,7 @@ namespace SimpleEASALogbook
         private void Form1_OnResize(object sender, EventArgs e)
         {
             // nullcheck for mono-framework
-            if(Form1.ActiveForm != null)
+            if (Form1.ActiveForm != null)
             {
                 dataGridView1.Width = Form1.ActiveForm.Width - 40;
                 dataGridView1.Height = Form1.ActiveForm.Height - 119;
@@ -101,15 +104,9 @@ namespace SimpleEASALogbook
 
                     foreach (Flight flight in Flights)
                     {
-                        if (flight.DateOfSim.Equals(DateTime.MinValue))
-                        {
-                            dataGridView1.Rows.Add(dataGridView1.Rows.Count.ToString(), flight.OffBlockTime.ToShortDateString(), flight.DepartureAirport, flight.getOffBlockTimeString(), flight.DestinationAirport, flight.getOnBlockTimeString(), flight.TypeOfAircraft, flight.AircraftRegistration, flight.getSEPTimeString(), flight.getMEPTimeString(), flight.getMultiPilotTimeString(), flight.getTotalTimeString(), flight.PilotInCommand, flight.getDayLDGString(), flight.getNightLDGString(), flight.getNightTimeString(), flight.getIFRTimeString(), flight.getPICTimeString(), flight.getCopilotTimeString(), flight.getDualTimeString(), flight.getInstructorTimeString(), "", "", "", flight.Remarks);
-                        }
-                        else
-                        {
-                            dataGridView1.Rows.Add(dataGridView1.Rows.Count.ToString(), flight.OffBlockTime.ToShortDateString(), flight.DepartureAirport, flight.getOffBlockTimeString(), flight.DestinationAirport, flight.getOnBlockTimeString(), flight.TypeOfAircraft, flight.AircraftRegistration, flight.getSEPTimeString(), flight.getMEPTimeString(), flight.getMultiPilotTimeString(), flight.getTotalTimeString(), flight.PilotInCommand, flight.getDayLDGString(), flight.getNightLDGString(), flight.getNightTimeString(), flight.getIFRTimeString(), flight.getPICTimeString(), flight.getCopilotTimeString(), flight.getDualTimeString(), flight.getInstructorTimeString(), flight.DateOfSim.ToShortDateString(), flight.TypeOfSim, flight.SimTime.ToString().Substring(0, 5), flight.Remarks);
-                        }
-                        if (flight.nextpageafter)
+                        dataGridView1.Rows.Add(dataGridView1.Rows.Count.ToString(), flight.getDateString(), flight.getDepartureString(), flight.getOffBlockTimeString(), flight.getDestinationString(), flight.getOnBlockTimeString(), flight.getTypeOfAircraftString(), flight.getRegistrationString(), flight.getSEPTimeString(), flight.getMEPTimeString(), flight.getMultiPilotTimeString(), flight.getTotalTimeString(), flight.getPICNameString(), flight.getDayLDGString(), flight.getNightLDGString(), flight.getNightTimeString(), flight.getIFRTimeString(), flight.getPICTimeString(), flight.getCopilotTimeString(), flight.getDualTimeString(), flight.getInstructorTimeString(), flight.getSimDateString(), flight.getSimTypeString(), flight.getSimTimeString(), flight.getRemarksString());
+
+                        if (flight.hasPageBreak())
                         {
                             dataGridView1.Rows.Add(dataGridView1.Rows.Count.ToString(), "pagebreak", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*");
                         }
@@ -211,17 +208,17 @@ namespace SimpleEASALogbook
         private void validateRows(int rowIndex)
         {
             bool error = false;
-            foreach(DataGridViewCell cell in dataGridView1.Rows[rowIndex].Cells)
+            foreach (DataGridViewCell cell in dataGridView1.Rows[rowIndex].Cells)
             {
-                if(cell != null)
+                if (cell != null)
                 {
-                    if(cell.ErrorText.Length>1)
+                    if (cell.ErrorText.Length > 1)
                     {
                         error = true;
                     }
                 }
             }
-            if(!error)
+            if (!error)
             {
                 dataGridView1.Rows[rowIndex].ErrorText = "";
             }
@@ -335,7 +332,7 @@ namespace SimpleEASALogbook
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if(MessageBox.Show("do you want to save before closing?","good bye",MessageBoxButtons.YesNo,MessageBoxIcon.Question).Equals(DialogResult.Yes))
+            if (MessageBox.Show("do you want to save before closing?", "good bye", MessageBoxButtons.YesNo, MessageBoxIcon.Question).Equals(DialogResult.Yes))
             {
                 SaveTable();
             }
