@@ -1,4 +1,6 @@
-﻿namespace SimpleEASALogbook
+﻿using System;
+
+namespace SimpleEASALogbook
 {
     partial class Form1
     {
@@ -557,7 +559,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(94, 514);
+            this.button2.Location = new System.Drawing.Point(94, 513);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 4;
@@ -568,7 +570,7 @@
             // button3
             // 
             this.button3.Enabled = false;
-            this.button3.Location = new System.Drawing.Point(176, 514);
+            this.button3.Location = new System.Drawing.Point(176, 513);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
             this.button3.TabIndex = 5;
@@ -593,7 +595,7 @@
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(75, 23);
             this.button5.TabIndex = 7;
-            this.button5.Text = "💾 &save";
+            this.button5.Text = "&save";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 

@@ -74,16 +74,21 @@ namespace SimpleEASALogbook
         }
         private void Form1_OnResize(object sender, EventArgs e)
         {
-            dataGridView1.Width = Form1.ActiveForm.Width - 40;
-            dataGridView1.Height = Form1.ActiveForm.Height - 119;
-            button5.Left = Form1.ActiveForm.Width - 184;
-            button6.Left = Form1.ActiveForm.Width - 103;
-            button1.Top = Form1.ActiveForm.Height - 87;
-            button2.Top = Form1.ActiveForm.Height - 87;
-            button3.Top = Form1.ActiveForm.Height - 87;
-            button4.Top = Form1.ActiveForm.Height - 87;
-            button5.Top = Form1.ActiveForm.Height - 87;
-            button6.Top = Form1.ActiveForm.Height - 87;
+            // nullcheck for mono-framework
+            if(Form1.ActiveForm != null)
+            {
+                dataGridView1.Width = Form1.ActiveForm.Width - 40;
+                dataGridView1.Height = Form1.ActiveForm.Height - 119;
+                button5.Left = Form1.ActiveForm.Width - 184;
+                button6.Left = Form1.ActiveForm.Width - 103;
+                button1.Top = Form1.ActiveForm.Height - 87;
+                button2.Top = Form1.ActiveForm.Height - 87;
+                button3.Top = Form1.ActiveForm.Height - 87;
+                button4.Top = Form1.ActiveForm.Height - 87;
+                button5.Top = Form1.ActiveForm.Height - 87;
+                button6.Top = Form1.ActiveForm.Height - 87;
+            }
+
         }
         private void LoadDB()
         {
