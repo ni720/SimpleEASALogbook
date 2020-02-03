@@ -14,6 +14,10 @@ namespace SimpleEASALogbook
         {
             InitializeComponent();
         }
+        public static bool IsRunningOnMono()
+        {
+            return Type.GetType("Mono.Runtime") != null;
+        }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -58,6 +62,7 @@ namespace SimpleEASALogbook
 
         private void Form1_OnLoad(object sender, EventArgs e)
         {
+                      
             // this makes scrolling through the datagridview much faster, but can slowdown in a terminal session
             if (!System.Windows.Forms.SystemInformation.TerminalServerSession)
             {
@@ -294,14 +299,28 @@ namespace SimpleEASALogbook
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (dataGridView1.Rows.Count > 1 && !dataGridView1.Rows[dataGridView1.Rows.Count - 1].Equals(dataGridView1.SelectedRows[0]))
+
+            // another workaround for a crash in mono
+            try
             {
-                toolStripStatusLabel1.Text = "deleting row...";
-                Form1.ActiveForm.Enabled = false;
-                dataGridView1.Rows.RemoveAt(dataGridView1.SelectedRows[0].Index);
+                if (dataGridView1.Rows.Count > 1)
+                {
+                    toolStripStatusLabel1.Text = "deleting row...";
+                    Form1.ActiveForm.Enabled = false;
+                    dataGridView1.Rows.RemoveAt(dataGridView1.SelectedRows[0].Index);
+                    toolStripStatusLabel1.Text = "";
+                    Form1.ActiveForm.Enabled = true;
+                }
+            }
+            catch
+            {
+
+            }finally
+            {
                 toolStripStatusLabel1.Text = "";
                 Form1.ActiveForm.Enabled = true;
             }
+
         }
 
         private void bindingSource1_CurrentChanged(object sender, EventArgs e)
@@ -369,11 +388,12 @@ namespace SimpleEASALogbook
             {
                 if (dataGridView1.Rows[rowIndex].Cells[11].Value == null)
                 {
-                    if (dataGridView1.Rows[rowIndex].Cells[1].Value != null && dataGridView1.Rows[rowIndex].Cells[3].Value != null && dataGridView1.Rows[rowIndex].Cells[5].Value != null)
+                    // value.tostring.length > 0 because of mono
+                    if (dataGridView1.Rows[rowIndex].Cells[1].Value.ToString().Length>0 && dataGridView1.Rows[rowIndex].Cells[3].Value.ToString().Length > 0 && dataGridView1.Rows[rowIndex].Cells[5].Value.ToString().Length > 0)
                     {
                         TimeSpan.TryParse(dataGridView1.Rows[rowIndex].Cells[3].Value.ToString(), out TimeSpan begin);
                         TimeSpan.TryParse(dataGridView1.Rows[rowIndex].Cells[5].Value.ToString(), out TimeSpan end);
-                        if (end.Hours < begin.Hours)
+                        if (end.Ticks < begin.Ticks)
                         {
                             end = end.Add(TimeSpan.FromHours(24));
                         }
@@ -383,8 +403,7 @@ namespace SimpleEASALogbook
             }
             catch (Exception e)
             {
-                // ingore compilermessage
-                e.ToString();
+                File.AppendAllText("_error_logfile.txt", DateTime.Now.ToString() + ": " + e.ToString() + "\n");
             }
 
         }
@@ -392,56 +411,70 @@ namespace SimpleEASALogbook
         // to easily populate with data
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
+            populateDataOnClick(e.RowIndex, e.ColumnIndex);
+
+        }
+
+        private void populateDataOnClick(int rowIndex, int columnIndex)
+        {
+
+            // Value.ToString().Length<1 because of mono
+            // dataGridView1.RefreshEdit(); because of mono
             try
             {
-                if (e.ColumnIndex == 1)
+                if (columnIndex == 1)
                 {
-                    if (dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value == null)
+                    if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length<1)
                     {
-                        dataGridView1.Rows[e.RowIndex].Cells[1].Value = DateTime.Now.ToShortDateString();
+                        dataGridView1.Rows[rowIndex].Cells[1].Value = DateTime.Now.ToShortDateString();
+                        dataGridView1.RefreshEdit();
                     }
                 }
-                if (e.ColumnIndex == 3)
+                if (columnIndex == 3)
                 {
-                    if (dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value == null)
+                    if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length < 1)
                     {
-                        dataGridView1.Rows[e.RowIndex].Cells[3].Value = DateTime.Now.ToShortTimeString();
+                        dataGridView1.Rows[rowIndex].Cells[3].Value = DateTime.Now.ToShortTimeString();
+                        dataGridView1.RefreshEdit();
                     }
                 }
-                if (e.ColumnIndex == 5)
+                if (columnIndex == 5)
                 {
-                    if (dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value == null)
+                    if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length < 1)
                     {
-                        dataGridView1.Rows[e.RowIndex].Cells[5].Value = DateTime.Now.ToShortTimeString();
+                        dataGridView1.Rows[rowIndex].Cells[5].Value = DateTime.Now.ToShortTimeString();
+                        dataGridView1.RefreshEdit();
                     }
                 }
-                if (e.ColumnIndex == 8 || e.ColumnIndex == 9 || e.ColumnIndex == 10 || e.ColumnIndex == 15 || e.ColumnIndex == 16 || e.ColumnIndex == 17 || e.ColumnIndex == 18 || e.ColumnIndex == 19 || e.ColumnIndex == 20)
+                if (columnIndex == 8 || columnIndex == 9 || columnIndex == 10 || columnIndex == 15 || columnIndex == 16 || columnIndex == 17 || columnIndex == 18 || columnIndex == 19 || columnIndex == 20)
                 {
-                    if (dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value == null && dataGridView1.Rows[e.RowIndex].Cells[11].Value != null && dataGridView1.Rows[e.RowIndex].Cells[11].ErrorText.Length<1)
+                    if ((dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length < 1) && ( dataGridView1.Rows[rowIndex].Cells[11].Value != null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length > 0) && dataGridView1.Rows[rowIndex].Cells[11].ErrorText.Length < 1)
                     {
-                        dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = dataGridView1.Rows[e.RowIndex].Cells[11].Value;
-                    }else
+                        dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = dataGridView1.Rows[rowIndex].Cells[11].Value;
+                        dataGridView1.RefreshEdit();
+                    }
+                    else
                     {
-                        if(dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null)
+                        if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value != null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length < 1)
                         {
-                            dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = "";
+                            dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = null;
+                            dataGridView1.RefreshEdit();
                         }
                     }
                 }
-                if (e.ColumnIndex == 21)
+                if (columnIndex == 21)
                 {
-                    if (dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value == null)
+                    if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length < 1)
                     {
-                        dataGridView1.Rows[e.RowIndex].Cells[21].Value = DateTime.Now.ToShortDateString();
+                        dataGridView1.Rows[rowIndex].Cells[21].Value = DateTime.Now.ToShortDateString();
+                        dataGridView1.RefreshEdit();
                     }
                 }
             }
             catch (Exception y)
             {
-                // ingore compilermessage
-                y.ToString();
+                File.AppendAllText("_error_logfile.txt", DateTime.Now.ToString() + ": " + y.ToString()+"\n");
             }
-
         }
 
         private void dataGridView1_SortCompare(object sender, DataGridViewSortCompareEventArgs e)
@@ -458,6 +491,20 @@ namespace SimpleEASALogbook
                     dataGridView1.Rows[e.RowIndex2].Cells[3].Value.ToString());
             }
             e.Handled = true;
+        }
+
+        private void dataGridView1_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void brusselsPDFToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
         }
     }
 }

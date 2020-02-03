@@ -1,0 +1,2 @@
+03.02.2020 23:20:15: System.NullReferenceException: Der Objektverweis wurde nicht auf eine Objektinstanz festgelegt.
+   bei SimpleEASALogbook.Form1.autoFillCellValue(Int32 rowIndex, Int32 columnIndex) in C:\Users\Martin\source\repos\SimpleEASALogbook\SimpleEASALogbook\Form1.cs:Zeile 392.
