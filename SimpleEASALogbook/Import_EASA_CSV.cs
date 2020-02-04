@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Threading;
 
 namespace SimpleEASALogbook
 {
     class Import_EASA_CSV
     {
-
         DateTime StartDate = DateTime.MinValue;
         string FROM = "";
         TimeSpan beginTime = TimeSpan.Zero;
@@ -36,6 +37,8 @@ namespace SimpleEASALogbook
         List<Flight> Flights = new List<Flight>();
         public Import_EASA_CSV(string stringToParse)
         {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
+
             using (var reader = new StringReader(stringToParse))
             {
                 int i = 0;
@@ -50,7 +53,7 @@ namespace SimpleEASALogbook
                     }
                     catch (Exception exc)
                     {
-                        File.AppendAllText("_error_logfile.txt", DateTime.Now.ToString()+ ": error parsing, skipping line: " +i.ToString()+"\n"+ exc.ToString() + "\n");
+                        File.AppendAllText("_error_logfile.txt", DateTime.Now.ToString() + ": error parsing, skipping line: " + i.ToString() + "\n" + exc.ToString() + "\n");
                     }
 
                     i++;

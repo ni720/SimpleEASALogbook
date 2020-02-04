@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace SimpleEASALogbook
@@ -13,8 +12,8 @@ namespace SimpleEASALogbook
         static void Main()
         {
             Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);            
+            Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
-        }        
+        }
     }
 }

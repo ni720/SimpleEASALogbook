@@ -1,5 +1,6 @@
 ﻿using System;
 
+
 namespace SimpleEASALogbook
 {
     public class Flight : IComparable
@@ -29,6 +30,7 @@ namespace SimpleEASALogbook
         private TimeSpan SimTime = TimeSpan.Zero;
         private string Remarks = "";
         private bool nextpageafter = false;
+        
 
         public Flight(DateTime date, TimeSpan offblock, string dep, TimeSpan onblock, string dest, string type, string reg, TimeSpan septime, TimeSpan meptime, TimeSpan multitime, TimeSpan totaltime, string pic, int ldgday, int ldgnight, TimeSpan nighttime, TimeSpan ifrtime, TimeSpan pictime, TimeSpan copitime, TimeSpan dualtime, TimeSpan instructortime, DateTime dateofsim, string typeofsim, TimeSpan simtime, string remarks, bool nextpage)
         {
@@ -67,7 +69,7 @@ namespace SimpleEASALogbook
             }
             else
             {
-                return FlightDate.ToShortDateString();
+                return FlightDate.ToShortDateString().Substring(0,8);
             }
         }
 
