@@ -44,10 +44,6 @@ namespace SimpleEASALogbook
 
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
 
         private void button4_Click(object sender, EventArgs e)
         {
@@ -79,11 +75,14 @@ namespace SimpleEASALogbook
 
             LoadDB();
 
+            // to make behaviour the same as with mono
+            dataGridView1.AllowUserToAddRows = false;
+
             // workaround for mono-framework
             if (IsRunningOnMono())
             {
                 dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
-                dataGridView1.AllowUserToAddRows = false;
+                
                 if (dataGridView1.Rows.Count < 1)
                 {
                     dataGridView1.Rows.Add();
@@ -345,7 +344,8 @@ namespace SimpleEASALogbook
 
         private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
-
+            // workaround to make mono double click better
+            dataGridView1.CurrentCell = dataGridView1.Rows[dataGridView1.Rows.Count - 1].Cells[1];
         }
 
         private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
@@ -406,7 +406,7 @@ namespace SimpleEASALogbook
                                 end = end.Add(TimeSpan.FromHours(24));
                             }
                             dataGridView1.Rows[rowIndex].Cells[10].Value = end.Subtract(begin).ToString().Substring(0, 5);
-                            dataGridView1.RefreshEdit();
+                            dataGridView1.RefreshEdit(); // workaround for mono to display cell values
                         }
 
                     }
@@ -444,7 +444,7 @@ namespace SimpleEASALogbook
         {
 
             // Value.ToString().Length<1 because of mono
-            // dataGridView1.RefreshEdit(); because of mono
+            // dataGridView1.RefreshEdit(); // workaround for mono to display cell values because of mono
             try
             {
                 if (columnIndex == 0)
@@ -452,7 +452,8 @@ namespace SimpleEASALogbook
                     if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length < 1)
                     {
                         dataGridView1.Rows[rowIndex].Cells[0].Value = DateTime.Now.ToShortDateString().Substring(0, 8);
-                        dataGridView1.RefreshEdit();
+                        dataGridView1.RefreshEdit(); // workaround for mono to display cell values
+                        dataGridView1.CurrentCell = dataGridView1.Rows[rowIndex].Cells[1]; // workaround for mono for better cell doubleclick
                     }
                 }
                 if (columnIndex == 2)
@@ -460,7 +461,8 @@ namespace SimpleEASALogbook
                     if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length < 1)
                     {
                         dataGridView1.Rows[rowIndex].Cells[2].Value = DateTime.Now.ToShortTimeString();
-                        dataGridView1.RefreshEdit();
+                        dataGridView1.RefreshEdit(); // workaround for mono to display cell values
+                        dataGridView1.CurrentCell = dataGridView1.Rows[rowIndex].Cells[1]; // workaround for mono for better cell doubleclick
                     }
                 }
                 if (columnIndex == 4)
@@ -468,7 +470,8 @@ namespace SimpleEASALogbook
                     if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length < 1)
                     {
                         dataGridView1.Rows[rowIndex].Cells[4].Value = DateTime.Now.ToShortTimeString();
-                        dataGridView1.RefreshEdit();
+                        dataGridView1.RefreshEdit(); // workaround for mono to display cell values
+                        dataGridView1.CurrentCell = dataGridView1.Rows[rowIndex].Cells[1]; // workaround for mono for better cell doubleclick
                     }
                 }
                 if (columnIndex == 7 || columnIndex == 8 || columnIndex == 9 || columnIndex == 14 || columnIndex == 15 || columnIndex == 16 || columnIndex == 17 || columnIndex == 18 || columnIndex == 19)
@@ -476,14 +479,16 @@ namespace SimpleEASALogbook
                     if ((dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length < 1) && (dataGridView1.Rows[rowIndex].Cells[10].Value != null || dataGridView1.Rows[rowIndex].Cells[10].Value.ToString().Length > 0) && dataGridView1.Rows[rowIndex].Cells[10].ErrorText.Length < 1)
                     {
                         dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = dataGridView1.Rows[rowIndex].Cells[10].Value;
-                        dataGridView1.RefreshEdit();
+                        dataGridView1.RefreshEdit(); // workaround for mono to display cell values
+                        dataGridView1.CurrentCell = dataGridView1.Rows[rowIndex].Cells[1]; // workaround for mono for better cell doubleclick
                     }
                     else
                     {
                         if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value != null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length < 1)
                         {
                             dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = null;
-                            dataGridView1.RefreshEdit();
+                            dataGridView1.RefreshEdit(); // workaround for mono to display cell values
+                            dataGridView1.CurrentCell = dataGridView1.Rows[rowIndex].Cells[1]; // workaround for mono for better cell doubleclick
                         }
                     }
                 }
@@ -492,12 +497,14 @@ namespace SimpleEASALogbook
                     if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length < 1)
                     {
                         dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = "1";
-                        dataGridView1.RefreshEdit();
+                        dataGridView1.RefreshEdit(); // workaround for mono to display cell values
+                        dataGridView1.CurrentCell = dataGridView1.Rows[rowIndex].Cells[1]; // workaround for mono for better cell doubleclick
                     }
                     else
                     {
                         dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = "";
-                        dataGridView1.RefreshEdit();
+                        dataGridView1.RefreshEdit(); // workaround for mono to display cell values
+                        dataGridView1.CurrentCell = dataGridView1.Rows[rowIndex].Cells[1]; // workaround for mono for better cell doubleclick
                     }
                 }
                 if (columnIndex == 20)
@@ -505,7 +512,8 @@ namespace SimpleEASALogbook
                     if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length < 1)
                     {
                         dataGridView1.Rows[rowIndex].Cells[20].Value = DateTime.Now.ToShortDateString().Substring(0, 8);
-                        dataGridView1.RefreshEdit();
+                        dataGridView1.RefreshEdit(); // workaround for mono to display cell values
+                        dataGridView1.CurrentCell = dataGridView1.Rows[rowIndex].Cells[1]; // workaround for mono for better cell doubleclick
                     }
                 }
             }
@@ -532,15 +540,6 @@ namespace SimpleEASALogbook
             e.Handled = true;
         }
 
-        // TODO test if mono still needs this or if UI is responding correctly without
-        private void dataGridView1_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (IsRunningOnMono())
-            {
-                dataGridView1_CellDoubleClick(sender, e);
-            }
-        }
-
         private void brusselsPDFToolStripMenuItem_Click(object sender, EventArgs e)
         {
         }
@@ -555,7 +554,7 @@ namespace SimpleEASALogbook
 
         }
 
-        //
+        // todo add : and /
         private void dataGridView1_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
             e.Control.KeyPress -= new KeyPressEventHandler(Column1_KeyPress);
