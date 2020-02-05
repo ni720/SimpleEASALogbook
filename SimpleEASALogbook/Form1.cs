@@ -72,22 +72,19 @@ namespace SimpleEASALogbook
                 PropertyInfo pi = dgvType.GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic);
                 pi.SetValue(dataGridView1, true, null);
             }
-
-            LoadDB();
-
-            // to make behaviour the same as with mono
+                       
+            // to make behaviour the same as with mono, the "newrow" has caused too many problems
             dataGridView1.AllowUserToAddRows = false;
+            dataGridView1.AllowUserToDeleteRows = false;
 
             // workaround for mono-framework
             if (IsRunningOnMono())
             {
                 dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
-                
-                if (dataGridView1.Rows.Count < 1)
-                {
-                    dataGridView1.Rows.Add();
-                }
+
             }
+
+            // loading takes place in the form_shown method to show the user, there is loading in progress
 
         }
         private void Form1_OnResize(object sender, EventArgs e)
@@ -96,9 +93,11 @@ namespace SimpleEASALogbook
             if (Form1.ActiveForm != null)
             {
                 dataGridView1.Width = Form1.ActiveForm.Width - 40;
-                dataGridView1.Height = Form1.ActiveForm.Height - 119;
+                dataGridView1.Height = Form1.ActiveForm.Height - 141;
                 button5.Left = Form1.ActiveForm.Width - 184;
                 button6.Left = Form1.ActiveForm.Width - 103;
+                label1.Width = Form1.ActiveForm.Width - 40;
+                label1.Top = Form1.ActiveForm.Height - 112;
                 button1.Top = Form1.ActiveForm.Height - 87;
                 button2.Top = Form1.ActiveForm.Height - 87;
                 button3.Top = Form1.ActiveForm.Height - 87;
@@ -597,6 +596,55 @@ namespace SimpleEASALogbook
 
             var headerBounds = new System.Drawing.Rectangle(e.RowBounds.Left, e.RowBounds.Top, grid.RowHeadersWidth, e.RowBounds.Height);
             e.Graphics.DrawString(rowIdx, this.Font, System.Drawing.SystemBrushes.ControlText, headerBounds, centerFormat);
+        }
+
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            var now = DateTime.Now;
+
+            LoadDB();
+
+            if (dataGridView1.Rows.Count < 1)
+            {
+                dataGridView1.Rows.Add();
+            }
+
+            label1.Text=Summarize(Flights);
+
+            toolStripStatusLabel1.Text = "finished loading, it took: " + Math.Round((DateTime.Now.Subtract(now).TotalSeconds)).ToString() + " second(s).";
+
+        }
+
+        static string Summarize(List<Flight> flights)
+        {
+            TimeSpan multiPilotFlightTime = new TimeSpan(0);
+            TimeSpan totalFligtTime = new TimeSpan(0);
+            int dayLdgs = 0;
+            int nightLdgs = 0;
+            TimeSpan nightTime = new TimeSpan();
+            TimeSpan ifrTime = new TimeSpan();
+            TimeSpan PICTime = new TimeSpan();
+            TimeSpan CopiTime = new TimeSpan();
+            TimeSpan DualTime = new TimeSpan();
+            TimeSpan InstructorTime = new TimeSpan();
+            TimeSpan SimTime = new TimeSpan();
+            foreach (Flight a in flights)
+            {
+                multiPilotFlightTime = multiPilotFlightTime.Add(a.getMultiPilotTime);
+                totalFligtTime = totalFligtTime.Add(a.getTotalTimeOfFlight);
+                dayLdgs += a.getDayLandings;
+                nightLdgs += a.getNightLandings;
+                nightTime = nightTime.Add(a.getNightTime);
+                ifrTime = ifrTime.Add(a.getIFRTime);
+                PICTime = PICTime.Add(a.getPICTime);
+                CopiTime = CopiTime.Add(a.getCopilotTime);
+                DualTime = DualTime.Add(a.getDualTime);
+                InstructorTime = InstructorTime.Add(a.getInstructorTime);
+                SimTime = SimTime.Add(a.getSimTime);
+            }
+            
+            return "∑:   multiPilot: " + ((int)multiPilotFlightTime.TotalHours).ToString() + ":" + multiPilotFlightTime.Minutes.ToString()  +"   total: " + ((int)totalFligtTime.TotalHours).ToString() + ":" + totalFligtTime.Minutes.ToString() + "   DayLDG: " + dayLdgs.ToString() + "   NightLDG: " + nightLdgs.ToString() + "   Night: " + ((int)nightTime.TotalHours).ToString() + ":" + nightTime.Minutes.ToString() + "   IFR: " + ((int)ifrTime.TotalHours).ToString() + ":" + ifrTime.Minutes.ToString() + "   PIC: " + ((int)PICTime.TotalHours).ToString() + ":" + PICTime.Minutes.ToString() + "   Copi: " + ((int)CopiTime.TotalHours).ToString() + ":" + CopiTime.Minutes.ToString() + "   Dual: " + ((int)DualTime.TotalHours).ToString() + ":" + DualTime.Minutes.ToString() + "   Instructor: " + ((int)InstructorTime.TotalHours).ToString() + ":" + InstructorTime.Minutes.ToString() + "   Sim: " + ((int)SimTime.TotalHours).ToString() + ":" + SimTime.Minutes.ToString();
+
         }
     }
 }

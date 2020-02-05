@@ -30,8 +30,7 @@ namespace SimpleEASALogbook
         private TimeSpan SimTime = TimeSpan.Zero;
         private string Remarks = "";
         private bool nextpageafter = false;
-        
-
+               
         public Flight(DateTime date, TimeSpan offblock, string dep, TimeSpan onblock, string dest, string type, string reg, TimeSpan septime, TimeSpan meptime, TimeSpan multitime, TimeSpan totaltime, string pic, int ldgday, int ldgnight, TimeSpan nighttime, TimeSpan ifrtime, TimeSpan pictime, TimeSpan copitime, TimeSpan dualtime, TimeSpan instructortime, DateTime dateofsim, string typeofsim, TimeSpan simtime, string remarks, bool nextpage)
         {
             FlightDate = date;
@@ -334,6 +333,85 @@ namespace SimpleEASALogbook
             }
             // The orders are equivalent.
             return 0;
+        }
+
+        public TimeSpan getMultiPilotTime
+        {
+            get
+            {
+                return MultiPilotTime;
+            }
+        }
+        public TimeSpan getTotalTimeOfFlight
+        {
+            get
+            {
+                return TotalTimeOfFlight;
+            }
+        }
+        public TimeSpan getNightTime
+        {
+            get
+            {
+                return NightTime;
+            }
+        }
+        public TimeSpan getIFRTime
+        {
+            get
+            {
+                return IFRTime;
+            }
+        }
+        public TimeSpan getPICTime
+        {
+            get
+            {
+                return PICTime;
+            }
+        }
+        public TimeSpan getCopilotTime
+        {
+            get
+            {
+                return CopilotTime;
+            }
+        }
+        public TimeSpan getDualTime
+        {
+            get
+            {
+                return DualTime;
+            }
+        }
+        public TimeSpan getInstructorTime
+        {
+            get
+            {
+                return InstructorTime;
+            }
+        }
+        public TimeSpan getSimTime
+        {
+            get
+            {
+                return SimTime;
+            }
+        }
+        public int getDayLandings
+        {
+            get
+            {
+                return DayLandings;
+            }
+        }
+
+        public int getNightLandings
+        {
+            get
+            {
+                return NightLandings;
+            }
         }
     }
 }
