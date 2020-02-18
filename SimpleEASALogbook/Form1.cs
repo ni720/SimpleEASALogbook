@@ -93,6 +93,20 @@ namespace SimpleEASALogbook
                 dataGridView1.AllowUserToDeleteRows = false;
                 dataGridView1.AutoGenerateColumns = false;
                 iFlights.AllowEdit = true;
+                dataGridView1.DataSource = iFlights;
+                dataGridView1.Columns[2].DefaultCellStyle.Format = "hh\\:mm";
+                dataGridView1.Columns[4].DefaultCellStyle.Format = "hh\\:mm";
+                dataGridView1.Columns[7].DefaultCellStyle.Format = "hh\\:mm";
+                dataGridView1.Columns[8].DefaultCellStyle.Format = "hh\\:mm";
+                dataGridView1.Columns[9].DefaultCellStyle.Format = "hh\\:mm";
+                dataGridView1.Columns[10].DefaultCellStyle.Format = "hh\\:mm";
+                dataGridView1.Columns[14].DefaultCellStyle.Format = "hh\\:mm";
+                dataGridView1.Columns[15].DefaultCellStyle.Format = "hh\\:mm";
+                dataGridView1.Columns[16].DefaultCellStyle.Format = "hh\\:mm";
+                dataGridView1.Columns[17].DefaultCellStyle.Format = "hh\\:mm";
+                dataGridView1.Columns[18].DefaultCellStyle.Format = "hh\\:mm";
+                dataGridView1.Columns[19].DefaultCellStyle.Format = "hh\\:mm";
+                dataGridView1.Columns[22].DefaultCellStyle.Format = "hh\\:mm";
 
                 // workaround for mono-framework
                 if (IsRunningOnMono())
@@ -140,58 +154,20 @@ namespace SimpleEASALogbook
         // load table from "database" file
         private void LoadDB()
         {
-
-            //iFlights = new BindingList<Flight>(Flights);
-            dataGridView1.DataSource = iFlights;
-
-            //dataGridView1.Columns[9].ValueType = typeof(TimeSpan);
-            dataGridView1.Columns[2].DefaultCellStyle.Format = "hh\\:mm";
-            dataGridView1.Columns[4].DefaultCellStyle.Format = "hh\\:mm";
-            dataGridView1.Columns[7].DefaultCellStyle.Format = "hh\\:mm";
-            dataGridView1.Columns[8].DefaultCellStyle.Format = "hh\\:mm";
-            dataGridView1.Columns[9].DefaultCellStyle.Format = "hh\\:mm";
-            dataGridView1.Columns[10].DefaultCellStyle.Format = "hh\\:mm";
-            dataGridView1.Columns[14].DefaultCellStyle.Format = "hh\\:mm";
-            dataGridView1.Columns[15].DefaultCellStyle.Format = "hh\\:mm";
-            dataGridView1.Columns[16].DefaultCellStyle.Format = "hh\\:mm";
-            dataGridView1.Columns[17].DefaultCellStyle.Format = "hh\\:mm";
-            dataGridView1.Columns[18].DefaultCellStyle.Format = "hh\\:mm";
-            dataGridView1.Columns[19].DefaultCellStyle.Format = "hh\\:mm";
-            dataGridView1.Columns[22].DefaultCellStyle.Format = "hh\\:mm";
-
             if (File.Exists("EASALogbook.csv"))
             {
                 try
                 {
                     Import_EASA_CSV import = new Import_EASA_CSV(File.ReadAllText("EASALogbook.csv").ToString());
                     Flights.AddRange(import.getFlightList());
-                    //iFlights = new BindingList<Flight>(Flights);
                     iFlights.ResetBindings();
-
                     MarkAllCellsEditable();
-
-                    /*                    foreach (Flight flight in Flights)
-                                        {
-                                            dataGridView1.Rows.Add(flight.getDateString(), flight.getDepartureString(), flight.getOffBlockTimeString(), flight.getDestinationString(), flight.getOnBlockTimeString(), flight.getTypeOfAircraftString(), flight.getRegistrationString(), flight.getSEPTimeString(), flight.getMEPTimeString(), flight.getMultiPilotTimeString(), flight.getTotalTimeString(), flight.getPICNameString(), flight.getDayLDGString(), flight.getNightLDGString(), flight.getNightTimeString(), flight.getIFRTimeString(), flight.getPICTimeString(), flight.getCopilotTimeString(), flight.getDualTimeString(), flight.getInstructorTimeString(), flight.getSimDateString(), flight.getSimTypeString(), flight.getSimTimeString(), flight.getRemarksString());
-
-                                            if (flight.hasPageBreak())
-                                            {
-                                                dataGridView1.Rows.Add(dataGridView1.Rows.Count.ToString(), "pagebreak", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*");
-                                            }
-
-                                        }*/
                 }
                 catch (Exception exc)
                 {
                     File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " LoadDB:\n" + exc.ToString() + "\n");
                 }
-
             }
-            else
-            {
-
-            }
-
         }
 
         // save the table by parsing it into flights and writing the flights. all via EASA import&export filter
@@ -370,10 +346,11 @@ namespace SimpleEASALogbook
                 int row = dataGridView1.Rows[dataGridView1.SelectedRows[0].Index].Index;
                 dataGridView1.Rows.RemoveAt(dataGridView1.SelectedRows[0].Index);
 
-                if (dataGridView1.RowCount > 0)
+                if (dataGridView1.RowCount > 0 && row >0 )
                 {
                     dataGridView1.CurrentCell = dataGridView1.Rows[row - 1].Cells[0];
                     dataGridView1.Rows[row - 1].Selected = true;
+
                 }
             }
         }
