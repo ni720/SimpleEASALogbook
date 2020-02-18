@@ -93,11 +93,10 @@ namespace SimpleEASALogbook
             this.Column25 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.duplicatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -139,6 +138,7 @@ namespace SimpleEASALogbook
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newToolStripMenuItem,
+            this.duplicatesToolStripMenuItem,
             this.saveToolStripMenuItem,
             this.toolStripMenuItem1,
             this.closeToolStripMenuItem});
@@ -149,26 +149,26 @@ namespace SimpleEASALogbook
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.newToolStripMenuItem.Text = "&New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveToolStripMenuItem.Text = "&Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(100, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 6);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.closeToolStripMenuItem.Text = "&Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
@@ -640,28 +640,6 @@ namespace SimpleEASALogbook
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // button3
-            // 
-            this.button3.Enabled = false;
-            this.button3.Location = new System.Drawing.Point(176, 513);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 5;
-            this.button3.Text = "✏ details";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // button4
-            // 
-            this.button4.Enabled = false;
-            this.button4.Location = new System.Drawing.Point(257, 513);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 6;
-            this.button4.Text = "duplicates";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
             // button5
             // 
             this.button5.Location = new System.Drawing.Point(616, 513);
@@ -687,6 +665,13 @@ namespace SimpleEASALogbook
             this.openFileDialog1.FileName = "openFileDialog1";
             this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
             // 
+            // duplicatesToolStripMenuItem
+            // 
+            this.duplicatesToolStripMenuItem.Enabled = false;
+            this.duplicatesToolStripMenuItem.Name = "duplicatesToolStripMenuItem";
+            this.duplicatesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.duplicatesToolStripMenuItem.Text = "&Duplicates";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -694,8 +679,6 @@ namespace SimpleEASALogbook
             this.ClientSize = new System.Drawing.Size(784, 561);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.dataGridView1);
@@ -734,8 +717,6 @@ namespace SimpleEASALogbook
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.ToolStripMenuItem eASALogToolStripMenuItem;
@@ -781,6 +762,7 @@ namespace SimpleEASALogbook
         private System.Windows.Forms.DataGridViewTextBoxColumn Column23;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column24;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Column25;
+        private System.Windows.Forms.ToolStripMenuItem duplicatesToolStripMenuItem;
     }
 }
 

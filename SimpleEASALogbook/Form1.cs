@@ -12,7 +12,7 @@ namespace SimpleEASALogbook
     public partial class Form1 : Form
     {
         public static List<Flight> Flights = new List<Flight>();
-        private static BindingList<Flight> iFlights;
+        public static BindingList<Flight> iFlights = new BindingList<Flight>(Flights);
         public static WaitForm _WaitForm = new WaitForm();
 
         public Form1()
@@ -27,10 +27,13 @@ namespace SimpleEASALogbook
         // add rows for now.. but should be detail view add of rows
         private void button1_Click(object sender, EventArgs e)
         {
-            iFlights.Add(new Flight());
             //Reset the Datasource
             //dataGridView1.DataSource = null;
             //dataGridView1.DataSource = iFlights;
+
+            Flights.Add(new Flight(DateTime.MinValue, TimeSpan.Zero, "", TimeSpan.Zero, "", "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, DateTime.MinValue, "", TimeSpan.Zero, "", false));
+            iFlights.ResetBindings();
+            dataGridView1.CurrentCell = dataGridView1.Rows[dataGridView1.RowCount - 1].Cells[0];
         }
 
         // save button
@@ -88,6 +91,8 @@ namespace SimpleEASALogbook
                 // to make behaviour the same as with mono, the "newrow" has caused too many problems
                 dataGridView1.AllowUserToAddRows = false;
                 dataGridView1.AllowUserToDeleteRows = false;
+                dataGridView1.AutoGenerateColumns = false;
+                iFlights.AllowEdit = true;
 
                 // workaround for mono-framework
                 if (IsRunningOnMono())
@@ -127,8 +132,6 @@ namespace SimpleEASALogbook
                 button6.Left = Form1.ActiveForm.Width - 103;
                 button1.Top = Form1.ActiveForm.Height - 87;
                 button2.Top = Form1.ActiveForm.Height - 87;
-                button3.Top = Form1.ActiveForm.Height - 87;
-                button4.Top = Form1.ActiveForm.Height - 87;
                 button5.Top = Form1.ActiveForm.Height - 87;
                 button6.Top = Form1.ActiveForm.Height - 87;
             }
@@ -137,38 +140,33 @@ namespace SimpleEASALogbook
         // load table from "database" file
         private void LoadDB()
         {
+
+            //iFlights = new BindingList<Flight>(Flights);
+            dataGridView1.DataSource = iFlights;
+
+            //dataGridView1.Columns[9].ValueType = typeof(TimeSpan);
+            dataGridView1.Columns[2].DefaultCellStyle.Format = "hh\\:mm";
+            dataGridView1.Columns[4].DefaultCellStyle.Format = "hh\\:mm";
+            dataGridView1.Columns[7].DefaultCellStyle.Format = "hh\\:mm";
+            dataGridView1.Columns[8].DefaultCellStyle.Format = "hh\\:mm";
+            dataGridView1.Columns[9].DefaultCellStyle.Format = "hh\\:mm";
+            dataGridView1.Columns[10].DefaultCellStyle.Format = "hh\\:mm";
+            dataGridView1.Columns[14].DefaultCellStyle.Format = "hh\\:mm";
+            dataGridView1.Columns[15].DefaultCellStyle.Format = "hh\\:mm";
+            dataGridView1.Columns[16].DefaultCellStyle.Format = "hh\\:mm";
+            dataGridView1.Columns[17].DefaultCellStyle.Format = "hh\\:mm";
+            dataGridView1.Columns[18].DefaultCellStyle.Format = "hh\\:mm";
+            dataGridView1.Columns[19].DefaultCellStyle.Format = "hh\\:mm";
+            dataGridView1.Columns[22].DefaultCellStyle.Format = "hh\\:mm";
+
             if (File.Exists("EASALogbook.csv"))
             {
                 try
                 {
                     Import_EASA_CSV import = new Import_EASA_CSV(File.ReadAllText("EASALogbook.csv").ToString());
                     Flights.AddRange(import.getFlightList());
-
-                    iFlights = new BindingList<Flight>(Flights);
-                    dataGridView1.AutoGenerateColumns = false;
-                    iFlights.AllowEdit = true;
-
-
-                    dataGridView1.DataSource = iFlights;
-
-                    //dataGridView1.Columns[9].ValueType = typeof(TimeSpan);
-                    dataGridView1.Columns[2].DefaultCellStyle.Format = "hh\\:mm";
-                    dataGridView1.Columns[4].DefaultCellStyle.Format = "hh\\:mm";
-                    dataGridView1.Columns[7].DefaultCellStyle.Format = "hh\\:mm";
-                    dataGridView1.Columns[8].DefaultCellStyle.Format = "hh\\:mm";
-                    dataGridView1.Columns[9].DefaultCellStyle.Format = "hh\\:mm";
-                    dataGridView1.Columns[10].DefaultCellStyle.Format = "hh\\:mm";
-                    dataGridView1.Columns[14].DefaultCellStyle.Format = "hh\\:mm";
-                    dataGridView1.Columns[15].DefaultCellStyle.Format = "hh\\:mm";
-                    dataGridView1.Columns[16].DefaultCellStyle.Format = "hh\\:mm";
-                    dataGridView1.Columns[17].DefaultCellStyle.Format = "hh\\:mm";
-                    dataGridView1.Columns[18].DefaultCellStyle.Format = "hh\\:mm";
-                    dataGridView1.Columns[19].DefaultCellStyle.Format = "hh\\:mm";
-                    dataGridView1.Columns[22].DefaultCellStyle.Format = "hh\\:mm";
-
-
-
-
+                    //iFlights = new BindingList<Flight>(Flights);
+                    iFlights.ResetBindings();
 
                     MarkAllCellsEditable();
 
@@ -187,7 +185,13 @@ namespace SimpleEASALogbook
                 {
                     File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " LoadDB:\n" + exc.ToString() + "\n");
                 }
+
             }
+            else
+            {
+
+            }
+
         }
 
         // save the table by parsing it into flights and writing the flights. all via EASA import&export filter
@@ -361,17 +365,15 @@ namespace SimpleEASALogbook
         // add row
         private void button2_Click(object sender, EventArgs e)
         {
-
-            if (dataGridView1.Rows.Count > 0)
+            if (dataGridView1.SelectedRows.Count > 0)
             {
-                if (dataGridView1.SelectedRows[0].Index != dataGridView1.NewRowIndex)
-                {
-                    dataGridView1.Rows.RemoveAt(dataGridView1.SelectedRows[0].Index);
+                int row = dataGridView1.Rows[dataGridView1.SelectedRows[0].Index].Index;
+                dataGridView1.Rows.RemoveAt(dataGridView1.SelectedRows[0].Index);
 
-                }
-                else
+                if (dataGridView1.RowCount > 0)
                 {
-                    dataGridView1.Rows[dataGridView1.NewRowIndex].SetValues("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
+                    dataGridView1.CurrentCell = dataGridView1.Rows[row - 1].Cells[0];
+                    dataGridView1.Rows[row - 1].Selected = true;
                 }
             }
         }
