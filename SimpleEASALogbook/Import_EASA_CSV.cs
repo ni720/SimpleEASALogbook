@@ -91,6 +91,9 @@ namespace SimpleEASALogbook
             if (csvline[24].Equals("pagebreak"))
             {
                 nextpageafter = true;
+            }else
+            {
+                nextpageafter = false;
             }
 
             return new Flight(StartDate, beginTime, FROM, endTime, TO, Type, Aircraft, SETime, METime, MultiPilotTime, TotalTimeOfFlight, PIC, DayLanding, NightLanding, NightTime, IFRTime, PICTime, CopilotTime, DualTime, InstructorTime, date_of_sim, Type_of_sim, sim_time, remarks, nextpageafter);
