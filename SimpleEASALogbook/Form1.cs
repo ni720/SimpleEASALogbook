@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -13,7 +12,7 @@ namespace SimpleEASALogbook
     public partial class Form1 : Form
     {
         public static List<Flight> Flights = new List<Flight>();
-        public static BindingList<Flight> iFlights = new BindingList<Flight>(Flights);
+        public static SortableBindingList<Flight> iFlights = new SortableBindingList<Flight>(Flights);
         public static WaitForm _WaitForm = new WaitForm();
 
         public Form1()
@@ -32,7 +31,9 @@ namespace SimpleEASALogbook
             //dataGridView1.DataSource = null;
             //dataGridView1.DataSource = iFlights;
 
+            // ibindinglist does not accept null value Flight
             Flights.Add(new Flight(DateTime.MinValue, TimeSpan.Zero, "", TimeSpan.Zero, "", "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, DateTime.MinValue, "", TimeSpan.Zero, "", false));
+
             iFlights.ResetBindings();
             dataGridView1.Refresh();
             if(dataGridView1.Rows.Count>0)
@@ -165,9 +166,10 @@ namespace SimpleEASALogbook
                 {
                     Import_EASA_CSV import = new Import_EASA_CSV(File.ReadAllText("EASALogbook.csv").ToString());
                     Flights.AddRange(import.getFlightList());
-                    Flights.Sort();
+                    //Flights.Sort();
                     iFlights.ResetBindings();
                     MarkAllCellsEditable();
+                    //dataGridView1.Refresh();
                 }
                 catch (Exception exc)
                 {
@@ -770,15 +772,16 @@ namespace SimpleEASALogbook
 
         private void dataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            Flights.Sort();
+            //Flights.Sort();
             
-
-            dataGridView1.Refresh();
+            
+            //dataGridView1.Refresh();
         }
 
         private void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
 
         }
+
     }
 }

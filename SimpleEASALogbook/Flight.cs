@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 
 namespace SimpleEASALogbook
 {
-    public class Flight : IComparable, INotifyPropertyChanged
+    public class Flight : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private Nullable<DateTime> _FlightDate = null;
@@ -41,9 +41,6 @@ namespace SimpleEASALogbook
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
-        }
-        public Flight()
-        {
         }
         public Flight(DateTime date, TimeSpan offblock, string dep, TimeSpan onblock, string dest, string type, string reg, TimeSpan septime, TimeSpan meptime, TimeSpan multitime, TimeSpan totaltime, string pic, int ldgday, int ldgnight, TimeSpan nighttime, TimeSpan ifrtime, TimeSpan pictime, TimeSpan copitime, TimeSpan dualtime, TimeSpan instructortime, DateTime dateofsim, string typeofsim, TimeSpan simtime, string remarks, bool nextpage)
         {
@@ -441,87 +438,6 @@ namespace SimpleEASALogbook
             return _NextPageThereafter;
         }
 
-        // this makes is possible to sort per date
-        public int CompareTo(object obj)
-        {
-            Flight compareFlight = obj as Flight;
-
-            // make nullable values comparable
-
-            DateTime a = DateTime.MinValue;
-            DateTime b = DateTime.MinValue;
-            TimeSpan c = TimeSpan.Zero;
-            TimeSpan d = TimeSpan.Zero;
-
-            if (_DateOfSim.HasValue)
-            {
-                if(_DateOfSim.Value.Ticks > DateTime.MinValue.Ticks)
-                {
-                    a = _DateOfSim.Value;
-                }
-            }
-            if (_FlightDate.HasValue)
-            {
-                if (_FlightDate.Value.Ticks > DateTime.MinValue.Ticks)
-                {
-                    a = _FlightDate.Value;
-                }
-            }
-            if (compareFlight.DateOfSim.HasValue)
-            {
-                if (compareFlight.DateOfSim.Value.Ticks > DateTime.MinValue.Ticks)
-                {
-                    b = compareFlight.DateOfSim.Value;
-                }
-            }
-            if (compareFlight.FlightDate.HasValue)
-            {
-                if (compareFlight.FlightDate.Value.Ticks > DateTime.MinValue.Ticks)
-                {
-                    b = compareFlight.FlightDate.Value;
-                }
-
-            }
-            if (_OffBlockTime.HasValue)
-            {
-                if(_OffBlockTime.Value.Ticks > TimeSpan.Zero.Ticks)
-                {
-                    c = _OffBlockTime.Value;
-                }
-            }
-            if (compareFlight.OffBlockTime.HasValue)
-            {
-                if(compareFlight.OffBlockTime.Value.Ticks > TimeSpan.Zero.Ticks)
-                {
-                    d = compareFlight.OffBlockTime.Value;
-                }
-            }
-
-            // compare values
-
-            if (a.Ticks < b.Ticks)
-            {
-                return -1;
-            }
-            if (a.Ticks > b.Ticks)
-            {
-                return 1;
-            }
-            if (a.Ticks == b.Ticks)
-            {
-                if (c.Ticks < d.Ticks)
-                {
-                    return -1;
-                }
-                if (c.Ticks > d.Ticks)
-                {
-                    return 1;
-                }
-            }
-
-            // The orders are equivalent.
-            return 0;
-        }
         public DateTime? FlightDate
         {
             get
