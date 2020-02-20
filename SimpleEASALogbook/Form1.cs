@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -33,7 +34,11 @@ namespace SimpleEASALogbook
 
             Flights.Add(new Flight(DateTime.MinValue, TimeSpan.Zero, "", TimeSpan.Zero, "", "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, DateTime.MinValue, "", TimeSpan.Zero, "", false));
             iFlights.ResetBindings();
-            dataGridView1.CurrentCell = dataGridView1.Rows[dataGridView1.RowCount - 1].Cells[0];
+            dataGridView1.Refresh();
+            if(dataGridView1.Rows.Count>0)
+            {
+                dataGridView1.CurrentCell = dataGridView1.Rows[dataGridView1.RowCount - 1].Cells[0];
+            }
         }
 
         // save button
@@ -160,6 +165,7 @@ namespace SimpleEASALogbook
                 {
                     Import_EASA_CSV import = new Import_EASA_CSV(File.ReadAllText("EASALogbook.csv").ToString());
                     Flights.AddRange(import.getFlightList());
+                    Flights.Sort();
                     iFlights.ResetBindings();
                     MarkAllCellsEditable();
                 }
@@ -231,8 +237,8 @@ namespace SimpleEASALogbook
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            dataGridView1.Rows.Clear();
-            Flights = new List<Flight>();
+            Flights.Clear();
+            iFlights.ResetBindings();
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -466,8 +472,8 @@ namespace SimpleEASALogbook
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            populateDataOnClick(e.RowIndex, e.ColumnIndex);
-            autoFillCellValue(e.RowIndex, e.ColumnIndex);
+           // populateDataOnClick(e.RowIndex, e.ColumnIndex);
+           // autoFillCellValue(e.RowIndex, e.ColumnIndex);
         }
 
         private void MarkAllCellsEditable()
@@ -760,6 +766,19 @@ namespace SimpleEASALogbook
                     }
                 }
             }
+        }
+
+        private void dataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            Flights.Sort();
+            
+
+            dataGridView1.Refresh();
+        }
+
+        private void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+
         }
     }
 }

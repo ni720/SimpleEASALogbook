@@ -444,26 +444,81 @@ namespace SimpleEASALogbook
         // this makes is possible to sort per date
         public int CompareTo(object obj)
         {
-            Flight orderToCompare = obj as Flight;
-            if (orderToCompare._FlightDate < _FlightDate)
+            Flight compareFlight = obj as Flight;
+
+            // make nullable values comparable
+
+            DateTime a = DateTime.MinValue;
+            DateTime b = DateTime.MinValue;
+            TimeSpan c = TimeSpan.Zero;
+            TimeSpan d = TimeSpan.Zero;
+
+            if (_DateOfSim.HasValue)
             {
-                return 1;
+                if(_DateOfSim.Value.Ticks > DateTime.MinValue.Ticks)
+                {
+                    a = _DateOfSim.Value;
+                }
             }
-            if (orderToCompare._FlightDate > _FlightDate)
+            if (_FlightDate.HasValue)
+            {
+                if (_FlightDate.Value.Ticks > DateTime.MinValue.Ticks)
+                {
+                    a = _FlightDate.Value;
+                }
+            }
+            if (compareFlight.DateOfSim.HasValue)
+            {
+                if (compareFlight.DateOfSim.Value.Ticks > DateTime.MinValue.Ticks)
+                {
+                    b = compareFlight.DateOfSim.Value;
+                }
+            }
+            if (compareFlight.FlightDate.HasValue)
+            {
+                if (compareFlight.FlightDate.Value.Ticks > DateTime.MinValue.Ticks)
+                {
+                    b = compareFlight.FlightDate.Value;
+                }
+
+            }
+            if (_OffBlockTime.HasValue)
+            {
+                if(_OffBlockTime.Value.Ticks > TimeSpan.Zero.Ticks)
+                {
+                    c = _OffBlockTime.Value;
+                }
+            }
+            if (compareFlight.OffBlockTime.HasValue)
+            {
+                if(compareFlight.OffBlockTime.Value.Ticks > TimeSpan.Zero.Ticks)
+                {
+                    d = compareFlight.OffBlockTime.Value;
+                }
+            }
+
+            // compare values
+
+            if (a.Ticks < b.Ticks)
             {
                 return -1;
             }
-            if (orderToCompare._FlightDate == _FlightDate)
+            if (a.Ticks > b.Ticks)
             {
-                if (orderToCompare._DateOfSim < _DateOfSim)
-                {
-                    return 1;
-                }
-                if (orderToCompare._DateOfSim > _DateOfSim)
+                return 1;
+            }
+            if (a.Ticks == b.Ticks)
+            {
+                if (c.Ticks < d.Ticks)
                 {
                     return -1;
                 }
+                if (c.Ticks > d.Ticks)
+                {
+                    return 1;
+                }
             }
+
             // The orders are equivalent.
             return 0;
         }
