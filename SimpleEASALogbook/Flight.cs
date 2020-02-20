@@ -40,12 +40,14 @@ namespace SimpleEASALogbook
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-        public Flight(DateTime date, TimeSpan offblock, string dep, TimeSpan onblock, string dest, string type, string reg, TimeSpan septime, TimeSpan meptime, TimeSpan multitime, TimeSpan totaltime, string pic, int ldgday, int ldgnight, TimeSpan nighttime, TimeSpan ifrtime, TimeSpan pictime, TimeSpan copitime, TimeSpan dualtime, TimeSpan instructortime, DateTime dateofsim, string typeofsim, TimeSpan simtime, string remarks, bool nextpage)
+        public Flight(DateTime date, TimeSpan? offblock, string dep, TimeSpan? onblock, string dest, string type, string reg, TimeSpan septime, TimeSpan meptime, TimeSpan multitime, TimeSpan totaltime, string pic, int ldgday, int ldgnight, TimeSpan nighttime, TimeSpan ifrtime, TimeSpan pictime, TimeSpan copitime, TimeSpan dualtime, TimeSpan instructortime, DateTime dateofsim, string typeofsim, TimeSpan simtime, string remarks, bool nextpage)
         {
             _FlightDate = date;
-            _OffBlockTime = offblock;
+            if (onblock.HasValue)
+            { _OffBlockTime = offblock; }
             _DepartureAirport = dep;
-            _OnBlockTime = onblock;
+            if(onblock.HasValue)
+            { _OnBlockTime = onblock; }            
             _DestinationAirport = dest;
             _TypeOfAircraft = type;
             _AircraftRegistration = reg;
@@ -118,15 +120,14 @@ namespace SimpleEASALogbook
             {
                 if (_OffBlockTime.HasValue)
                 {
-                    if (_OffBlockTime.Value.Ticks > TimeSpan.Zero.Ticks)
+                    if (_OnBlockTime.HasValue)
                     {
-                        return _OffBlockTime.Value;
-
+                        if (_OffBlockTime.Value.Ticks.Equals(TimeSpan.Zero.Ticks) && _OnBlockTime.Value.Ticks.Equals(TimeSpan.Zero.Ticks))
+                        {
+                            return null;
+                        }
                     }
-                    else
-                    {
-                        return null;
-                    }
+                    return _OffBlockTime.Value;
                 }
                 else
                 {
@@ -163,15 +164,14 @@ namespace SimpleEASALogbook
             {
                 if (_OnBlockTime.HasValue)
                 {
-                    if (_OnBlockTime.Value.Ticks > TimeSpan.Zero.Ticks)
+                    if (_OffBlockTime.HasValue)
                     {
-                        return _OnBlockTime.Value;
-
+                        if (_OffBlockTime.Value.Ticks.Equals(TimeSpan.Zero.Ticks) && _OnBlockTime.Value.Ticks.Equals(TimeSpan.Zero.Ticks))
+                        {
+                            return null;
+                        }
                     }
-                    else
-                    {
-                        return null;
-                    }
+                    return _OnBlockTime.Value;
                 }
                 else
                 {

@@ -148,7 +148,7 @@ namespace SimpleEASALogbook
         private void Button1_Click(object sender, EventArgs e)
         {
             // ibindinglist does not accept null value Flight
-            Flights.Add(new Flight(DateTime.MinValue, TimeSpan.Zero, "", TimeSpan.Zero, "", "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, DateTime.MinValue, "", TimeSpan.Zero, "", false));
+            Flights.Add(new Flight(DateTime.MinValue, null, "", null, "", "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, DateTime.MinValue, "", TimeSpan.Zero, "", false));
             iFlights.ResetBindings();   // refresh the ibindinglist
             dataGridView1.Refresh();    // refresh the datagridview
             if (dataGridView1.Rows.Count > 0)
@@ -163,6 +163,7 @@ namespace SimpleEASALogbook
             {
                 int row = dataGridView1.Rows[dataGridView1.SelectedRows[0].Index].Index;
                 dataGridView1.Rows.RemoveAt(dataGridView1.SelectedRows[0].Index);
+                iFlights.ResetBindings();
 
                 if (dataGridView1.RowCount > 0 && row > 0)
                 {
@@ -257,21 +258,18 @@ namespace SimpleEASALogbook
         {
             try
             {
-                if (dataGridView1.Rows[rowIndex].Cells[10].Value == null)
+                if (dataGridView1.Rows[rowIndex].Cells[0] != null && dataGridView1.Rows[rowIndex].Cells[2] != null && dataGridView1.Rows[rowIndex].Cells[4] != null)
                 {
-                    if (dataGridView1.Rows[rowIndex].Cells[0] != null && dataGridView1.Rows[rowIndex].Cells[2] != null && dataGridView1.Rows[rowIndex].Cells[4] != null)
+                    if (dataGridView1.Rows[rowIndex].Cells[0].Value != null && dataGridView1.Rows[rowIndex].Cells[2].Value != null && dataGridView1.Rows[rowIndex].Cells[4].Value != null)
                     {
-                        if (dataGridView1.Rows[rowIndex].Cells[0].Value != null && dataGridView1.Rows[rowIndex].Cells[2].Value != null && dataGridView1.Rows[rowIndex].Cells[4].Value != null)
+                        TimeSpan begin = (TimeSpan)dataGridView1.Rows[rowIndex].Cells[2].Value;
+                        TimeSpan end = (TimeSpan)dataGridView1.Rows[rowIndex].Cells[4].Value;
+                        if (end.Ticks < begin.Ticks)
                         {
-                            TimeSpan begin = (TimeSpan)dataGridView1.Rows[rowIndex].Cells[2].Value;
-                            TimeSpan end = (TimeSpan)dataGridView1.Rows[rowIndex].Cells[4].Value;
-                            if (end.Ticks < begin.Ticks)
-                            {
-                                end = end.Add(TimeSpan.FromHours(24));
-                            }
-                            dataGridView1.Rows[rowIndex].Cells[10].Value = end.Subtract(begin);                                                
-                            dataGridView1.Refresh();
+                            end = end.Add(TimeSpan.FromHours(24));
                         }
+                        dataGridView1.Rows[rowIndex].Cells[10].Value = end.Subtract(begin);
+                        dataGridView1.Refresh();
                     }
                 }
             }
