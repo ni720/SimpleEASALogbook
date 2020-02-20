@@ -23,68 +23,20 @@ namespace SimpleEASALogbook
         {
             return Type.GetType("Mono.Runtime") != null;
         }
-
-        // add rows for now.. but should be detail view add of rows
-        private void button1_Click(object sender, EventArgs e)
-        {
-            //Reset the Datasource
-            //dataGridView1.DataSource = null;
-            //dataGridView1.DataSource = iFlights;
-
-            // ibindinglist does not accept null value Flight
-            Flights.Add(new Flight(DateTime.MinValue, TimeSpan.Zero, "", TimeSpan.Zero, "", "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, DateTime.MinValue, "", TimeSpan.Zero, "", false));
-
-            iFlights.ResetBindings();
-            dataGridView1.Refresh();
-            if(dataGridView1.Rows.Count>0)
-            {
-                dataGridView1.CurrentCell = dataGridView1.Rows[dataGridView1.RowCount - 1].Cells[0];
-            }
-        }
-
-        // save button
-        private void button5_Click(object sender, EventArgs e)
-        {
-            toolStripStatusLabel1.Text = "saving...";
-            button5.Enabled = false;
-            Form1.ActiveForm.Enabled = false;
-            SaveTable();
-            toolStripStatusLabel1.Text = "";
-            Form1.ActiveForm.Enabled = true;
-            button5.Enabled = true;
-        }
-
-        private void eASALogToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button6_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
-        private void statusStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
-        }
-
+        // when application is loading
         private void Form1_OnLoad(object sender, EventArgs e)
         {
+            // start time measurement
             var now = DateTime.Now;
 
+            // waitform is using the same thread at the moment
             using (WaitForm _waitForm = new WaitForm())
             {
                 _waitForm.Show();
                 _waitForm.Update();
-                Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
 
+                // because of EASA logging rules
+                Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
 
                 // this makes scrolling through the datagridview much faster, but can slowdown in a terminal session
                 if (!System.Windows.Forms.SystemInformation.TerminalServerSession)
@@ -94,12 +46,15 @@ namespace SimpleEASALogbook
                     pi.SetValue(dataGridView1, true, null);
                 }
 
+                // prepare the DataGridView
                 // to make behaviour the same as with mono, the "newrow" has caused too many problems
                 dataGridView1.AllowUserToAddRows = false;
                 dataGridView1.AllowUserToDeleteRows = false;
                 dataGridView1.AutoGenerateColumns = false;
+
                 iFlights.AllowEdit = true;
                 dataGridView1.DataSource = iFlights;
+
                 dataGridView1.Columns[2].DefaultCellStyle.Format = "hh\\:mm";
                 dataGridView1.Columns[4].DefaultCellStyle.Format = "hh\\:mm";
                 dataGridView1.Columns[7].DefaultCellStyle.Format = "hh\\:mm";
@@ -121,26 +76,140 @@ namespace SimpleEASALogbook
 
                 }
 
-                // loading takes place in the form_shown method to show the user, there is loading in progress
-
-
-
-
                 LoadDB();
 
-                //if (dataGridView1.Rows.Count < 1)
-                //{
-                //    dataGridView1.Rows.Add();
-                //}
+                // if database empty or not existing
+                if (dataGridView1.Rows.Count < 1)
+                {
+                    Flights.Add(new Flight(DateTime.MinValue, TimeSpan.Zero, "", TimeSpan.Zero, "", "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, DateTime.MinValue, "", TimeSpan.Zero, "", false));
+                    iFlights.ResetBindings();   // refresh the ibindinglist
+                    dataGridView1.Refresh();
+                }
 
+                // scroll down to last row
+                if (dataGridView1.Rows.Count > 0)
+                {
+                    dataGridView1.FirstDisplayedScrollingRowIndex = dataGridView1.Rows.Count - 1;
+                    dataGridView1.CurrentCell = dataGridView1.Rows[dataGridView1.Rows.Count - 1].Cells[0];
+                }
 
                 toolStripStatusLabel1.Text = "finished loading, it took: " + Math.Round((DateTime.Now.Subtract(now).TotalSeconds)).ToString() + " second(s).";
-
-
-                //dataGridView1.FirstDisplayedScrollingRowIndex = dataGridView1.Rows.Count - 1;
-
             }
         }
+        // load table from "database" file
+        private void LoadDB()
+        {
+            if (File.Exists("EASALogbook.csv"))
+            {
+                try
+                {
+                    Import_EASA_CSV import = new Import_EASA_CSV(File.ReadAllText("EASALogbook.csv").ToString());
+                    Flights.AddRange(import.getFlightList());
+                    //Flights.Sort();
+                    iFlights.Sort("FlightDate", ListSortDirection.Ascending);
+                    iFlights.ResetBindings();
+                    MarkAllCellsEditable();
+                    //dataGridView1.Refresh();
+                }
+                catch (Exception exc)
+                {
+                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " LoadDB:\n" + exc.ToString() + "\n");
+                }
+            }
+        }
+        // save the table via EASA export filter
+        private void SaveTable()
+        {
+            try
+            {
+                iFlights.Sort("FlightDate", ListSortDirection.Ascending);
+                List<Flight> temp = iFlights.GetFlights();
+                Export_EASA_CSV export = new Export_EASA_CSV(temp);
+                File.WriteAllText("EASALogbook.csv", export.GetCSV());
+            }
+            catch (Exception e)
+            {
+                File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " SaveTable_3:\n" + e.ToString() + "\n");
+            }
+        }
+        // this is a workaround because of a M$ bug?
+        private void MarkAllCellsEditable()
+        {
+            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            {
+                foreach (DataGridViewCell cell in dataGridView1.Rows[i].Cells)
+                {
+                    cell.ReadOnly = false;
+                }
+            }
+        }
+
+        // + button
+        private void Button1_Click(object sender, EventArgs e)
+        {
+            // ibindinglist does not accept null value Flight
+            Flights.Add(new Flight(DateTime.MinValue, TimeSpan.Zero, "", TimeSpan.Zero, "", "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, DateTime.MinValue, "", TimeSpan.Zero, "", false));
+            iFlights.ResetBindings();   // refresh the ibindinglist
+            dataGridView1.Refresh();    // refresh the datagridview
+            if (dataGridView1.Rows.Count > 0)
+            {
+                dataGridView1.CurrentCell = dataGridView1.Rows[dataGridView1.RowCount - 1].Cells[0];
+            }
+        }
+        // - button
+        private void Button2_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.SelectedRows.Count > 0)
+            {
+                int row = dataGridView1.Rows[dataGridView1.SelectedRows[0].Index].Index;
+                dataGridView1.Rows.RemoveAt(dataGridView1.SelectedRows[0].Index);
+
+                if (dataGridView1.RowCount > 0 && row > 0)
+                {
+                    dataGridView1.CurrentCell = dataGridView1.Rows[row - 1].Cells[0];
+                    dataGridView1.Rows[row - 1].Selected = true;
+                }
+            }
+        }
+        // save button
+        private void Button5_Click(object sender, EventArgs e)
+        {
+            toolStripStatusLabel1.Text = "saving...";
+            button5.Enabled = false;
+            Form1.ActiveForm.Enabled = false;
+            SaveTable();
+            toolStripStatusLabel1.Text = "";
+            Form1.ActiveForm.Enabled = true;
+            button5.Enabled = true;
+        }
+        // end button
+        private void Button6_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+        // new database from menu
+        private void NewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Flights.Clear();
+            iFlights.ResetBindings();
+        }
+        // save from menu
+        private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            toolStripStatusLabel1.Text = "saving...";
+            saveToolStripMenuItem.Enabled = false;
+            Form1.ActiveForm.Enabled = false;
+            SaveTable();
+            toolStripStatusLabel1.Text = "";
+            Form1.ActiveForm.Enabled = true;
+            saveToolStripMenuItem.Enabled = true;
+        }
+        // exit from menu
+        private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+        // move all if form is resized
         private void Form1_OnResize(object sender, EventArgs e)
         {
             // nullcheck for mono-framework
@@ -156,244 +225,7 @@ namespace SimpleEASALogbook
                 button6.Top = Form1.ActiveForm.Height - 87;
             }
         }
-
-        // load table from "database" file
-        private void LoadDB()
-        {
-            if (File.Exists("EASALogbook.csv"))
-            {
-                try
-                {
-                    Import_EASA_CSV import = new Import_EASA_CSV(File.ReadAllText("EASALogbook.csv").ToString());
-                    Flights.AddRange(import.getFlightList());
-                    //Flights.Sort();
-                    iFlights.ResetBindings();
-                    MarkAllCellsEditable();
-                    //dataGridView1.Refresh();
-                }
-                catch (Exception exc)
-                {
-                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " LoadDB:\n" + exc.ToString() + "\n");
-                }
-            }
-        }
-
-        // save the table by parsing it into flights and writing the flights. all via EASA import&export filter
-        private void SaveTable()
-        {
-            /*Flights = new List<Flight>();
-            string stringBuilder = "";
-            int i = 0, j = 0;
-            try
-            {
-                for (i = 0; i < dataGridView1.Rows.Count; i++)
-                {
-                    for (j = 0; j < dataGridView1.Columns.Count-1; j++)
-                    {
-                        if (dataGridView1.Rows[i].Cells[j].Value == null)
-                        {
-                            stringBuilder += ";";
-                        }
-                        else
-                        {
-                            stringBuilder += dataGridView1.Rows[i].Cells[j].Value.ToString() + ";";
-                        }
-                    }
-
-                    if (dataGridView1.Rows[i].Cells[dataGridView1.Columns.Count - 1].Value != null)
-                    {
-                            stringBuilder += ";pagebreak;";
-                    }
-                    stringBuilder += "\n";
-                }
-            }
-            catch (Exception e)
-            {
-                File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " SaveTable_1:\n" + e.ToString() + "\n");
-            }
-
-            try
-            {
-                Import_EASA_CSV import = new Import_EASA_CSV(stringBuilder);
-                Flights.AddRange(import.getFlightList());
-            }
-            catch (Exception e)
-            {
-                File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " SaveTable_2:\n" + e.ToString() + "\n");
-            }*/
-            try
-            {
-                Export_EASA_CSV export = new Export_EASA_CSV(Flights);
-                File.WriteAllText("EASALogbook.csv", export.GetCSV());
-            }
-            catch (Exception e)
-            {
-                File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " SaveTable_3:\n" + e.ToString() + "\n");
-            }
-        }
-
-        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
-        }
-
-        private void newToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Flights.Clear();
-            iFlights.ResetBindings();
-        }
-
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            toolStripStatusLabel1.Text = "saving...";
-            saveToolStripMenuItem.Enabled = false;
-            Form1.ActiveForm.Enabled = false;
-            SaveTable();
-            toolStripStatusLabel1.Text = "";
-            Form1.ActiveForm.Enabled = true;
-            saveToolStripMenuItem.Enabled = true;
-        }
-
-        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
-        // shows error icon if input was invalid
-        private void validateRows(int rowIndex)
-        {
-            bool error = false;
-            foreach (DataGridViewCell cell in dataGridView1.Rows[rowIndex].Cells)
-            {
-                if (cell != null)
-                {
-                    if (cell.ErrorText.Length > 1)
-                    {
-                        error = true;
-                    }
-                }
-            }
-            if (!error)
-            {
-                dataGridView1.Rows[rowIndex].ErrorText = "";
-            }
-        }
-
-        // shows error icon if input was invalid
-        private void validateCells(int rowIndex, int columnIndex)
-        {
-
-            var row = dataGridView1.Rows[rowIndex];
-            if (row != null)
-            {
-                var cell = row.Cells[columnIndex];
-                if (cell != null)
-                {
-                    if (columnIndex == 0 || columnIndex == 20)
-                    {
-                        object value = cell.Value;
-                        if (value != null && !value.Equals(string.Empty))
-                        {
-                            if (!DateTime.TryParse(value.ToString(), out DateTime dummy))
-                            {
-                                dataGridView1.Rows[rowIndex].Cells[columnIndex].ErrorText = "DateTime must be dd.mm.yyyy";
-                                dataGridView1.Rows[rowIndex].ErrorText = "error, entry may not be saved";
-                            }
-                            else
-                            {
-                                dataGridView1.Rows[rowIndex].Cells[columnIndex].ErrorText = "";
-                            }
-                        }
-                    }
-                    if (columnIndex == 2 || columnIndex == 4 || columnIndex == 7 || columnIndex == 8 || columnIndex == 9 || columnIndex == 10 || columnIndex == 14 || columnIndex == 15 || columnIndex == 16 || columnIndex == 17 || columnIndex == 18 || columnIndex == 19 || columnIndex == 22)
-                    {
-                        object value = cell.Value;
-                        if (value != null && !value.Equals(string.Empty))
-                        {
-                            if (!TimeSpan.TryParse(value.ToString(), out TimeSpan dummy))
-                            {
-                                dataGridView1.Rows[rowIndex].Cells[columnIndex].ErrorText = "Time must be hh:mm";
-                            }
-                            else
-                            {
-                                dataGridView1.Rows[rowIndex].Cells[columnIndex].ErrorText = "";
-                            }
-                        }
-                    }
-                    if (columnIndex == 12 || columnIndex == 13)
-                    {
-                        object value = cell.Value;
-                        if (value != null && !value.Equals(string.Empty))
-                        {
-                            if (!int.TryParse(value.ToString(), out int dummy))
-                            {
-                                dataGridView1.Rows[rowIndex].Cells[columnIndex].ErrorText = "must be a digit from 1 to 9, may not be saved otherwise";
-                            }
-                            else
-                            {
-                                dataGridView1.Rows[rowIndex].Cells[columnIndex].ErrorText = "";
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        private void dataGridView1_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
-        {
-            //validateCells(e.RowIndex, e.ColumnIndex);
-            //validateRows(e.RowIndex);
-            autoFillCellValue(e.RowIndex, e.ColumnIndex);
-        }
-
-        // add row
-        private void button2_Click(object sender, EventArgs e)
-        {
-            if (dataGridView1.SelectedRows.Count > 0)
-            {
-                int row = dataGridView1.Rows[dataGridView1.SelectedRows[0].Index].Index;
-                dataGridView1.Rows.RemoveAt(dataGridView1.SelectedRows[0].Index);
-
-                if (dataGridView1.RowCount > 0 && row >0 )
-                {
-                    dataGridView1.CurrentCell = dataGridView1.Rows[row - 1].Cells[0];
-                    dataGridView1.Rows[row - 1].Selected = true;
-
-                }
-            }
-        }
-
-        private void bindingSource1_CurrentChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void toolStripStatusLabel1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
-        {
-            // workaround to make mono double click better
-            // dataGridView1.CurrentCell = dataGridView1.Rows[dataGridView1.Rows.Count - 1].Cells[1];
-        }
-
-        private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-
-            //validateCells(e.RowIndex, e.ColumnIndex);
-            //validateRows(e.RowIndex);
-            autoFillCellValue(e.RowIndex, e.ColumnIndex);
-
-        }
-
-        // ask if user wants to save
+        // before exiting app ask if user wants to save
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (MessageBox.Show("do you want to save before closing?", "good bye", MessageBoxButtons.YesNo, MessageBoxIcon.Question).Equals(DialogResult.Yes))
@@ -402,190 +234,136 @@ namespace SimpleEASALogbook
             }
         }
 
-        private void lHPDFToolStripMenuItem_Click(object sender, EventArgs e)
-        {
 
+        // finished editing -> see if other cells can be filled with value
+        private void DataGridView1_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            AutoFillCellValue(e.RowIndex, e.ColumnIndex);
         }
-
-        private void easaLogbookCSVToolStripMenuItem_Click(object sender, EventArgs e)
+        // finished editing -> see if other cells can be filled with value
+        private void DataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-
+            AutoFillCellValue(e.RowIndex, e.ColumnIndex);
         }
-
-        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        // finished editing -> see if other cells can be filled with value
+        private void DataGridView1_CellLeave(object sender, DataGridViewCellEventArgs e)
         {
-
-        }
-
-        private void dataGridView1_CellLeave(object sender, DataGridViewCellEventArgs e)
-        {
-            //validateCells(e.RowIndex, e.ColumnIndex);
-            //validateRows(e.RowIndex);
-            autoFillCellValue(e.RowIndex, e.ColumnIndex);
+            AutoFillCellValue(e.RowIndex, e.ColumnIndex);
         }
 
         // auto calculate totalflighttime
-        private void autoFillCellValue(int rowIndex, int columnIndex)
+        // mono implementation is missing
+        private void AutoFillCellValue(int rowIndex, int columnIndex)
         {
-
             try
             {
                 if (dataGridView1.Rows[rowIndex].Cells[10].Value == null)
                 {
-                    if (IsRunningOnMono())
+                    if (dataGridView1.Rows[rowIndex].Cells[0] != null && dataGridView1.Rows[rowIndex].Cells[2] != null && dataGridView1.Rows[rowIndex].Cells[4] != null)
                     {
-                        // value.tostring.length > 0 because of mono
-                        if (dataGridView1.Rows[rowIndex].Cells[0].Value.ToString().Length > 0 && dataGridView1.Rows[rowIndex].Cells[2].Value.ToString().Length > 0 && dataGridView1.Rows[rowIndex].Cells[4].Value.ToString().Length > 0)
-                        {
-                            TimeSpan.TryParse(dataGridView1.Rows[rowIndex].Cells[2].Value.ToString(), out TimeSpan begin);
-                            TimeSpan.TryParse(dataGridView1.Rows[rowIndex].Cells[4].Value.ToString(), out TimeSpan end);
-                            if (end.Ticks < begin.Ticks)
-                            {
-                                end = end.Add(TimeSpan.FromHours(24));
-                            }
-                            dataGridView1.Rows[rowIndex].Cells[10].Value = end.Subtract(begin).ToString().Substring(0, 5);
-                            dataGridView1.RefreshEdit(); // workaround for mono to display cell values
-                        }
-
-                    }
-                    else
-                    { // value.tostring.length > 0 because of mono
                         if (dataGridView1.Rows[rowIndex].Cells[0].Value != null && dataGridView1.Rows[rowIndex].Cells[2].Value != null && dataGridView1.Rows[rowIndex].Cells[4].Value != null)
                         {
-                            TimeSpan.TryParse(dataGridView1.Rows[rowIndex].Cells[2].Value.ToString(), out TimeSpan begin);
-                            TimeSpan.TryParse(dataGridView1.Rows[rowIndex].Cells[4].Value.ToString(), out TimeSpan end);
+                            TimeSpan begin = (TimeSpan)dataGridView1.Rows[rowIndex].Cells[2].Value;
+                            TimeSpan end = (TimeSpan)dataGridView1.Rows[rowIndex].Cells[4].Value;
                             if (end.Ticks < begin.Ticks)
                             {
                                 end = end.Add(TimeSpan.FromHours(24));
                             }
-                            dataGridView1.Rows[rowIndex].Cells[10].Value = end.Subtract(begin).ToString().Substring(0, 5);
+                            dataGridView1.Rows[rowIndex].Cells[10].Value = end.Subtract(begin);                                                
+                            dataGridView1.Refresh();
                         }
-
                     }
-
                 }
             }
             catch (Exception e)
             {
                 File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " autoFillCellValue: " + rowIndex + "x" + columnIndex + "\n" + e.ToString() + "\n");
             }
-
         }
-
-        private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        // on doubleclick we try to fill the cell with value
+        private void DataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-           // populateDataOnClick(e.RowIndex, e.ColumnIndex);
-           // autoFillCellValue(e.RowIndex, e.ColumnIndex);
+            PopulateDataOnClick(e.RowIndex, e.ColumnIndex);
+            AutoFillCellValue(e.RowIndex, e.ColumnIndex);
         }
-
-        private void MarkAllCellsEditable()
-        {
-            for (int i = 0; i < dataGridView1.Rows.Count; i++)
-            {
-                foreach (DataGridViewCell cell in dataGridView1.Rows[i].Cells)
-                {
-                    cell.ReadOnly = false;
-                }
-            }
-        }
-
         // to easily populate with data
-        private void populateDataOnClick(int rowIndex, int columnIndex)
+        // mono implementation missing
+        private void PopulateDataOnClick(int rowIndex, int columnIndex)
         {
-
-            // Value.ToString().Length<1 because of mono
-            // dataGridView1.RefreshEdit(); // workaround for mono to display cell values because of mono
             try
             {
-                if (columnIndex == 0)
+                if (dataGridView1.Rows[rowIndex].Cells[columnIndex] != null)
                 {
-                    if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length < 1)
+                    if (columnIndex == 0)
                     {
-                        // TODO test if better method exists!
-                        dataGridView1.Rows[rowIndex].Cells[0].Value = DateTime.Now;
-                        /*Flights[rowIndex].FlightDate = DateTime.Now;
-                        MarkAllCellsEditable();
-                        dataGridView1.DataSource = null;
-                        iFLights = new BindingList<Flight>(Flights);
-                        dataGridView1.DataSource = iFLights;
-                        MarkAllCellsEditable();*/
-                        //(dataGridView1.BindingContext[dataGridView1.DataSource] as CurrencyManager).Refresh();
-                        //dataGridView1.RefreshEdit(); // workaround for mono to display cell values
-                        // dataGridView1.CurrentCell = dataGridView1.Rows[rowIndex].Cells[1]; // workaround for mono for better cell doubleclick
-                    }
-                }
-                if (columnIndex == 2 || columnIndex == 4)
-                {
-                    if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length < 1)
-                    {
-
-                        dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
-                        //dataGridView1.RefreshEdit(); // workaround for mono to display cell values
-                        // dataGridView1.CurrentCell = dataGridView1.Rows[rowIndex].Cells[1]; // workaround for mono for better cell doubleclick
-                    }
-                }
-
-                if (columnIndex == 7 || columnIndex == 8 || columnIndex == 9 || columnIndex == 14 || columnIndex == 15 || columnIndex == 16 || columnIndex == 17 || columnIndex == 18 || columnIndex == 19)
-                {
-                    if ((dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null) && (dataGridView1.Rows[rowIndex].Cells[10] != null))
-                    {
-                        dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = dataGridView1.Rows[rowIndex].Cells[10].Value;
-                        //dataGridView1.RefreshEdit(); // workaround for mono to display cell values
-                        // dataGridView1.CurrentCell = dataGridView1.Rows[rowIndex].Cells[1]; // workaround for mono for better cell doubleclick
-                    }
-                    else
-                    {
-                        if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value != null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length < 1)
+                        if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length < 1)
                         {
-                            dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = null;
-                            //dataGridView1.RefreshEdit(); // workaround for mono to display cell values
-                            // dataGridView1.CurrentCell = dataGridView1.Rows[rowIndex].Cells[1]; // workaround for mono for better cell doubleclick
+                            dataGridView1.Rows[rowIndex].Cells[0].Value = DateTime.Now;
+                            dataGridView1.EndEdit();
+                        }
+                    }
+                    if (columnIndex == 2 || columnIndex == 4)
+                    {
+                        if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length < 1)
+                        {
+                            dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
+                            dataGridView1.EndEdit();
+                        }
+                    }
+                    if (columnIndex == 7 || columnIndex == 8 || columnIndex == 9 || columnIndex == 14 || columnIndex == 15 || columnIndex == 16 || columnIndex == 17 || columnIndex == 18 || columnIndex == 19)
+                    {
+                        if ((dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null) && (dataGridView1.Rows[rowIndex].Cells[10] != null))
+                        {
+                            dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = dataGridView1.Rows[rowIndex].Cells[10].Value;
+                            dataGridView1.EndEdit();
+                        }
+                        else
+                        {
+                            if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value != null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length < 1)
+                            {
+                                dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = null;
+                            }
+                        }
+                    }
+                    if (columnIndex == 12 || columnIndex == 13)
+                    {
+                        if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length < 1)
+                        {
+                            dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = "1";
+                            dataGridView1.EndEdit();
+                        }
+                        else
+                        {
+                            dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = "";
+                            dataGridView1.EndEdit();
+                        }
+                    }
+                    if (columnIndex == 20)
+                    {
+                        if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length < 1)
+                        {
+                            dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = DateTime.Now;
+                            dataGridView1.EndEdit();
+                        }
+                    }
+                    if (columnIndex == 22)
+                    {
+                        if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length < 1)
+                        {
+                            dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = new TimeSpan(4, 0, 0);
+                            dataGridView1.EndEdit();
+                        }
+                        else
+                        {
+                            if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value != null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length < 1)
+                            {
+                                dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = null;
+                                dataGridView1.EndEdit();
+                            }
                         }
                     }
                 }
-                if (columnIndex == 12 || columnIndex == 13)
-                {
-                    if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length < 1)
-                    {
-                        dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = "1";
-                        //dataGridView1.RefreshEdit(); // workaround for mono to display cell values
-                        // dataGridView1.CurrentCell = dataGridView1.Rows[rowIndex].Cells[1]; // workaround for mono for better cell doubleclick
-                    }
-                    else
-                    {
-                        dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = "";
-                        //dataGridView1.RefreshEdit(); // workaround for mono to display cell values
-                        // dataGridView1.CurrentCell = dataGridView1.Rows[rowIndex].Cells[1]; // workaround for mono for better cell doubleclick
-                    }
-                }
-                if (columnIndex == 20)
-                {
-                    if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length < 1)
-                    {
-                        dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = DateTime.Now;
 
-                        //dataGridView1.RefreshEdit(); // workaround for mono to display cell values
-                        // dataGridView1.CurrentCell = dataGridView1.Rows[rowIndex].Cells[1]; // workaround for mono for better cell doubleclick
-                    }
-                }
-                if (columnIndex == 22)
-                {
-                    if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length < 1)
-                    {
-                        dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = new TimeSpan(4, 0, 0);
-                        //dataGridView1.RefreshEdit(); // workaround for mono to display cell values
-                        // dataGridView1.CurrentCell = dataGridView1.Rows[rowIndex].Cells[1]; // workaround for mono for better cell doubleclick
-                    }
-                    else
-                    {
-                        if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value != null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.ToString().Length < 1)
-                        {
-                            dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = null;
-                            //dataGridView1.RefreshEdit(); // workaround for mono to display cell values
-                            // dataGridView1.CurrentCell = dataGridView1.Rows[rowIndex].Cells[1]; // workaround for mono for better cell doubleclick
-                        }
-                    }
-                }
             }
             catch (Exception y)
             {
@@ -593,69 +371,48 @@ namespace SimpleEASALogbook
             }
         }
 
-        // includes offblocktime into date to compare date cells
-        private void dataGridView1_SortCompare(object sender, DataGridViewSortCompareEventArgs e)
+        // restrict edit on certain cells
+        private void DataGridView1_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            // Try to sort based on the cells in the current column.
-            e.SortResult = System.String.Compare(
-                e.CellValue1.ToString(), e.CellValue2.ToString());
+            e.Control.KeyPress -= new KeyPressEventHandler(Cell_KeyPress_Allow_Digits_and_Separators);
+            e.Control.KeyPress -= new KeyPressEventHandler(Cell_KeyPress_Allow_Digits_only);
 
-            // If the cells are equal, sort based on the ID column.
-            if (e.SortResult == 0 && e.Column.Index == 0)
+            // cells with digits and separators
+            if (dataGridView1.CurrentCell.ColumnIndex == 0 || dataGridView1.CurrentCell.ColumnIndex == 2 || dataGridView1.CurrentCell.ColumnIndex == 4 || dataGridView1.CurrentCell.ColumnIndex == 7 || dataGridView1.CurrentCell.ColumnIndex == 8 || dataGridView1.CurrentCell.ColumnIndex == 9 || dataGridView1.CurrentCell.ColumnIndex == 10 || dataGridView1.CurrentCell.ColumnIndex == 14 || dataGridView1.CurrentCell.ColumnIndex == 15 || dataGridView1.CurrentCell.ColumnIndex == 16 || dataGridView1.CurrentCell.ColumnIndex == 17 || dataGridView1.CurrentCell.ColumnIndex == 18 || dataGridView1.CurrentCell.ColumnIndex == 19 || dataGridView1.CurrentCell.ColumnIndex == 20 || dataGridView1.CurrentCell.ColumnIndex == 21 || dataGridView1.CurrentCell.ColumnIndex == 22)
             {
-                e.SortResult = System.String.Compare(
-                    dataGridView1.Rows[e.RowIndex1].Cells[2].Value.ToString(),
-                    dataGridView1.Rows[e.RowIndex2].Cells[2].Value.ToString());
-            }
-            e.Handled = true;
-        }
-
-        private void brusselsPDFToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-
-        }
-
-        private void dataGridView1_KeyDown(object sender, KeyEventArgs e)
-        {
-
-        }
-
-        private void dataGridView1_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
-        {
-            e.Control.KeyPress -= new KeyPressEventHandler(Cell_KeyPress);
-            //Desired Columns
-            if (dataGridView1.CurrentCell.ColumnIndex == 0 || dataGridView1.CurrentCell.ColumnIndex == 2 || dataGridView1.CurrentCell.ColumnIndex == 4 || dataGridView1.CurrentCell.ColumnIndex == 7 || dataGridView1.CurrentCell.ColumnIndex == 8 || dataGridView1.CurrentCell.ColumnIndex == 9 || dataGridView1.CurrentCell.ColumnIndex == 10 || dataGridView1.CurrentCell.ColumnIndex == 12 || dataGridView1.CurrentCell.ColumnIndex == 13 || dataGridView1.CurrentCell.ColumnIndex == 14 || dataGridView1.CurrentCell.ColumnIndex == 15 || dataGridView1.CurrentCell.ColumnIndex == 16 || dataGridView1.CurrentCell.ColumnIndex == 17 || dataGridView1.CurrentCell.ColumnIndex == 18 || dataGridView1.CurrentCell.ColumnIndex == 19 || dataGridView1.CurrentCell.ColumnIndex == 20 || dataGridView1.CurrentCell.ColumnIndex == 21 || dataGridView1.CurrentCell.ColumnIndex == 22)
-            {
-                TextBox tb = e.Control as TextBox;
-                if (tb != null)
+                if (e.Control is TextBox tb)
                 {
-                    tb.KeyPress += new KeyPressEventHandler(Cell_KeyPress);
+                    tb.KeyPress += new KeyPressEventHandler(Cell_KeyPress_Allow_Digits_and_Separators);
                 }
             }
-
+            // cells with only digits
+            if (dataGridView1.CurrentCell.ColumnIndex == 12 || dataGridView1.CurrentCell.ColumnIndex == 13)
+            {
+                if (e.Control is TextBox tb)
+                {
+                    tb.KeyPress += new KeyPressEventHandler(Cell_KeyPress_Allow_Digits_only);
+                }
+            }
         }
-
-        private void Cell_KeyPress(object sender, KeyPressEventArgs e)
+        // only allow digits and separators
+        private void Cell_KeyPress_Allow_Digits_and_Separators(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != ':' && e.KeyChar != '/')
             {
                 e.Handled = true;
             }
         }
-
-
-        private void menuStrip1_ItemClicked_1(object sender, ToolStripItemClickedEventArgs e)
+        // only allow digits
+        private void Cell_KeyPress_Allow_Digits_only(object sender, KeyPressEventArgs e)
         {
-
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
         }
 
-
         // this paints a number on the columnheader of each row
-        private void dataGridView1_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        private void DataGridView1_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
             var grid = sender as DataGridView;
             var rowIdx = (e.RowIndex + 1).ToString();
@@ -669,8 +426,7 @@ namespace SimpleEASALogbook
             var headerBounds = new System.Drawing.Rectangle(e.RowBounds.Left, e.RowBounds.Top, grid.RowHeadersWidth, e.RowBounds.Height);
             e.Graphics.DrawString(rowIdx, this.Font, System.Drawing.SystemBrushes.ControlText, headerBounds, centerFormat);
         }
-
-
+        // summarize flight times
         static string Summarize(List<Flight> flights)
         {
             TimeSpan multiPilotFlightTime = new TimeSpan(0);
@@ -702,86 +458,30 @@ namespace SimpleEASALogbook
             return "∑:   multiPilot: " + ((int)multiPilotFlightTime.TotalHours).ToString() + ":" + multiPilotFlightTime.Minutes.ToString() + "   total: " + ((int)totalFligtTime.TotalHours).ToString() + ":" + totalFligtTime.Minutes.ToString() + "   DayLDG: " + dayLdgs.ToString() + "   NightLDG: " + nightLdgs.ToString() + "   Night: " + ((int)nightTime.TotalHours).ToString() + ":" + nightTime.Minutes.ToString() + "   IFR: " + ((int)ifrTime.TotalHours).ToString() + ":" + ifrTime.Minutes.ToString() + "   PIC: " + ((int)PICTime.TotalHours).ToString() + ":" + PICTime.Minutes.ToString() + "   Copi: " + ((int)CopiTime.TotalHours).ToString() + ":" + CopiTime.Minutes.ToString() + "   Dual: " + ((int)DualTime.TotalHours).ToString() + ":" + DualTime.Minutes.ToString() + "   Instructor: " + ((int)InstructorTime.TotalHours).ToString() + ":" + InstructorTime.Minutes.ToString() + "   Sim: " + ((int)SimTime.TotalHours).ToString() + ":" + SimTime.Minutes.ToString();
 
         }
-
-        private void dataGridView1_Scroll(object sender, ScrollEventArgs e)
-        {
-        }
-
-        private void dataGridView2_Scroll(object sender, ScrollEventArgs e)
-        {
-
-        }
-
-        private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
-        {
-            //dataGridView1.Rows[e.RowIndex].ErrorText = "error in entry, change will not be saved";
-            //dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].ErrorText = "error in entry, change will not be saved";
-        }
-
-
-
-        private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-
-        }
-
-        private void dataGridView1_CellEnter(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void dataGridView1_CellParsing(object sender, DataGridViewCellParsingEventArgs e)
+        // allows the user to only enter some digits and become a timespan
+        private void DataGridView1_CellParsing(object sender, DataGridViewCellParsingEventArgs e)
         {
             if (e != null)
             {
                 if (e.Value != null)
                 {
-                    if (dataGridView1.CurrentCell.ColumnIndex == 7 || dataGridView1.CurrentCell.ColumnIndex == 8 || dataGridView1.CurrentCell.ColumnIndex == 9 || dataGridView1.CurrentCell.ColumnIndex == 10 || dataGridView1.CurrentCell.ColumnIndex == 14 || dataGridView1.CurrentCell.ColumnIndex == 15 || dataGridView1.CurrentCell.ColumnIndex == 16 || dataGridView1.CurrentCell.ColumnIndex == 17 || dataGridView1.CurrentCell.ColumnIndex == 18 || dataGridView1.CurrentCell.ColumnIndex == 19 || dataGridView1.CurrentCell.ColumnIndex == 22)
+                    try
                     {
-                        if (e.Value.ToString().Length > 3 && e.Value.ToString().Length < 5 && !e.Value.ToString().Contains(":"))
+                        if (dataGridView1.CurrentCell.ColumnIndex == 2 || dataGridView1.CurrentCell.ColumnIndex == 4 || dataGridView1.CurrentCell.ColumnIndex == 7 || dataGridView1.CurrentCell.ColumnIndex == 8 || dataGridView1.CurrentCell.ColumnIndex == 9 || dataGridView1.CurrentCell.ColumnIndex == 10 || dataGridView1.CurrentCell.ColumnIndex == 14 || dataGridView1.CurrentCell.ColumnIndex == 15 || dataGridView1.CurrentCell.ColumnIndex == 16 || dataGridView1.CurrentCell.ColumnIndex == 17 || dataGridView1.CurrentCell.ColumnIndex == 18 || dataGridView1.CurrentCell.ColumnIndex == 19 || dataGridView1.CurrentCell.ColumnIndex == 22)
                         {
-                            try
+                            if (e.Value.ToString().Length > 3 && e.Value.ToString().Length < 5 && !e.Value.ToString().Contains(":"))
                             {
                                 e.Value = TimeSpan.Parse(e.Value.ToString().Substring(0, 2) + ":" + e.Value.ToString().Substring(2, 2));
                                 e.ParsingApplied = true;
-                                // Set the ParsingApplied property to 
-                                // Show the event is handled.
-                            }
-                            catch (FormatException)
-                            {
-                                // Set to false in case another CellParsing handler
-                                // wants to try to parse this DataGridViewCellParsingEventArgs instance.
-                                e.ParsingApplied = false;
                             }
                         }
+                    }
+                    catch (FormatException)
+                    {
+                        e.ParsingApplied = false;
                     }
                 }
             }
         }
-
-        private void dataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            //Flights.Sort();
-            
-            
-            //dataGridView1.Refresh();
-        }
-
-        private void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
-        {
-
-        }
-
     }
 }

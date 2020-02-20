@@ -53,7 +53,7 @@ namespace SimpleEASALogbook
                     }
                     catch (Exception exc)
                     {
-                        File.AppendAllText("_error_logfile.txt", DateTime.Now.ToString() + ": error parsing, skipping line: " + i.ToString() + "\n" + exc.ToString() + "\n");
+                        File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + ": error parsing, skipping line: " + i.ToString() + "\n" + exc.ToString() + "\n");
                     }
 
                     i++;
@@ -91,7 +91,8 @@ namespace SimpleEASALogbook
             if (csvline[24].Equals("pagebreak"))
             {
                 nextpageafter = true;
-            }else
+            }
+            else
             {
                 nextpageafter = false;
             }
