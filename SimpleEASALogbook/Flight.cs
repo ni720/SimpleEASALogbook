@@ -46,8 +46,8 @@ namespace SimpleEASALogbook
             if (onblock.HasValue)
             { _OffBlockTime = offblock; }
             _DepartureAirport = dep;
-            if(onblock.HasValue)
-            { _OnBlockTime = onblock; }            
+            if (onblock.HasValue)
+            { _OnBlockTime = onblock; }
             _DestinationAirport = dest;
             _TypeOfAircraft = type;
             _AircraftRegistration = reg;
@@ -120,9 +120,9 @@ namespace SimpleEASALogbook
             {
                 if (_OffBlockTime.HasValue)
                 {
-                    if (_OnBlockTime.HasValue)
+                    if (_FlightDate.HasValue)
                     {
-                        if (_OffBlockTime.Value.Ticks.Equals(TimeSpan.Zero.Ticks) && _OnBlockTime.Value.Ticks.Equals(TimeSpan.Zero.Ticks))
+                        if (_OffBlockTime.Value.Ticks.Equals(TimeSpan.Zero.Ticks))
                         {
                             return null;
                         }
@@ -164,9 +164,9 @@ namespace SimpleEASALogbook
             {
                 if (_OnBlockTime.HasValue)
                 {
-                    if (_OffBlockTime.HasValue)
+                    if (_FlightDate.HasValue)
                     {
-                        if (_OffBlockTime.Value.Ticks.Equals(TimeSpan.Zero.Ticks) && _OnBlockTime.Value.Ticks.Equals(TimeSpan.Zero.Ticks))
+                        if (_OnBlockTime.Value.Ticks.Equals(TimeSpan.Zero.Ticks))
                         {
                             return null;
                         }
@@ -596,9 +596,16 @@ namespace SimpleEASALogbook
         {
             get
             {
-                if (_DateOfSim.Value.Ticks > DateTime.MinValue.Ticks)
+                if (_DateOfSim.HasValue)
                 {
-                    return _DateOfSim.Value;
+                    if (_DateOfSim.Value.Ticks > DateTime.MinValue.Ticks)
+                    {
+                        return _DateOfSim.Value;
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
                 else
                 {
