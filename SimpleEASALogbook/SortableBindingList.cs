@@ -12,7 +12,6 @@ namespace SimpleEASALogbook
         private bool _isSorted;
         private ListSortDirection _sortDirection = ListSortDirection.Ascending;
         private PropertyDescriptor _sortProperty;
-
         public SortableBindingList()
         {
         }

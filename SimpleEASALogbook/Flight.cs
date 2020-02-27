@@ -40,9 +40,10 @@ namespace SimpleEASALogbook
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-        public Flight(DateTime date, TimeSpan? offblock, string dep, TimeSpan? onblock, string dest, string type, string reg, TimeSpan septime, TimeSpan meptime, TimeSpan multitime, TimeSpan totaltime, string pic, int ldgday, int ldgnight, TimeSpan nighttime, TimeSpan ifrtime, TimeSpan pictime, TimeSpan copitime, TimeSpan dualtime, TimeSpan instructortime, DateTime dateofsim, string typeofsim, TimeSpan simtime, string remarks, bool nextpage)
+        public Flight(DateTime? date, TimeSpan? offblock, string dep, TimeSpan? onblock, string dest, string type, string reg, TimeSpan septime, TimeSpan meptime, TimeSpan multitime, TimeSpan totaltime, string pic, int ldgday, int ldgnight, TimeSpan nighttime, TimeSpan ifrtime, TimeSpan pictime, TimeSpan copitime, TimeSpan dualtime, TimeSpan instructortime, DateTime? dateofsim, string typeofsim, TimeSpan simtime, string remarks, bool nextpage)
         {
-            _FlightDate = date;
+            if (date.HasValue)
+            { FlightDate = date; }
             if (onblock.HasValue)
             { _OffBlockTime = offblock; }
             _DepartureAirport = dep;
@@ -64,7 +65,8 @@ namespace SimpleEASALogbook
             _CopilotTime = copitime;
             _DualTime = dualtime;
             _InstructorTime = instructortime;
-            _DateOfSim = dateofsim;
+            if(dateofsim.HasValue)
+            { _DateOfSim = dateofsim; }            
             _TypeOfSim = typeofsim;
             _SimTime = simtime;
             _Remarks = remarks;
@@ -82,7 +84,13 @@ namespace SimpleEASALogbook
                     }
                     else
                     {
-                        return null;
+                        if(_Remarks.Contains("previous experience"))
+                        {
+                            return DateTime.MinValue;
+                        }else
+                        {
+                            return null;
+                        }
                     }
                 }
                 else

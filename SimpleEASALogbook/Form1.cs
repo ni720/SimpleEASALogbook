@@ -15,6 +15,7 @@ namespace SimpleEASALogbook
         public static SortableBindingList<Flight> iFlights = new SortableBindingList<Flight>(Flights);
         public static WaitForm _WaitForm = new WaitForm();
         public static bool isMono = false;
+
         public Form1()
         {
             InitializeComponent();
@@ -31,6 +32,7 @@ namespace SimpleEASALogbook
         {
             // start time measurement
             var now = DateTime.Now;
+
 
             // check if running mono
             IsRunningOnMono();
@@ -61,25 +63,24 @@ namespace SimpleEASALogbook
                 iFlights.AllowEdit = true;
                 dataGridView1.DataSource = iFlights;
 
-                dataGridView1.Columns[2].DefaultCellStyle.Format = "hh\\:mm";
-                dataGridView1.Columns[4].DefaultCellStyle.Format = "hh\\:mm";
-                dataGridView1.Columns[7].DefaultCellStyle.Format = "hh\\:mm";
-                dataGridView1.Columns[8].DefaultCellStyle.Format = "hh\\:mm";
-                dataGridView1.Columns[9].DefaultCellStyle.Format = "hh\\:mm";
-                dataGridView1.Columns[10].DefaultCellStyle.Format = "hh\\:mm";
-                dataGridView1.Columns[14].DefaultCellStyle.Format = "hh\\:mm";
-                dataGridView1.Columns[15].DefaultCellStyle.Format = "hh\\:mm";
-                dataGridView1.Columns[16].DefaultCellStyle.Format = "hh\\:mm";
-                dataGridView1.Columns[17].DefaultCellStyle.Format = "hh\\:mm";
-                dataGridView1.Columns[18].DefaultCellStyle.Format = "hh\\:mm";
-                dataGridView1.Columns[19].DefaultCellStyle.Format = "hh\\:mm";
-                dataGridView1.Columns[22].DefaultCellStyle.Format = "hh\\:mm";
+                dataGridView1.Columns[2].DefaultCellStyle.Format = "%h\\:mm";
+                dataGridView1.Columns[4].DefaultCellStyle.Format = "%h\\:mm";
+                dataGridView1.Columns[7].DefaultCellStyle.Format = "%h\\:mm";
+                dataGridView1.Columns[8].DefaultCellStyle.Format = "%h\\:mm";
+                dataGridView1.Columns[9].DefaultCellStyle.Format = "%h\\:mm";
+                dataGridView1.Columns[10].DefaultCellStyle.Format = "%h\\:mm";
+                dataGridView1.Columns[14].DefaultCellStyle.Format = "%h\\:mm";
+                dataGridView1.Columns[15].DefaultCellStyle.Format = "%h\\:mm";
+                dataGridView1.Columns[16].DefaultCellStyle.Format = "%h\\:mm";
+                dataGridView1.Columns[17].DefaultCellStyle.Format = "%h\\:mm";
+                dataGridView1.Columns[18].DefaultCellStyle.Format = "%h\\:mm";
+                dataGridView1.Columns[19].DefaultCellStyle.Format = "%h\\:mm";
+                dataGridView1.Columns[22].DefaultCellStyle.Format = "%h\\:mm";
 
                 // workaround for mono-framework
                 if (isMono)
                 {
                     dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
-
                 }
 
                 LoadDB();
@@ -92,11 +93,27 @@ namespace SimpleEASALogbook
                     dataGridView1.Refresh();
                 }
 
-                // scroll down to last row
-                if (dataGridView1.Rows.Count > 0)
+                // ignore the old sum-row
+                for (int i = 0; i < Flights.Count; i++)
                 {
-                    dataGridView1.FirstDisplayedScrollingRowIndex = dataGridView1.Rows.Count - 1;
-                    dataGridView1.CurrentCell = dataGridView1.Rows[dataGridView1.Rows.Count - 1].Cells[0];
+                    if (Flights[i].FlightDate.HasValue)
+                    {
+                        if (Flights[i].FlightDate.Value.Year > 9000)
+                        {
+                            Flights.RemoveAt(i);
+                        }
+                    }
+                }
+                iFlights.Add(Summarize(Flights));
+                iFlights.Sort("FlightDate", ListSortDirection.Ascending);
+                iFlights.ResetBindings();
+                dataGridView1.Refresh();
+
+                // scroll down to last row
+                if (dataGridView1.Rows.Count > 1)
+                {
+                    dataGridView1.FirstDisplayedScrollingRowIndex = dataGridView1.Rows.Count - 2;
+                    dataGridView1.CurrentCell = dataGridView1.Rows[dataGridView1.Rows.Count - 2].Cells[0];
                 }
 
                 toolStripStatusLabel1.Text = "finished loading, it took: " + Math.Round((DateTime.Now.Subtract(now).TotalSeconds)).ToString() + " second(s).";
@@ -126,6 +143,17 @@ namespace SimpleEASALogbook
         {
             try
             {
+                // do not save the sum-row
+                for (int i = 0; i < Flights.Count; i++)
+                {
+                    if (Flights[i].FlightDate.HasValue)
+                    {
+                        if (Flights[i].FlightDate.Value.Year > 9000)
+                        {
+                            Flights.RemoveAt(i);
+                        }
+                    }
+                }
                 iFlights.Sort("FlightDate", ListSortDirection.Ascending);
                 List<Flight> temp = iFlights.GetFlights();
                 Export_EASA_CSV export = new Export_EASA_CSV(temp);
@@ -147,15 +175,15 @@ namespace SimpleEASALogbook
                 }
             }
         }
-
         // + button
         private void Button1_Click(object sender, EventArgs e)
         {
-            if (dataGridView1.Rows.Count > 0)
+            toolStripStatusLabel1.Text = "   adding row...";
+            EnableControls(false);
+            if (dataGridView1.CurrentCell.RowIndex >= 0)
             {
                 // ibindinglist does not accept null value Flight
-                Flights.Insert(dataGridView1.CurrentCell.RowIndex, new Flight(DateTime.MinValue, null, "", null, "", "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, DateTime.MinValue, "", TimeSpan.Zero, "", false));
-
+                Flights.Insert(dataGridView1.CurrentCell.RowIndex + 1, new Flight(DateTime.MinValue, null, "", null, "", "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, DateTime.MinValue, "", TimeSpan.Zero, "", false));
             }
             else
             {
@@ -163,54 +191,94 @@ namespace SimpleEASALogbook
                 Flights.Add(new Flight(DateTime.MinValue, null, "", null, "", "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, DateTime.MinValue, "", TimeSpan.Zero, "", false));
             }
             iFlights.ResetBindings();   // refresh the ibindinglist
-            dataGridView1.Refresh();    // refresh the datagridview        
+            dataGridView1.Refresh();    // refresh the datagridview  
+            if (dataGridView1.CurrentRow.Index < dataGridView1.RowCount - 1)
+            {
+                dataGridView1.CurrentCell = dataGridView1.Rows[dataGridView1.CurrentRow.Index + 1].Cells[dataGridView1.CurrentCell.ColumnIndex];
+            }
+            EnableControls(true);
+            toolStripStatusLabel1.Text = "   row added";
         }
         // - button
         private void Button2_Click(object sender, EventArgs e)
         {
-            if (dataGridView1.SelectedRows.Count > 0)
+            if (dataGridView1.SelectedRows.Count > 0 && dataGridView1.RowCount > 1 && dataGridView1.CurrentRow.Index < dataGridView1.RowCount - 1)
             {
+                toolStripStatusLabel1.Text = "   deleting row...";
+                EnableControls(false);
                 Flights.RemoveAt(dataGridView1.CurrentCell.RowIndex);
                 iFlights.ResetBindings();
                 dataGridView1.Refresh();
+                toolStripStatusLabel1.Text = "   row deleted";
             }
+            else
+            {
+                if (dataGridView1.CurrentRow.Index == dataGridView1.RowCount - 1)
+                {
+                    toolStripStatusLabel1.Text = "   sum-row can not be deleted!";
+                    EnableControls(false);
+                    var normal = dataGridView1.DefaultCellStyle.SelectionBackColor;
+                    dataGridView1.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.LightGray;
+                    dataGridView1.Refresh();
+                    Thread.Sleep(100);
+                    dataGridView1.DefaultCellStyle.SelectionBackColor = normal;
+                    dataGridView1.Refresh();
+                    Thread.Sleep(100);
+                    dataGridView1.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.LightGray;
+                    dataGridView1.Refresh();
+                    Thread.Sleep(100);
+                    dataGridView1.DefaultCellStyle.SelectionBackColor = normal;
+                    dataGridView1.Refresh();
+                    Thread.Sleep(100);
+                    dataGridView1.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.LightGray;
+                    dataGridView1.Refresh();
+                    Thread.Sleep(100);
+                    dataGridView1.DefaultCellStyle.SelectionBackColor = normal;
+                    dataGridView1.Refresh();
+                }
+            }
+            EnableControls(true);
         }
         // save button
         private void Button5_Click(object sender, EventArgs e)
         {
-            toolStripStatusLabel1.Text = "saving...";
-            button5.Enabled = false;
-            Form1.ActiveForm.Enabled = false;
+            toolStripStatusLabel1.Text = "   saving...";
+            EnableControls(false);
             SaveTable();
-            toolStripStatusLabel1.Text = "";
-            Form1.ActiveForm.Enabled = true;
-            button5.Enabled = true;
+            toolStripStatusLabel1.Text = "   saved.";
+            EnableControls(true);
         }
         // end button
         private void Button6_Click(object sender, EventArgs e)
         {
+            EnableControls(false);
             Application.Exit();
         }
         // new database from menu
         private void NewToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            toolStripStatusLabel1.Text = "   resetting database...";
+            EnableControls(false);
             Flights.Clear();
+            Flights.Add(new Flight(DateTime.MinValue, null, "", null, "", "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, DateTime.MinValue, "", TimeSpan.Zero, "", false));
             iFlights.ResetBindings();
+            iFlights.Add(Summarize(Flights));
+            EnableControls(true);
+            toolStripStatusLabel1.Text = "   new database!";
         }
         // save from menu
         private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            toolStripStatusLabel1.Text = "saving...";
-            saveToolStripMenuItem.Enabled = false;
-            Form1.ActiveForm.Enabled = false;
+            toolStripStatusLabel1.Text = "   saving...";
+            EnableControls(false);
             SaveTable();
-            toolStripStatusLabel1.Text = "";
-            Form1.ActiveForm.Enabled = true;
-            saveToolStripMenuItem.Enabled = true;
+            toolStripStatusLabel1.Text = "   saved.";
+            EnableControls(true);
         }
         // exit from menu
         private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            EnableControls(false);
             Application.Exit();
         }
         // move all if form is resized
@@ -238,6 +306,19 @@ namespace SimpleEASALogbook
             }
         }
 
+        private void EnableControls(bool value)
+        {
+            dataGridView1.Enabled = value;
+            button1.Enabled = value;
+            button2.Enabled = value;
+            button5.Enabled = value;
+            button6.Enabled = value;
+            fileToolStripMenuItem.Enabled = value;
+            importToolStripMenuItem.Enabled = value;
+            exportToolStripMenuItem.Enabled = value;
+            helpToolStripMenuItem.Enabled = value;
+        }
+
         // finished editing -> see if other cells can be filled with value
         private void DataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
@@ -252,6 +333,11 @@ namespace SimpleEASALogbook
         // mono implementation is missing
         private void AutoFillCellValue(int rowIndex, int columnIndex)
         {
+            //  filter out columnheader clicks
+            if (rowIndex < 0 || columnIndex < 0)
+            {
+                return;
+            }
             try
             {
                 if (dataGridView1.Rows[rowIndex].Cells[0] != null && dataGridView1.Rows[rowIndex].Cells[2] != null && dataGridView1.Rows[rowIndex].Cells[4] != null)
@@ -294,9 +380,13 @@ namespace SimpleEASALogbook
         }
 
         // to easily populate with data
-        // mono implementation missing
         private void PopulateDataOnClick(int rowIndex, int columnIndex)
         {
+            //  filter out columnheader clicks
+            if (rowIndex < 0 || columnIndex < 0)
+            {
+                return;
+            }
             try
             {
                 if (isMono)
@@ -512,11 +602,14 @@ namespace SimpleEASALogbook
             var headerBounds = new System.Drawing.Rectangle(e.RowBounds.Left, e.RowBounds.Top, grid.RowHeadersWidth, e.RowBounds.Height);
             e.Graphics.DrawString(rowIdx, this.Font, System.Drawing.SystemBrushes.ControlText, headerBounds, centerFormat);
         }
+
         // summarize flight times
-        static string Summarize(List<Flight> flights)
+        private Flight Summarize(List<Flight> flights)
         {
+            TimeSpan SEPTime = new TimeSpan(0);
+            TimeSpan MEPTime = new TimeSpan(0);
             TimeSpan multiPilotFlightTime = new TimeSpan(0);
-            TimeSpan totalFligtTime = new TimeSpan(0);
+            TimeSpan totalFlightTime = new TimeSpan(0);
             int dayLdgs = 0;
             int nightLdgs = 0;
             TimeSpan nightTime = new TimeSpan();
@@ -526,24 +619,64 @@ namespace SimpleEASALogbook
             TimeSpan DualTime = new TimeSpan();
             TimeSpan InstructorTime = new TimeSpan();
             TimeSpan SimTime = new TimeSpan();
-            foreach (Flight a in flights)
+            foreach (Flight tempFlight in flights)
             {
-                multiPilotFlightTime = multiPilotFlightTime.Add(a.MultiPilotTime.Value);
-                totalFligtTime = totalFligtTime.Add(a.TotalTimeOfFlight.Value);
-                dayLdgs += a.DayLandings.Value;
-                nightLdgs += a.NightLandings.Value;
-                nightTime = nightTime.Add(a.NightTime.Value);
-                ifrTime = ifrTime.Add(a.IFRTime.Value);
-                PICTime = PICTime.Add(a.PICTime.Value);
-                CopiTime = CopiTime.Add(a.CopilotTime.Value);
-                DualTime = DualTime.Add(a.DualTime.Value);
-                InstructorTime = InstructorTime.Add(a.InstructorTime.Value);
-                SimTime = SimTime.Add(a.SimTime.Value);
+                if (tempFlight.SEPTime.HasValue)
+                {
+                    SEPTime = SEPTime.Add(tempFlight.SEPTime.Value);
+                }
+                if (tempFlight.MEPTime.HasValue)
+                {
+                    MEPTime = MEPTime.Add(tempFlight.MEPTime.Value);
+                }
+                if (tempFlight.MultiPilotTime.HasValue)
+                {
+                    multiPilotFlightTime = multiPilotFlightTime.Add(tempFlight.MultiPilotTime.Value);
+                }
+                if (tempFlight.TotalTimeOfFlight.HasValue)
+                {
+                    totalFlightTime = totalFlightTime.Add(tempFlight.TotalTimeOfFlight.Value);
+                }
+                if (tempFlight.DayLandings.HasValue)
+                {
+                    dayLdgs += tempFlight.DayLandings.Value;
+                }
+                if (tempFlight.NightLandings.HasValue)
+                {
+                    nightLdgs += tempFlight.NightLandings.Value;
+                }
+                if (tempFlight.NightTime.HasValue)
+                {
+                    nightTime = nightTime.Add(tempFlight.NightTime.Value);
+                }
+                if (tempFlight.IFRTime.HasValue)
+                {
+                    ifrTime = ifrTime.Add(tempFlight.IFRTime.Value);
+                }
+                if (tempFlight.PICTime.HasValue)
+                {
+                    PICTime = PICTime.Add(tempFlight.PICTime.Value);
+                }
+                if (tempFlight.CopilotTime.HasValue)
+                {
+                    CopiTime = CopiTime.Add(tempFlight.CopilotTime.Value);
+                }
+                if (tempFlight.DualTime.HasValue)
+                {
+                    DualTime = DualTime.Add(tempFlight.DualTime.Value);
+                }
+                if (tempFlight.InstructorTime.HasValue)
+                {
+                    InstructorTime = InstructorTime.Add(tempFlight.InstructorTime.Value);
+                }
+                if (tempFlight.SimTime.HasValue)
+                {
+                    SimTime = SimTime.Add(tempFlight.SimTime.Value);
+                }
             }
-
-            return "∑:   multiPilot: " + ((int)multiPilotFlightTime.TotalHours).ToString() + ":" + multiPilotFlightTime.Minutes.ToString() + "   total: " + ((int)totalFligtTime.TotalHours).ToString() + ":" + totalFligtTime.Minutes.ToString() + "   DayLDG: " + dayLdgs.ToString() + "   NightLDG: " + nightLdgs.ToString() + "   Night: " + ((int)nightTime.TotalHours).ToString() + ":" + nightTime.Minutes.ToString() + "   IFR: " + ((int)ifrTime.TotalHours).ToString() + ":" + ifrTime.Minutes.ToString() + "   PIC: " + ((int)PICTime.TotalHours).ToString() + ":" + PICTime.Minutes.ToString() + "   Copi: " + ((int)CopiTime.TotalHours).ToString() + ":" + CopiTime.Minutes.ToString() + "   Dual: " + ((int)DualTime.TotalHours).ToString() + ":" + DualTime.Minutes.ToString() + "   Instructor: " + ((int)InstructorTime.TotalHours).ToString() + ":" + InstructorTime.Minutes.ToString() + "   Sim: " + ((int)SimTime.TotalHours).ToString() + ":" + SimTime.Minutes.ToString();
-
+            return new Flight(DateTime.MaxValue, null, null, null, null, null, null, SEPTime, MEPTime, multiPilotFlightTime, totalFlightTime, null, dayLdgs, nightLdgs, nightTime, ifrTime, PICTime, CopiTime, DualTime, InstructorTime, null, null, SimTime, "sum of all flights", false);
         }
+
         // allows the user to only enter some digits and become a timespan
         private void DataGridView1_CellParsing(object sender, DataGridViewCellParsingEventArgs e)
         {
@@ -571,6 +704,11 @@ namespace SimpleEASALogbook
                                     e.Value = TimeSpan.Parse(e.Value.ToString().Substring(0, 2) + ":" + e.Value.ToString().Substring(2, 2));
                                     e.ParsingApplied = true;
                                 }
+                                if (e.Value.ToString().Length > 2 && e.Value.ToString().Length < 4 && !e.Value.ToString().Contains(":"))
+                                {
+                                    e.Value = TimeSpan.Parse(e.Value.ToString().Substring(0, 1) + ":" + e.Value.ToString().Substring(1, 2));
+                                    e.ParsingApplied = true;
+                                }
                             }
                         }
                     }
@@ -580,6 +718,81 @@ namespace SimpleEASALogbook
                     }
                 }
             }
+        }
+
+        // update sum row
+        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (iFlights.Count > 0)
+            {
+                // remove the sum-row
+                for (int i = 0; i < Flights.Count; i++)
+                {
+                    if (Flights[i].FlightDate.HasValue)
+                    {
+                        if (Flights[i].FlightDate.Value.Year > 9000)
+                        {
+                            Flights.RemoveAt(i);
+                        }
+                    }
+                }
+                iFlights.Add(Summarize(Flights));
+            }
+        }
+
+        private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.Value != null)
+            {
+                // show totalhours to make it possible in sumrow to show more than 24hrs in one cell
+                if (e.ColumnIndex == 7 || e.ColumnIndex == 8 || e.ColumnIndex == 9 || e.ColumnIndex == 10 || e.ColumnIndex == 14 || e.ColumnIndex == 15 || e.ColumnIndex == 16 || e.ColumnIndex == 17 || e.ColumnIndex == 18 || e.ColumnIndex == 19 || e.ColumnIndex == 22)
+                {
+                    TimeSpan temp = (TimeSpan)e.Value;
+                    if (temp.TotalHours > 24)
+                    {
+                        e.Value = (int)temp.TotalHours + ":" + temp.Minutes;
+                        e.FormattingApplied = true;
+                    }
+                }
+                // sum row
+                if (e.ColumnIndex == 0 && e.Value.Equals(DateTime.MaxValue))
+                {
+                    e.Value = "∑:";
+                    e.FormattingApplied = true;
+                }
+                // previous experience row
+                if (e.ColumnIndex == 0 && e.Value.Equals(DateTime.MinValue))
+                {
+                    e.Value = "α:";
+                    e.FormattingApplied = true;
+                }
+            }
+        }
+        private void dataGridView1_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        {
+            if (e != null && dataGridView1.CurrentRow != null && dataGridView1.Rows[e.RowIndex].Cells[0].Value != null)
+            {
+                if (dataGridView1.CurrentRow.Cells[0].Value.Equals(DateTime.MaxValue))
+                {
+                    e.Cancel = true;
+                }
+                else
+                {
+                    if (dataGridView1.CurrentRow.Cells[0].Value.Equals(DateTime.MinValue) && (e.ColumnIndex < 7 || e.ColumnIndex == 11 || e.ColumnIndex == 20 || e.ColumnIndex == 21 || e.ColumnIndex == 23))
+                    {
+                        e.Cancel = true;
+                    }
+                }
+            }
+        }
+        private void previousExpecienceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            iFlights.Insert(0, new Flight(DateTime.MinValue, null, "", null, "", "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, DateTime.MinValue, "", TimeSpan.Zero, "previous experience", false));
+        }
+
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            Form1.ActiveForm.WindowState = FormWindowState.Maximized;
         }
     }
 }
