@@ -40,7 +40,7 @@ namespace SimpleEASALogbook
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-        public Flight(DateTime? date, TimeSpan? offblock, string dep, TimeSpan? onblock, string dest, string type, string reg, TimeSpan septime, TimeSpan meptime, TimeSpan multitime, TimeSpan totaltime, string pic, int ldgday, int ldgnight, TimeSpan nighttime, TimeSpan ifrtime, TimeSpan pictime, TimeSpan copitime, TimeSpan dualtime, TimeSpan instructortime, DateTime? dateofsim, string typeofsim, TimeSpan simtime, string remarks, bool nextpage)
+        public Flight(DateTime? date, string dep, TimeSpan? offblock, string dest, TimeSpan? onblock, string type, string reg, TimeSpan septime, TimeSpan meptime, TimeSpan multitime, TimeSpan totaltime, string pic, int ldgday, int ldgnight, TimeSpan nighttime, TimeSpan ifrtime, TimeSpan pictime, TimeSpan copitime, TimeSpan dualtime, TimeSpan instructortime, DateTime? dateofsim, string typeofsim, TimeSpan simtime, string remarks, bool nextpage)
         {
             if (date.HasValue)
             { FlightDate = date; }

@@ -97,9 +97,9 @@ namespace SimpleEASALogbook
                 nextpageafter = false;
             }
 
-            return new Flight(StartDate, beginTime, FROM, endTime, TO, Type, Aircraft, SETime, METime, MultiPilotTime, TotalTimeOfFlight, PIC, DayLanding, NightLanding, NightTime, IFRTime, PICTime, CopilotTime, DualTime, InstructorTime, date_of_sim, Type_of_sim, sim_time, remarks, nextpageafter);
+            return new Flight(StartDate,FROM, beginTime, TO, endTime, Type, Aircraft, SETime, METime, MultiPilotTime, TotalTimeOfFlight, PIC, DayLanding, NightLanding, NightTime, IFRTime, PICTime, CopilotTime, DualTime, InstructorTime, date_of_sim, Type_of_sim, sim_time, remarks, nextpageafter);
         }
-        public List<Flight> getFlightList()
+        public List<Flight> GetFlightList()
         {
             return Flights;
         }
