@@ -433,7 +433,7 @@ namespace SimpleEASALogbook
         // datagridview virtualmode -> get cellvalue from list
         private void dataGridView1_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
-            if (e.RowIndex >= 0)    // nullcheck for mono - 2do test if works
+            if (BindedFlightList.Count > e.RowIndex)    // nullcheck for mono - 2do test if works
             {
                 switch (e.ColumnIndex)
                 {
@@ -554,6 +554,9 @@ namespace SimpleEASALogbook
                 List<Flight> temp = BindedFlightList.GetFlights();
                 Export_EASA_CSV export = new Export_EASA_CSV(temp);
                 File.WriteAllText("EASALogbook.csv", export.GetCSV());
+                BindedFlightList.Add(Summarize(FlightList));
+                dataGridView1.RowCount = BindedFlightList.Count;
+                dataGridView1.Refresh();
             }
             catch (Exception e)
             {
@@ -578,8 +581,15 @@ namespace SimpleEASALogbook
             EnableControls(false);
             if (dataGridView1.CurrentRow.Index < dataGridView1.RowCount - 1)
             {
-                // ibindinglist does not accept null value Flight
-                FlightList.Insert(dataGridView1.CurrentCell.RowIndex + 1, new Flight(DateTime.MinValue, "", null, "", null, "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, DateTime.MinValue, "", TimeSpan.Zero, "", false));
+                if (dataGridView1.CurrentCell.RowIndex < 1)
+                {
+                    FlightList.Insert(dataGridView1.RowCount + 1, new Flight(DateTime.MinValue, "", null, "", null, "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, DateTime.MinValue, "", TimeSpan.Zero, "", false));
+
+                }
+                else
+                {
+                    FlightList.Insert(dataGridView1.CurrentCell.RowIndex + 1, new Flight(DateTime.MinValue, "", null, "", null, "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, DateTime.MinValue, "", TimeSpan.Zero, "", false));
+                }
             }
             else
             {
@@ -1154,6 +1164,10 @@ namespace SimpleEASALogbook
         // update sum row
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
+            RenewSumRow();
+        }
+        private void RenewSumRow()
+        {
             if (BindedFlightList.Count > 0)
             {
                 // remove the sum-row
@@ -1235,6 +1249,7 @@ namespace SimpleEASALogbook
         // Import EASA CSV
         private void EASALogToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            openFileDialog1.Multiselect = false;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 try
@@ -1242,6 +1257,7 @@ namespace SimpleEASALogbook
                     Import_EASA_CSV import = new Import_EASA_CSV(File.ReadAllText(openFileDialog1.FileName).ToString());
                     FlightList.AddRange(import.GetFlightList());
                     BindedFlightList.Sort("FlightDate", ListSortDirection.Ascending);
+                    RenewSumRow();
                     dataGridView1.RowCount = BindedFlightList.Count;
                     MarkAllCellsEditable();
                 }
@@ -1254,6 +1270,7 @@ namespace SimpleEASALogbook
         // Import LH PDF
         private void LufthansaPDFToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            openFileDialog1.Multiselect = true;
             if (isMono)
             {
                 if (!File.Exists("/usr/bin/pdftotext"))
@@ -1272,30 +1289,29 @@ namespace SimpleEASALogbook
             }
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                string PDFToTextPath = "pdftotext.exe";
                 try
                 {
                     if (isMono)
                     {
-                        ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = "/usr/bin/pdftotext", Arguments = "-raw " + openFileDialog1.FileName + " temp_pdf_to_text.txt", };
+                        PDFToTextPath = "/usr/bin/pdftotext";
+                    }
+                    foreach (string FilePathName in openFileDialog1.FileNames)
+                    {
+                        ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = PDFToTextPath, Arguments = "-raw " + FilePathName + " temp_pdf_to_text.txt", };
                         Process proc = new Process() { StartInfo = startInfo, };
                         proc.Start();
                         proc.WaitForExit();
+                        Import_LH_PDF import = new Import_LH_PDF(File.ReadAllText("temp_pdf_to_text.txt").ToString());
+                        if (import.Error)
+                        {
+                            MessageBox.Show("at least one error occured during parsing", "Error!");
+                            return;
+                        }
+                        File.Delete("temp_pdf_to_text.txt");
+                        FlightList.AddRange(import.GetFlightList());
                     }
-                    else
-                    {
-                        ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = "pdftotext.exe", Arguments = "-raw " + openFileDialog1.FileName + " temp_pdf_to_text.txt", };
-                        Process proc = new Process() { StartInfo = startInfo, };
-                        proc.Start();
-                        proc.WaitForExit();
-                    }
-                    Import_LH_PDF import = new Import_LH_PDF(File.ReadAllText("temp_pdf_to_text.txt").ToString());
-                    if (import.Error)
-                    {
-                        MessageBox.Show("at least one error occured during parsing", "Error!");
-                        return;
-                    }
-                    File.Delete("temp_pdf_to_text.txt");
-                    FlightList.AddRange(import.GetFlightList());
+                    RenewSumRow();
                     BindedFlightList.Sort("FlightDate", ListSortDirection.Ascending);
                     dataGridView1.RowCount = BindedFlightList.Count;
                     MarkAllCellsEditable();
@@ -1303,6 +1319,214 @@ namespace SimpleEASALogbook
                 catch (Exception exc)
                 {
                     File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " LoadDB:\n" + exc.ToString() + "\n");
+                }
+            }
+        }
+
+        private void brusselsPDFToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.Multiselect = true;
+            if (isMono)
+            {
+                if (!File.Exists("/usr/bin/pdftotext"))
+                {
+                    MessageBox.Show("pdftotext has to be installed in /usr/bin/pdftotext", "Error!");
+                    return;
+                }
+            }
+            else
+            {
+                if (!File.Exists("pdftotext.exe"))
+                {
+                    MessageBox.Show("pdftotext.exe has to be placed in the folder of SimpleEASALogbook. Download commandline tools from: http://www.xpdfreader.com/download.html", "Error!");
+                    return;
+                }
+            }
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                string PDFToTextPath = "pdftotext.exe";
+                try
+                {
+                    if (isMono)
+                    {
+                        PDFToTextPath = "/usr/bin/pdftotext";
+                    }
+                    foreach (string FilePathName in openFileDialog1.FileNames)
+                    {
+                        ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = PDFToTextPath, Arguments = "-layout " + FilePathName + " temp_pdf_to_text.txt", };
+                        Process proc = new Process() { StartInfo = startInfo, };
+                        proc.Start();
+                        proc.WaitForExit();
+                        Import_Brussels_PDF import = new Import_Brussels_PDF(File.ReadAllText("temp_pdf_to_text.txt").ToString());
+                        if (import.Error)
+                        {
+                            MessageBox.Show("at least one error occured during parsing", "Error!");
+                            //return;
+                        }
+                        File.Delete("temp_pdf_to_text.txt");
+                        FlightList.AddRange(import.GetFlightList());
+                    }
+                    RenewSumRow();
+                    BindedFlightList.Sort("FlightDate", ListSortDirection.Ascending);
+                    dataGridView1.RowCount = BindedFlightList.Count;
+                    MarkAllCellsEditable();
+                }
+                catch (Exception exc)
+                {
+                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " LoadDB:\n" + exc.ToString() + "\n");
+                }
+            }
+        }
+
+        private void eASAHTMLToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            dataGridView1.EndEdit();
+            saveFileDialog1.Filter = "HTML Page|*.html";
+            saveFileDialog1.ShowDialog();
+
+            if (saveFileDialog1.FileName != "")
+            {
+                try
+                {
+                    if (saveFileDialog1.CheckFileExists)
+                    {
+                        File.Delete(saveFileDialog1.FileName);
+                    }
+                    BindedFlightList.Sort("FlightDate", ListSortDirection.Ascending);
+                    List<Flight> temp = new List<Flight>(BindedFlightList.GetFlights());
+                    // do not save the sum-row or empty rows
+                    for (int i = 0; i < temp.Count; i++)
+                    {
+                        if (temp[i].FlightDate.HasValue)
+                        {
+                            if (temp[i].FlightDate.Value.Year > 9000)
+                            {
+                                temp.RemoveAt(i);
+                            }
+                            else
+                            {
+                                if (temp[i].FlightDate.Value.Year < 1000 && !temp[i].Remarks.Contains("previous experience"))
+                                {
+                                    temp.RemoveAt(i);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (!temp[i].DateOfSim.HasValue)
+                            {
+                                temp.RemoveAt(i);
+                            }
+                        }
+                    }
+
+                    Export_EASA_HTML export = new Export_EASA_HTML(temp);
+                    File.WriteAllText(saveFileDialog1.FileName, export.GetHTML());
+                }
+                catch (Exception ey)
+                {
+                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " ExportTo_EASA_HTML:\n" + ey.ToString() + "\n");
+                }
+            }
+        }
+
+        private void eASAPDFToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            dataGridView1.EndEdit();
+            if (isMono)
+            {
+                if (!File.Exists("/usr/bin/wkhtmltopdf"))
+                {
+                    MessageBox.Show("No wkhtmltopdf found in /usr/bin, please install it", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    return;
+                }
+            }
+            else
+            {
+                if (!File.Exists("wkhtmltopdf.exe"))
+                {
+                    MessageBox.Show("No wkhtmltopdf.exe found, please put it in the same folder as this program is running form. (downlowad from wkhtmltopdf.org)", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    return;
+                }
+            }
+
+            saveFileDialog1.Filter = "Portable Document File|*.pdf";
+            saveFileDialog1.ShowDialog();
+
+            if (saveFileDialog1.FileName != "")
+            {
+
+                try
+                {
+                    if (saveFileDialog1.CheckFileExists)
+                    {
+                        File.Delete(saveFileDialog1.FileName);
+                    }
+                    BindedFlightList.Sort("FlightDate", ListSortDirection.Ascending);
+                    List<Flight> temp = new List<Flight>(BindedFlightList.GetFlights());
+                    // do not save the sum-row or empty rows
+                    for (int i = 0; i < temp.Count; i++)
+                    {
+                        if (temp[i].FlightDate.HasValue)
+                        {
+                            if (temp[i].FlightDate.Value.Year > 9000)
+                            {
+                                temp.RemoveAt(i);
+                            }
+                            else
+                            {
+                                if (temp[i].FlightDate.Value.Year < 1000 && !temp[i].Remarks.Contains("previous experience"))
+                                {
+                                    temp.RemoveAt(i);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (!temp[i].DateOfSim.HasValue)
+                            {
+                                temp.RemoveAt(i);
+                            }
+                        }
+                    }
+
+                    Export_EASA_HTML export = new Export_EASA_HTML(temp);
+                    File.WriteAllText(saveFileDialog1.FileName.Replace("pdf", "htm"), export.GetHTML());
+
+                    ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = "wkhtmltopdf.exe", Arguments = "-O landscape --print-media-type " + saveFileDialog1.FileName.Replace("pdf", "htm") + " " + saveFileDialog1.FileName };
+                    Process proc = new Process() { StartInfo = startInfo, };
+                    proc.Start();
+                    proc.WaitForExit();
+                    File.Delete(saveFileDialog1.FileName.Replace("pdf", "htm"));
+                }
+                catch (Exception ey)
+                {
+                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " ExportTo_EASA_HTML:\n" + ey.ToString() + "\n");
+                }
+            }
+        }
+
+        private void mCCPilotLogCSVToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    foreach (string FilePathName in openFileDialog1.FileNames)
+                    {
+                        Import_MCC_CSV import = new Import_MCC_CSV(File.ReadAllText(FilePathName).ToString());
+                        FlightList.AddRange(import.GetFlightList());
+                    }
+                    RenewSumRow();
+                    BindedFlightList.Sort("FlightDate", ListSortDirection.Ascending);
+                    dataGridView1.RowCount = BindedFlightList.Count;
+                    MarkAllCellsEditable();
+                }
+                catch (Exception exc)
+                {
+                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " Import_MCC_pilotLog_CSV:\n" + exc.ToString() + "\n");
                 }
             }
         }

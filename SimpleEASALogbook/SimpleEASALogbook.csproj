@@ -68,7 +68,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Export_EASA_CSV.cs" />
+    <Compile Include="Export_EASA_HTML.cs" />
+    <Compile Include="Import_Brussels_PDF.cs" />
     <Compile Include="Import_LH_PDF.cs" />
+    <Compile Include="Import_MCC_CSV.cs" />
     <Compile Include="SortableBindingList.cs" />
     <Compile Include="WaitForm.cs">
       <SubType>Form</SubType>
