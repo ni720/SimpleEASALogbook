@@ -1250,6 +1250,7 @@ namespace SimpleEASALogbook
         private void EASALogToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openFileDialog1.Multiselect = false;
+            openFileDialog1.Filter = "EASA Logbook conform CSV|*.csv";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 try
@@ -1260,10 +1261,19 @@ namespace SimpleEASALogbook
                     RenewSumRow();
                     dataGridView1.RowCount = BindedFlightList.Count;
                     MarkAllCellsEditable();
+                    if (import.GetError())
+                    {
+                        MessageBox.Show("at least one error occured during import. the import might have been successful nevertheless. if in doubt please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("import seems to be successful", "success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
                 catch (Exception exc)
                 {
-                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " LoadDB:\n" + exc.ToString() + "\n");
+                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " Import_EASA_CSV:\n" + exc.ToString() + "\n");
+                    MessageBox.Show("An error occured during import, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -1271,12 +1281,19 @@ namespace SimpleEASALogbook
         private void LufthansaPDFToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openFileDialog1.Multiselect = true;
+            openFileDialog1.Filter = "Lufthansa conform PDF|*.pdf";
+            string PDFToTextPath = "pdftotext.exe";
+            bool _ErrorOccured = false;
             if (isMono)
             {
                 if (!File.Exists("/usr/bin/pdftotext"))
                 {
                     MessageBox.Show("pdftotext has to be installed in /usr/bin/pdftotext", "Error!");
                     return;
+                }
+                else
+                {
+                    PDFToTextPath = "/usr/bin/pdftotext";
                 }
             }
             else
@@ -1289,13 +1306,8 @@ namespace SimpleEASALogbook
             }
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                string PDFToTextPath = "pdftotext.exe";
                 try
                 {
-                    if (isMono)
-                    {
-                        PDFToTextPath = "/usr/bin/pdftotext";
-                    }
                     foreach (string FilePathName in openFileDialog1.FileNames)
                     {
                         ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = PDFToTextPath, Arguments = "-raw " + FilePathName + " temp_pdf_to_text.txt", };
@@ -1303,10 +1315,9 @@ namespace SimpleEASALogbook
                         proc.Start();
                         proc.WaitForExit();
                         Import_LH_PDF import = new Import_LH_PDF(File.ReadAllText("temp_pdf_to_text.txt").ToString());
-                        if (import.Error)
+                        if (import.GetError())
                         {
-                            MessageBox.Show("at least one error occured during parsing", "Error!");
-                            return;
+                            _ErrorOccured = true;
                         }
                         File.Delete("temp_pdf_to_text.txt");
                         FlightList.AddRange(import.GetFlightList());
@@ -1315,23 +1326,41 @@ namespace SimpleEASALogbook
                     BindedFlightList.Sort("FlightDate", ListSortDirection.Ascending);
                     dataGridView1.RowCount = BindedFlightList.Count;
                     MarkAllCellsEditable();
+                    if (_ErrorOccured)
+                    {
+                        MessageBox.Show("at least one error occured during import. the import might have been successful nevertheless. if in doubt please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("import seems to be successful", "success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
                 catch (Exception exc)
                 {
-                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " LoadDB:\n" + exc.ToString() + "\n");
+                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " Import_LH_PDF:\n" + exc.ToString() + "\n");
+                    MessageBox.Show("An error occured during import, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
+        // Brussels PDF Import
         private void brusselsPDFToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openFileDialog1.Multiselect = true;
+            openFileDialog1.Filter = "Brussels conform PDF export|*.pdf";
+            string PDFToTextPath = "pdftotext.exe";
+            bool _ErrorOccured = false;
+
             if (isMono)
             {
                 if (!File.Exists("/usr/bin/pdftotext"))
                 {
                     MessageBox.Show("pdftotext has to be installed in /usr/bin/pdftotext", "Error!");
                     return;
+                }
+                else
+                {
+                    PDFToTextPath = "/usr/bin/pdftotext";
                 }
             }
             else
@@ -1344,13 +1373,8 @@ namespace SimpleEASALogbook
             }
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                string PDFToTextPath = "pdftotext.exe";
                 try
                 {
-                    if (isMono)
-                    {
-                        PDFToTextPath = "/usr/bin/pdftotext";
-                    }
                     foreach (string FilePathName in openFileDialog1.FileNames)
                     {
                         ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = PDFToTextPath, Arguments = "-layout " + FilePathName + " temp_pdf_to_text.txt", };
@@ -1358,10 +1382,9 @@ namespace SimpleEASALogbook
                         proc.Start();
                         proc.WaitForExit();
                         Import_Brussels_PDF import = new Import_Brussels_PDF(File.ReadAllText("temp_pdf_to_text.txt").ToString());
-                        if (import.Error)
+                        if (import.GetError())
                         {
-                            MessageBox.Show("at least one error occured during parsing", "Error!");
-                            //return;
+                            _ErrorOccured = true;
                         }
                         File.Delete("temp_pdf_to_text.txt");
                         FlightList.AddRange(import.GetFlightList());
@@ -1370,18 +1393,28 @@ namespace SimpleEASALogbook
                     BindedFlightList.Sort("FlightDate", ListSortDirection.Ascending);
                     dataGridView1.RowCount = BindedFlightList.Count;
                     MarkAllCellsEditable();
+                    if (_ErrorOccured)
+                    {
+                        MessageBox.Show("at least one error occured during import. the import might have been successful nevertheless. if in doubt please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("import seems to be successful", "success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
                 catch (Exception exc)
                 {
-                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " LoadDB:\n" + exc.ToString() + "\n");
+                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " Import_Brussels_PDF:\n" + exc.ToString() + "\n");
+                    MessageBox.Show("An error occured during import, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
+        // Export EASA HTML
         private void eASAHTMLToolStripMenuItem_Click(object sender, EventArgs e)
         {
             dataGridView1.EndEdit();
-            saveFileDialog1.Filter = "HTML Page|*.html";
+            saveFileDialog1.Filter = "EASA conform HTML|*.html";
             saveFileDialog1.ShowDialog();
 
             if (saveFileDialog1.FileName != "")
@@ -1419,27 +1452,36 @@ namespace SimpleEASALogbook
                             }
                         }
                     }
-
                     Export_EASA_HTML export = new Export_EASA_HTML(temp);
                     File.WriteAllText(saveFileDialog1.FileName, export.GetHTML());
+                    MessageBox.Show(saveFileDialog1.FileName + " saved successfully", "success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ey)
                 {
                     File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " ExportTo_EASA_HTML:\n" + ey.ToString() + "\n");
+                    MessageBox.Show("An error occured during export, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
+        // Export EASA PDF
         private void eASAPDFToolStripMenuItem_Click(object sender, EventArgs e)
         {
             dataGridView1.EndEdit();
+            saveFileDialog1.Filter = "EASA conform PDF|*.pdf";
+            saveFileDialog1.ShowDialog();
+
+            string pathToWKHTML = "";
             if (isMono)
             {
                 if (!File.Exists("/usr/bin/wkhtmltopdf"))
                 {
                     MessageBox.Show("No wkhtmltopdf found in /usr/bin, please install it", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
                     return;
+                }
+                else
+                {
+                    pathToWKHTML = "/usr/bin/wkhtmltopdf";
                 }
             }
             else
@@ -1447,17 +1489,16 @@ namespace SimpleEASALogbook
                 if (!File.Exists("wkhtmltopdf.exe"))
                 {
                     MessageBox.Show("No wkhtmltopdf.exe found, please put it in the same folder as this program is running form. (downlowad from wkhtmltopdf.org)", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
                     return;
+                }
+                else
+                {
+                    pathToWKHTML = "wkhtmltopdf.exe";
                 }
             }
 
-            saveFileDialog1.Filter = "Portable Document File|*.pdf";
-            saveFileDialog1.ShowDialog();
-
             if (saveFileDialog1.FileName != "")
             {
-
                 try
                 {
                     if (saveFileDialog1.CheckFileExists)
@@ -1491,25 +1532,29 @@ namespace SimpleEASALogbook
                             }
                         }
                     }
-
                     Export_EASA_HTML export = new Export_EASA_HTML(temp);
                     File.WriteAllText(saveFileDialog1.FileName.Replace("pdf", "htm"), export.GetHTML());
-
-                    ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = "wkhtmltopdf.exe", Arguments = "-O landscape --print-media-type " + saveFileDialog1.FileName.Replace("pdf", "htm") + " " + saveFileDialog1.FileName };
+                    ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = pathToWKHTML, Arguments = "-O landscape --print-media-type " + saveFileDialog1.FileName.Replace("pdf", "htm") + " " + saveFileDialog1.FileName };
                     Process proc = new Process() { StartInfo = startInfo, };
                     proc.Start();
                     proc.WaitForExit();
                     File.Delete(saveFileDialog1.FileName.Replace("pdf", "htm"));
+                    MessageBox.Show(saveFileDialog1.FileName + " saved successfully", "success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ey)
                 {
-                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " ExportTo_EASA_HTML:\n" + ey.ToString() + "\n");
+                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " ExportTo_EASA_PDF:\n" + ey.ToString() + "\n");
+                    MessageBox.Show("An error occured during export, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
+        // Import MCCPilotLog CSV
         private void mCCPilotLogCSVToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            bool _ErrorOccured = false;
+            MessageBox.Show("MCC PilotLog does not correctly export SEP and MEP Times, therefore they can not be imported. you have to edit those manually. \"error parsing, skipping line: 0\" is normal due to the header line in MCC PilotLog CSV export", "Caution", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            openFileDialog1.Filter = "MCC PilotLog conform CSV|*.csv";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 try
@@ -1518,16 +1563,83 @@ namespace SimpleEASALogbook
                     {
                         Import_MCC_CSV import = new Import_MCC_CSV(File.ReadAllText(FilePathName).ToString());
                         FlightList.AddRange(import.GetFlightList());
+                        if (import.GetError())
+                        {
+                            _ErrorOccured = true;
+                        }
                     }
                     RenewSumRow();
                     BindedFlightList.Sort("FlightDate", ListSortDirection.Ascending);
                     dataGridView1.RowCount = BindedFlightList.Count;
                     MarkAllCellsEditable();
+                    if (_ErrorOccured)
+                    {
+                        MessageBox.Show("at least one error occured during import. the import might have been successful nevertheless. if in doubt please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("import seems to be successful", "success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
                 catch (Exception exc)
                 {
-                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " Import_MCC_pilotLog_CSV:\n" + exc.ToString() + "\n");
+                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " Import_MCC_PilotLog_CSV:\n" + exc.ToString() + "\n");
+                    MessageBox.Show("An error occured during import, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+            }
+        }
+
+        // Export EASA CSV
+        private void easaLogbookCSVToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            dataGridView1.EndEdit();
+            saveFileDialog1.Filter = "EASA Logbook conform CSV|*.csv";
+            saveFileDialog1.ShowDialog();
+
+            if (saveFileDialog1.FileName != "")
+            {
+                try
+                {
+                    if (saveFileDialog1.CheckFileExists)
+                    {
+                        File.Delete(saveFileDialog1.FileName);
+                    }
+                    BindedFlightList.Sort("FlightDate", ListSortDirection.Ascending);
+                    List<Flight> temp = new List<Flight>(BindedFlightList.GetFlights());
+                    Export_EASA_CSV export = new Export_EASA_CSV(temp);
+                    string _Header = "Date,DEP,OffBlock,DEST,OnBlock,ACFTType,ACFTReg,SEPTime,MEPTime,MultiPilotTime,TotalTime,NamePIC,LDGDay,LDGNight,NightTime,IFRTime,PICTime,CopilotTime,DualTime,InstructorTime,SIMDate,SIMType,SimTime,Remarks,Pagebreak\n";
+                    File.WriteAllText(saveFileDialog1.FileName, _Header + export.GetCSV());
+                    MessageBox.Show(saveFileDialog1.FileName + " saved successfully", "success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ey)
+                {
+                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " ExportTo_EASA_CSV:\n" + ey.ToString() + "\n");
+                    MessageBox.Show("An error occured during export, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void howToLogYourFlightToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Do you want to visit the EASA Part FCL PDF? (FCL.050 Recording of flight time)", "EASA Recording of flight time", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
+            {
+                Process.Start("https://www.easa.europa.eu/sites/default/files/dfu/Part-FCL.pdf");
+            }
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Do you want to visit the GitHub Issues Page?", "GitHub Issues", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
+            {
+                Process.Start("https://github.com/ni720/SimpleEASALogbook/issues");
+            }
+        }
+
+        private void aboutToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Do you want to visit the GitHub Page?", "GitHub", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
+            {
+                Process.Start("https://github.com/ni720/SimpleEASALogbook");
             }
         }
     }

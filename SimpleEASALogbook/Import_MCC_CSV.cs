@@ -32,21 +32,15 @@ namespace SimpleEASALogbook
         string remarks = "";
         bool nextpageafter = false;
         List<Flight> Flights = new List<Flight>();
+        bool _ErrorOccured = false;
+        string MCCVersion = "4";
 
         public Import_MCC_CSV(string mcccsv)
         {
-
-            bool isOldMCCPilotLog = false;
             if (mcccsv.Contains("TIME_DEPSCH"))
             {
-                Console.WriteLine("sensed MCCPilotLog_v3");
-                isOldMCCPilotLog = true;
+                MCCVersion = "3";
             }
-            else
-            {
-                Console.WriteLine("sensed MCCPilotLog_v4");
-            }
-
 
             using (var reader = new StringReader(mcccsv))
             {
@@ -57,7 +51,7 @@ namespace SimpleEASALogbook
                     {
                         string[] csvline = new string[65];
                         csvline = line.Split(';');
-                        if (isOldMCCPilotLog)
+                        if (MCCVersion.Equals("3"))
                         {
                             Flights.Add(CreateFlightMCCv3(csvline));
                         }
@@ -65,17 +59,19 @@ namespace SimpleEASALogbook
                         {
                             Flights.Add(CreateFlightMCCv4(csvline));
                         }
-
                     }
                     catch (Exception ey)
                     {
-                        Console.WriteLine("error parsing, skipping line: " + i.ToString());
-                        Console.WriteLine(ey.ToString());
+                        _ErrorOccured = true;
+                        File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " MCC version: " + MCCVersion + " error parsing, skipping line: " + i.ToString() + "\n Import_MCC_pilotLog_CSV:\n" + ey.ToString() + "\n");
                     }
-
                     i++;
                 }
-
+                if (Flights.Count < 1)
+                {
+                    _ErrorOccured = true;
+                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " Import_MCC_CSV: found no Flights to parse.\n");
+                }
             }
         }
         Flight CreateFlightMCCv4(string[] csvline)
@@ -109,8 +105,8 @@ namespace SimpleEASALogbook
             FROM = csvline[4];
             TimeSpan.TryParse(csvline[5], out Starttime);
             TO = csvline[6];
-TimeSpan.TryParse(csvline[7], out Endtime);
-                                 
+            TimeSpan.TryParse(csvline[7], out Endtime);
+
             Type = csvline[8];
             Aircraft = csvline[9];
             PIC = csvline[11];
@@ -306,6 +302,10 @@ TimeSpan.TryParse(csvline[7], out Endtime);
         public List<Flight> GetFlightList()
         {
             return Flights;
+        }
+        public bool GetError()
+        {
+            return _ErrorOccured;
         }
     }
 }

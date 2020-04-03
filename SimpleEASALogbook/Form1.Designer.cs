@@ -31,14 +31,14 @@ namespace SimpleEASALogbook
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -264,10 +264,10 @@ namespace SimpleEASALogbook
             // 
             // easaLogbookCSVToolStripMenuItem
             // 
-            this.easaLogbookCSVToolStripMenuItem.Enabled = false;
             this.easaLogbookCSVToolStripMenuItem.Name = "easaLogbookCSVToolStripMenuItem";
             this.easaLogbookCSVToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.easaLogbookCSVToolStripMenuItem.Text = "EASA Logbook CSV";
+            this.easaLogbookCSVToolStripMenuItem.Click += new System.EventHandler(this.easaLogbookCSVToolStripMenuItem_Click);
             // 
             // eASAPDFToolStripMenuItem
             // 
@@ -310,10 +310,10 @@ namespace SimpleEASALogbook
             // 
             // howToLogYourFlightToolStripMenuItem
             // 
-            this.howToLogYourFlightToolStripMenuItem.Enabled = false;
             this.howToLogYourFlightToolStripMenuItem.Name = "howToLogYourFlightToolStripMenuItem";
             this.howToLogYourFlightToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.howToLogYourFlightToolStripMenuItem.Text = "How to log your flight";
+            this.howToLogYourFlightToolStripMenuItem.Click += new System.EventHandler(this.howToLogYourFlightToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
@@ -322,17 +322,17 @@ namespace SimpleEASALogbook
             // 
             // aboutToolStripMenuItem
             // 
-            this.aboutToolStripMenuItem.Enabled = false;
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.aboutToolStripMenuItem.Text = "Problems?";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem1
             // 
-            this.aboutToolStripMenuItem1.Enabled = false;
             this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
             this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(191, 22);
             this.aboutToolStripMenuItem1.Text = "About";
+            this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.aboutToolStripMenuItem1_Click);
             // 
             // dataGridView1
             // 
@@ -364,14 +364,14 @@ namespace SimpleEASALogbook
             this.Column23,
             this.Column24,
             this.Column25});
-            dataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle24.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle24.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle24.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle24.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle24.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle24.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle24;
+            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle16;
             this.dataGridView1.Location = new System.Drawing.Point(12, 26);
             this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
@@ -394,8 +394,8 @@ namespace SimpleEASALogbook
             // 
             this.Column1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.Column1.DataPropertyName = "FlightDate";
-            dataGridViewCellStyle17.Format = "d";
-            this.Column1.DefaultCellStyle = dataGridViewCellStyle17;
+            dataGridViewCellStyle9.Format = "d";
+            this.Column1.DefaultCellStyle = dataGridViewCellStyle9;
             this.Column1.HeaderText = "Flight Date";
             this.Column1.MaxInputLength = 10;
             this.Column1.Name = "Column1";
@@ -414,9 +414,9 @@ namespace SimpleEASALogbook
             // 
             this.Column3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.Column3.DataPropertyName = "OffBlockTime";
-            dataGridViewCellStyle18.Format = "t";
-            dataGridViewCellStyle18.NullValue = null;
-            this.Column3.DefaultCellStyle = dataGridViewCellStyle18;
+            dataGridViewCellStyle10.Format = "t";
+            dataGridViewCellStyle10.NullValue = null;
+            this.Column3.DefaultCellStyle = dataGridViewCellStyle10;
             this.Column3.HeaderText = "OffBlock";
             this.Column3.MaxInputLength = 5;
             this.Column3.Name = "Column3";
@@ -435,8 +435,8 @@ namespace SimpleEASALogbook
             // 
             this.Column5.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.Column5.DataPropertyName = "OnBlockTime";
-            dataGridViewCellStyle19.Format = "t";
-            this.Column5.DefaultCellStyle = dataGridViewCellStyle19;
+            dataGridViewCellStyle11.Format = "t";
+            this.Column5.DefaultCellStyle = dataGridViewCellStyle11;
             this.Column5.HeaderText = "OnBlock";
             this.Column5.MaxInputLength = 5;
             this.Column5.Name = "Column5";
@@ -462,9 +462,9 @@ namespace SimpleEASALogbook
             // 
             this.Column8.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.Column8.DataPropertyName = "SEPTime";
-            dataGridViewCellStyle20.Format = "HH:mm";
-            dataGridViewCellStyle20.NullValue = null;
-            this.Column8.DefaultCellStyle = dataGridViewCellStyle20;
+            dataGridViewCellStyle12.Format = "HH:mm";
+            dataGridViewCellStyle12.NullValue = null;
+            this.Column8.DefaultCellStyle = dataGridViewCellStyle12;
             this.Column8.HeaderText = "Single Engine";
             this.Column8.MaxInputLength = 5;
             this.Column8.Name = "Column8";
@@ -483,8 +483,8 @@ namespace SimpleEASALogbook
             // 
             this.Column10.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.Column10.DataPropertyName = "MultiPilotTime";
-            dataGridViewCellStyle21.NullValue = null;
-            this.Column10.DefaultCellStyle = dataGridViewCellStyle21;
+            dataGridViewCellStyle13.NullValue = null;
+            this.Column10.DefaultCellStyle = dataGridViewCellStyle13;
             this.Column10.HeaderText = "Multi Pilot";
             this.Column10.MaxInputLength = 5;
             this.Column10.Name = "Column10";
@@ -584,8 +584,8 @@ namespace SimpleEASALogbook
             // 
             this.Column21.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.Column21.DataPropertyName = "DateOfSim";
-            dataGridViewCellStyle22.Format = "d";
-            this.Column21.DefaultCellStyle = dataGridViewCellStyle22;
+            dataGridViewCellStyle14.Format = "d";
+            this.Column21.DefaultCellStyle = dataGridViewCellStyle14;
             this.Column21.HeaderText = "Sim Date";
             this.Column21.MaxInputLength = 10;
             this.Column21.Name = "Column21";
@@ -603,8 +603,8 @@ namespace SimpleEASALogbook
             // 
             this.Column23.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.Column23.DataPropertyName = "SimTime";
-            dataGridViewCellStyle23.Format = "t";
-            this.Column23.DefaultCellStyle = dataGridViewCellStyle23;
+            dataGridViewCellStyle15.Format = "t";
+            this.Column23.DefaultCellStyle = dataGridViewCellStyle15;
             this.Column23.HeaderText = "Sim Time";
             this.Column23.MaxInputLength = 5;
             this.Column23.Name = "Column23";

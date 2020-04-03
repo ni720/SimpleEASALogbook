@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
 
 namespace SimpleEASALogbook
@@ -7,7 +8,7 @@ namespace SimpleEASALogbook
     class Import_LH_PDF
     {
         List<Flight> Flights = new List<Flight>();
-        public bool Error = false;
+        bool _ErrorOccured = false;
 
         public Import_LH_PDF(string textToParse)
         {
@@ -57,19 +58,15 @@ namespace SimpleEASALogbook
                         date = new DateTime(year, month, day);
                         offblock = new TimeSpan(begin_hour, begin_min, 0);
                         onblock = new TimeSpan(end_hour, end_min, 0);
+                        begin = new DateTime(year, month, day, begin_hour, begin_min, 0);
+                        end = new DateTime(year, month, day, end_hour, end_min, 0);
 
                         if (end_hour < begin_hour)
                         {
-                            begin = new DateTime(year, month, day, begin_hour, begin_min, 0).AddHours(24);
+                            end = end.AddHours(24);
                         }
-                        else
-                        {
-                            begin = new DateTime(year, month, day, begin_hour, begin_min, 0);
-                        }
-                        end = new DateTime(year, month, day, end_hour, end_min, 0);
 
                         duration = end.Subtract(begin);
-
                         Match FromTo = fromto.Match(flightmatch.Value);
                         from = FromTo.Value.Substring(0, 3);
                         to = FromTo.Value.Substring(FromTo.Value.Length - 3, 3);
@@ -99,17 +96,27 @@ namespace SimpleEASALogbook
                         }
                     }
                 }
+                if (Flights.Count < 1)
+                {
+                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " Import_LH_PDF: found no Flights to parse.\n");
+                    _ErrorOccured = true;
+                }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Console.WriteLine("Error Parsing LH PDF");
-                Error = true;
+                File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " Import_LH_PDF:\n" + e.ToString() + "\n");
+                _ErrorOccured = true;
             }
         }
 
         public List<Flight> GetFlightList()
         {
             return Flights;
+        }
+
+        public bool GetError()
+        {
+            return _ErrorOccured;
         }
     }
 }

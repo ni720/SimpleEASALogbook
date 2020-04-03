@@ -33,8 +33,10 @@ namespace SimpleEASALogbook
         TimeSpan sim_time = TimeSpan.Zero;
         string remarks = "";
         bool nextpageafter = false;
+        bool _ErrorOccured = false;
 
         List<Flight> Flights = new List<Flight>();
+
         public Import_EASA_CSV(string stringToParse)
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
@@ -49,15 +51,19 @@ namespace SimpleEASALogbook
                         string[] csvline = new string[25];
                         csvline = line.Split(';');
                         Flights.Add(CreateFlight(csvline));
-
                     }
                     catch (Exception exc)
                     {
-                        File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + ": error parsing, skipping line: " + i.ToString() + "\n" + exc.ToString() + "\n");
+                        File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + ": error parsing EASA CSV, skipping line: " + i.ToString() + "\n" + exc.ToString() + "\n");
+                        _ErrorOccured = true;
                     }
-
                     i++;
                 }
+            }
+            if (Flights.Count < 1)
+            {
+                _ErrorOccured = true;
+                File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " Import_EASA_CSV: found no Flights to parse.\n");
             }
         }
 
@@ -97,11 +103,15 @@ namespace SimpleEASALogbook
                 nextpageafter = false;
             }
 
-            return new Flight(StartDate,FROM, beginTime, TO, endTime, Type, Aircraft, SETime, METime, MultiPilotTime, TotalTimeOfFlight, PIC, DayLanding, NightLanding, NightTime, IFRTime, PICTime, CopilotTime, DualTime, InstructorTime, date_of_sim, Type_of_sim, sim_time, remarks, nextpageafter);
+            return new Flight(StartDate, FROM, beginTime, TO, endTime, Type, Aircraft, SETime, METime, MultiPilotTime, TotalTimeOfFlight, PIC, DayLanding, NightLanding, NightTime, IFRTime, PICTime, CopilotTime, DualTime, InstructorTime, date_of_sim, Type_of_sim, sim_time, remarks, nextpageafter);
         }
         public List<Flight> GetFlightList()
         {
             return Flights;
+        }
+        public bool GetError()
+        {
+            return _ErrorOccured;
         }
     }
 }

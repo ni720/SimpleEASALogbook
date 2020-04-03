@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Text.RegularExpressions;
 
 namespace SimpleEASALogbook
@@ -8,30 +9,30 @@ namespace SimpleEASALogbook
     class Import_Brussels_PDF
     {
         List<Flight> Flights = new List<Flight>();
-        public bool Error = false;
+        bool _ErrorOccured = false;
 
         public Import_Brussels_PDF(string textToParse)
         {
 
-                CultureInfo provider = CultureInfo.InvariantCulture;
-                int ldg_day = 0;
-                int ldg_night = 0;
-                string from = "";
-                string to = "";
-                string aircraft = "";
-                string type = "";
-                string PIC = "";
-                string remarks = "";
-                DateTime begin, end;
-                TimeSpan begin_time = TimeSpan.Zero;
-                TimeSpan end_time = TimeSpan.Zero;
-                TimeSpan multiPilotTime = TimeSpan.Zero;
-                TimeSpan CoPilotTime = TimeSpan.Zero;
-                TimeSpan nightTime = TimeSpan.Zero;
-                TimeSpan IFRTime = TimeSpan.Zero;
-                TimeSpan PICTime = TimeSpan.Zero;
-                TimeSpan InstructorTime = TimeSpan.Zero;
-                TimeSpan SimTime = TimeSpan.Zero;
+            CultureInfo provider = CultureInfo.InvariantCulture;
+            int ldg_day = 0;
+            int ldg_night = 0;
+            string from = "";
+            string to = "";
+            string aircraft = "";
+            string type = "";
+            string PIC = "";
+            string remarks = "";
+            DateTime begin, end;
+            TimeSpan begin_time = TimeSpan.Zero;
+            TimeSpan end_time = TimeSpan.Zero;
+            TimeSpan multiPilotTime = TimeSpan.Zero;
+            TimeSpan CoPilotTime = TimeSpan.Zero;
+            TimeSpan nightTime = TimeSpan.Zero;
+            TimeSpan IFRTime = TimeSpan.Zero;
+            TimeSpan PICTime = TimeSpan.Zero;
+            TimeSpan InstructorTime = TimeSpan.Zero;
+            TimeSpan SimTime = TimeSpan.Zero;
             try
             {
 
@@ -76,20 +77,27 @@ namespace SimpleEASALogbook
 
                     Flights.Add(new Flight(begin, "", TimeSpan.MinValue, "", TimeSpan.MinValue, "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, begin, type, SimTime, remarks, false));
                 }
+                if (Flights.Count < 1)
+                {
+                    _ErrorOccured = true;
+                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " Import_Brussels_PDF: found no Flights to parse.\n");
+                }
             }
 
-            catch (Exception ey)
+            catch (Exception e)
             {
-                Error = true;
-                Console.WriteLine("error parsing Brussels PDF at");
-                Console.WriteLine(ey.ToString());
+                File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " Import_Brussels_PDF:\n" + e.ToString() + "\n");
+                _ErrorOccured = true;
             }
-
         }
 
         public List<Flight> GetFlightList()
         {
             return Flights;
+        }
+        public bool GetError()
+        {
+            return _ErrorOccured;
         }
     }
 }

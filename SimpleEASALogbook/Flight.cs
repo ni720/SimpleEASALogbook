@@ -65,8 +65,8 @@ namespace SimpleEASALogbook
             _CopilotTime = copitime;
             _DualTime = dualtime;
             _InstructorTime = instructortime;
-            if(dateofsim.HasValue)
-            { _DateOfSim = dateofsim; }            
+            if (dateofsim.HasValue)
+            { _DateOfSim = dateofsim; }
             _TypeOfSim = typeofsim;
             _SimTime = simtime;
             _Remarks = remarks;
@@ -84,10 +84,11 @@ namespace SimpleEASALogbook
                     }
                     else
                     {
-                        if(_Remarks.Contains("previous experience"))
+                        if (_Remarks.Contains("previous experience"))
                         {
                             return DateTime.MinValue;
-                        }else
+                        }
+                        else
                         {
                             return null;
                         }
