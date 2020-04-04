@@ -4,36 +4,38 @@ using System.IO;
 
 namespace SimpleEASALogbook
 {
-    class Import_MCC_CSV
+    internal class Import_MCC_CSV
     {
-        DateTime StartDate = DateTime.MinValue;
-        TimeSpan Starttime = TimeSpan.Zero;
-        string FROM = "";
-        TimeSpan Endtime = TimeSpan.Zero;
-        string TO = "";
-        string Aircraft = "";
-        string Type = "";
+        private bool _ErrorOccured = false;
+        private string Aircraft = "";
+        private TimeSpan CopilotTime = TimeSpan.Zero;
+        private DateTime date_of_sim = DateTime.MinValue;
+        private int DayLanding = 0;
+        private TimeSpan DualTime = TimeSpan.Zero;
+        private TimeSpan Endtime = TimeSpan.Zero;
+        private List<Flight> Flights = new List<Flight>();
+        private string FROM = "";
+        private TimeSpan IFRTime = TimeSpan.Zero;
+        private TimeSpan InstructorTime = TimeSpan.Zero;
+        private string MCCVersion = "4";
+
         //TimeSpan SETime = TimeSpan.Zero;  // MCC Pilotlog does not correctly export SEP Time
         //TimeSpan METime = TimeSpan.Zero;  // MCC Pilotlog does not correctly export MEP Time
-        TimeSpan MultiPilotTime = TimeSpan.Zero;
-        TimeSpan TotalTimeOfFlight = TimeSpan.Zero;
-        string PIC = "";
-        int DayLanding = 0;
-        int NightLanding = 0;
-        TimeSpan NightTime = TimeSpan.Zero;
-        TimeSpan IFRTime = TimeSpan.Zero;
-        TimeSpan PICTime = TimeSpan.Zero;
-        TimeSpan CopilotTime = TimeSpan.Zero;
-        TimeSpan DualTime = TimeSpan.Zero;
-        TimeSpan InstructorTime = TimeSpan.Zero;
-        DateTime date_of_sim = DateTime.MinValue;
-        string Type_of_sim = "";
-        TimeSpan sim_time = TimeSpan.Zero;
-        string remarks = "";
-        bool nextpageafter = false;
-        List<Flight> Flights = new List<Flight>();
-        bool _ErrorOccured = false;
-        string MCCVersion = "4";
+        private TimeSpan MultiPilotTime = TimeSpan.Zero;
+
+        private bool nextpageafter = false;
+        private int NightLanding = 0;
+        private TimeSpan NightTime = TimeSpan.Zero;
+        private string PIC = "";
+        private TimeSpan PICTime = TimeSpan.Zero;
+        private string remarks = "";
+        private TimeSpan sim_time = TimeSpan.Zero;
+        private DateTime StartDate = DateTime.MinValue;
+        private TimeSpan Starttime = TimeSpan.Zero;
+        private string TO = "";
+        private TimeSpan TotalTimeOfFlight = TimeSpan.Zero;
+        private string Type = "";
+        private string Type_of_sim = "";
 
         public Import_MCC_CSV(string mcccsv)
         {
@@ -74,7 +76,135 @@ namespace SimpleEASALogbook
                 }
             }
         }
-        Flight CreateFlightMCCv4(string[] csvline)
+
+        public bool GetError()
+        {
+            return _ErrorOccured;
+        }
+
+        public List<Flight> GetFlightList()
+        {
+            return Flights;
+        }
+
+        private Flight CreateFlightMCCv3(string[] csvline)
+        {
+            StartDate = new DateTime(int.Parse(csvline[0].Substring(6, 4)), int.Parse(csvline[0].Substring(3, 2)), int.Parse(csvline[0].Substring(0, 2)));
+
+            FROM = csvline[4];
+
+            if (!TimeSpan.TryParse(csvline[5], out Starttime))
+            {
+                Starttime = TimeSpan.Zero;
+            }
+
+            TO = csvline[7];
+
+            if (!TimeSpan.TryParse(csvline[8], out Endtime))
+            {
+                Endtime = TimeSpan.Zero;
+            }
+
+            Type = csvline[10];
+
+            Aircraft = csvline[11];
+
+            PIC = csvline[13];
+
+            if (csvline[28].Length > 0)
+            {
+                TotalTimeOfFlight = TimeSpan.FromMinutes(int.Parse(csvline[28]));
+            }
+
+            if (csvline[30].Length > 0)
+            {
+                PICTime = TimeSpan.FromMinutes(int.Parse(csvline[30]));
+            }
+
+            if (csvline[32].Length > 0)
+            {
+                DualTime = TimeSpan.FromMinutes(int.Parse(csvline[32]));
+            }
+
+            if (csvline[31].Length > 0)
+            {
+                CopilotTime = TimeSpan.FromMinutes(int.Parse(csvline[31]));
+            }
+
+            if (csvline[33].Length > 0)
+            {
+                InstructorTime = TimeSpan.FromMinutes(int.Parse(csvline[33]));
+            }
+
+            if (csvline[35].Length > 0)
+            {
+                NightTime = TimeSpan.FromMinutes(int.Parse(csvline[35]));
+            }
+
+            if (csvline[37].Length > 0)
+            {
+                IFRTime = TimeSpan.FromMinutes(int.Parse(csvline[37]));
+            }
+
+            if (!int.TryParse(csvline[44], out DayLanding) || csvline[41].Contains("false"))
+            {
+                DayLanding = 0;
+            }
+
+            if (!int.TryParse(csvline[45], out NightLanding) || csvline[41].Contains("false"))
+            {
+                NightLanding = 0;
+            }
+
+            if (!DateTime.TryParse(csvline[0], out date_of_sim) || !csvline[2].Contains("sim"))
+            {
+                date_of_sim = DateTime.MinValue;
+            }
+            if (csvline[28].Length > 0 && !csvline[2].Contains("sim"))
+            {
+                sim_time = TimeSpan.FromMinutes(int.Parse(csvline[28]));
+            }
+            if (csvline[2].Contains("sim"))
+            {
+                Type_of_sim = csvline[10];
+            }
+
+            remarks = csvline[50];
+
+            if (csvline[50].Length < 1 && csvline[2].Contains("sim"))
+            {
+                remarks += csvline[12];
+            }
+
+            //----
+            if (csvline[31].Length > 0)
+            {
+                MultiPilotTime = TimeSpan.FromMinutes(int.Parse(csvline[31]));
+            }
+
+            // ---
+
+            if (csvline.Length > 63 && csvline[63].Equals("pagebreak"))
+            {
+                nextpageafter = true;
+            }
+            else
+            {
+                nextpageafter = false;
+            }
+            // SIM
+            if (csvline[2].Contains("sim"))
+            {
+                return new Flight(StartDate, "", TimeSpan.MinValue, "", TimeSpan.MinValue, "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, date_of_sim, Type_of_sim, sim_time, remarks, nextpageafter);
+            }
+            // No SIM
+            else
+            {
+                return new Flight(StartDate, FROM, Starttime, TO, Endtime, Type, Aircraft, TimeSpan.Zero, TimeSpan.Zero, MultiPilotTime, TotalTimeOfFlight, PIC, DayLanding, NightLanding, NightTime, IFRTime, PICTime, CopilotTime, DualTime, InstructorTime, DateTime.MinValue, "", TimeSpan.Zero, remarks, nextpageafter);
+            }
+        }
+
+        private Flight CreateFlightMCCv4(string[] csvline)
         {
             StartDate = DateTime.MinValue;
             Starttime = TimeSpan.Zero;
@@ -178,134 +308,6 @@ namespace SimpleEASALogbook
             {
                 return new Flight(StartDate, FROM, Starttime, TO, Endtime, Type, Aircraft, TimeSpan.Zero, TimeSpan.Zero, MultiPilotTime, TotalTimeOfFlight, PIC, DayLanding, NightLanding, NightTime, IFRTime, PICTime, CopilotTime, DualTime, InstructorTime, null, "", TimeSpan.MinValue, remarks, nextpageafter);
             }
-        }
-        Flight CreateFlightMCCv3(string[] csvline)
-        {
-            StartDate = new DateTime(int.Parse(csvline[0].Substring(6, 4)), int.Parse(csvline[0].Substring(3, 2)), int.Parse(csvline[0].Substring(0, 2)));
-
-            FROM = csvline[4];
-
-
-            if (!TimeSpan.TryParse(csvline[5], out Starttime))
-            {
-                Starttime = TimeSpan.Zero;
-            }
-
-
-            TO = csvline[7];
-
-
-            if (!TimeSpan.TryParse(csvline[8], out Endtime))
-            {
-                Endtime = TimeSpan.Zero;
-            }
-
-
-            Type = csvline[10];
-
-            Aircraft = csvline[11];
-
-            PIC = csvline[13];
-
-            if (csvline[28].Length > 0)
-            {
-                TotalTimeOfFlight = TimeSpan.FromMinutes(int.Parse(csvline[28]));
-            }
-
-            if (csvline[30].Length > 0)
-            {
-                PICTime = TimeSpan.FromMinutes(int.Parse(csvline[30]));
-            }
-
-            if (csvline[32].Length > 0)
-            {
-                DualTime = TimeSpan.FromMinutes(int.Parse(csvline[32]));
-            }
-
-            if (csvline[31].Length > 0)
-            {
-                CopilotTime = TimeSpan.FromMinutes(int.Parse(csvline[31]));
-            }
-
-            if (csvline[33].Length > 0)
-            {
-                InstructorTime = TimeSpan.FromMinutes(int.Parse(csvline[33]));
-            }
-
-            if (csvline[35].Length > 0)
-            {
-                NightTime = TimeSpan.FromMinutes(int.Parse(csvline[35]));
-            }
-
-            if (csvline[37].Length > 0)
-            {
-                IFRTime = TimeSpan.FromMinutes(int.Parse(csvline[37]));
-            }
-
-            if (!int.TryParse(csvline[44], out DayLanding) || csvline[41].Contains("false"))
-            {
-                DayLanding = 0;
-            }
-
-            if (!int.TryParse(csvline[45], out NightLanding) || csvline[41].Contains("false"))
-            {
-                NightLanding = 0;
-            }
-
-            if (!DateTime.TryParse(csvline[0], out date_of_sim) || !csvline[2].Contains("sim"))
-            {
-                date_of_sim = DateTime.MinValue;
-            }
-            if (csvline[28].Length > 0 && !csvline[2].Contains("sim"))
-            {
-                sim_time = TimeSpan.FromMinutes(int.Parse(csvline[28]));
-            }
-            if (csvline[2].Contains("sim"))
-            {
-                Type_of_sim = csvline[10];
-            }
-
-            remarks = csvline[50];
-
-            if (csvline[50].Length < 1 && csvline[2].Contains("sim"))
-            {
-                remarks += csvline[12];
-            }
-
-            //----
-            if (csvline[31].Length > 0)
-            {
-                MultiPilotTime = TimeSpan.FromMinutes(int.Parse(csvline[31]));
-            }
-
-            // ---
-
-            if (csvline.Length > 63 && csvline[63].Equals("pagebreak"))
-            {
-                nextpageafter = true;
-            }
-            else
-            {
-                nextpageafter = false;
-            }
-            // SIM
-            if (csvline[2].Contains("sim"))
-            {
-                return new Flight(StartDate, "", TimeSpan.MinValue, "", TimeSpan.MinValue, "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, date_of_sim, Type_of_sim, sim_time, remarks, nextpageafter);
-            }
-            // No SIM
-            else
-            {
-                return new Flight(StartDate, FROM, Starttime, TO, Endtime, Type, Aircraft, TimeSpan.Zero, TimeSpan.Zero, MultiPilotTime, TotalTimeOfFlight, PIC, DayLanding, NightLanding, NightTime, IFRTime, PICTime, CopilotTime, DualTime, InstructorTime, DateTime.MinValue, "", TimeSpan.Zero, remarks, nextpageafter);
-            }
-        }
-        public List<Flight> GetFlightList()
-        {
-            return Flights;
-        }
-        public bool GetError()
-        {
-            return _ErrorOccured;
         }
     }
 }

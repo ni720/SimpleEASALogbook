@@ -5,10 +5,10 @@ using System.Text.RegularExpressions;
 
 namespace SimpleEASALogbook
 {
-    class Import_LH_PDF
+    internal class Import_LH_PDF
     {
-        List<Flight> Flights = new List<Flight>();
-        bool _ErrorOccured = false;
+        private bool _ErrorOccured = false;
+        private List<Flight> Flights = new List<Flight>();
 
         public Import_LH_PDF(string textToParse)
         {
@@ -43,7 +43,7 @@ namespace SimpleEASALogbook
                 {
                     if (filter_dhFlights.Matches(flightmatch.Value).Count > 0)
                     {
-                        // DH fluege verwerfen
+                        // disregard deadhead flights
                     }
                     else
                     {
@@ -77,19 +77,19 @@ namespace SimpleEASALogbook
 
                         PIC = flightmatch.Value.Substring(flightmatch.Value.LastIndexOf("/")).Replace("/", "").Trim();
 
-                        //SIM
+                        // is SIM-flight
                         if (flightmatch.Value.Trim().EndsWith("/"))
                         {
                             Flights.Add(new Flight(null, "", null, "", null, "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, begin, type, duration, aircraft, false));
                         }
-                        else //KEIN SIM
+                        else //no SIM
                         {
-                            // mit landung
+                            // with landing
                             if (landings.Matches(flightmatch.Value).Count > 0)
                             {
                                 Flights.Add(new Flight(date, from, offblock, to, onblock, type, aircraft, TimeSpan.Zero, TimeSpan.Zero, duration, duration, PIC, 1, 0, TimeSpan.Zero, duration, TimeSpan.Zero, duration, TimeSpan.Zero, TimeSpan.Zero, null, "", TimeSpan.Zero, "", false));
                             }
-                            else // ohne landung
+                            else // without landing
                             {
                                 Flights.Add(new Flight(date, from, offblock, to, onblock, type, aircraft, TimeSpan.Zero, TimeSpan.Zero, duration, duration, PIC, 0, 0, TimeSpan.Zero, duration, TimeSpan.Zero, duration, TimeSpan.Zero, TimeSpan.Zero, null, "", TimeSpan.Zero, "", false));
                             }
@@ -109,14 +109,14 @@ namespace SimpleEASALogbook
             }
         }
 
-        public List<Flight> GetFlightList()
-        {
-            return Flights;
-        }
-
         public bool GetError()
         {
             return _ErrorOccured;
+        }
+
+        public List<Flight> GetFlightList()
+        {
+            return Flights;
         }
     }
 }

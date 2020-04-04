@@ -6,40 +6,56 @@ namespace SimpleEASALogbook
 {
     public class Flight : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        private Nullable<DateTime> _FlightDate = null;
-        private string _DepartureAirport = "";
-        private Nullable<TimeSpan> _OffBlockTime = null;
-        private string _DestinationAirport = "";
-        private Nullable<TimeSpan> _OnBlockTime = null;
-        private string _TypeOfAircraft = "";
         private string _AircraftRegistration = "";
-        private Nullable<TimeSpan> _SEPTime = null;
-        private Nullable<TimeSpan> _MEPTime = null;
-        private Nullable<TimeSpan> _MultiPilotTime = null;
-        private Nullable<TimeSpan> _TotalTimeOfFlight = null;
-        private string _PilotInCommand = "";
-        private Nullable<int> _DayLandings = null;
-        private Nullable<int> _NightLandings = null;
-        private Nullable<TimeSpan> _NightTime = null;
-        private Nullable<TimeSpan> _IFRTime = null;
-        private Nullable<TimeSpan> _PICTime = null;
+
         private Nullable<TimeSpan> _CopilotTime = null;
-        private Nullable<TimeSpan> _DualTime = null;
-        private Nullable<TimeSpan> _InstructorTime = null;
+
         private Nullable<DateTime> _DateOfSim = null;
-        private string _TypeOfSim = "";
-        private Nullable<TimeSpan> _SimTime = null;
-        private string _Remarks = "";
+
+        private Nullable<int> _DayLandings = null;
+
+        private string _DepartureAirport = "";
+
+        private string _DestinationAirport = "";
+
+        private Nullable<TimeSpan> _DualTime = null;
+
+        private Nullable<DateTime> _FlightDate = null;
+
+        private Nullable<TimeSpan> _IFRTime = null;
+
+        private Nullable<TimeSpan> _InstructorTime = null;
+
+        private Nullable<TimeSpan> _MEPTime = null;
+
+        private Nullable<TimeSpan> _MultiPilotTime = null;
+
         private bool _NextPageThereafter = false;
 
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
+        private Nullable<int> _NightLandings = null;
+
+        private Nullable<TimeSpan> _NightTime = null;
+
+        private Nullable<TimeSpan> _OffBlockTime = null;
+
+        private Nullable<TimeSpan> _OnBlockTime = null;
+
+        private Nullable<TimeSpan> _PICTime = null;
+
+        private string _PilotInCommand = "";
+
+        private string _Remarks = "";
+
+        private Nullable<TimeSpan> _SEPTime = null;
+
+        private Nullable<TimeSpan> _SimTime = null;
+
+        private Nullable<TimeSpan> _TotalTimeOfFlight = null;
+
+        private string _TypeOfAircraft = "";
+
+        private string _TypeOfSim = "";
+
         public Flight(DateTime? date, string dep, TimeSpan? offblock, string dest, TimeSpan? onblock, string type, string reg, TimeSpan septime, TimeSpan meptime, TimeSpan multitime, TimeSpan totaltime, string pic, int ldgday, int ldgnight, TimeSpan nighttime, TimeSpan ifrtime, TimeSpan pictime, TimeSpan copitime, TimeSpan dualtime, TimeSpan instructortime, DateTime? dateofsim, string typeofsim, TimeSpan simtime, string remarks, bool nextpage)
         {
             if (date.HasValue)
@@ -72,6 +88,177 @@ namespace SimpleEASALogbook
             _Remarks = remarks;
             _NextPageThereafter = nextpage;
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public string AircraftRegistration
+        {
+            get
+            {
+                return _AircraftRegistration;
+            }
+            set
+            {
+                if (value != this._AircraftRegistration)
+                {
+                    this._AircraftRegistration = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public TimeSpan? CopilotTime
+        {
+            get
+            {
+                if (_CopilotTime.HasValue)
+                {
+                    if (_CopilotTime.Value.Ticks > TimeSpan.Zero.Ticks)
+                    {
+                        return _CopilotTime.Value;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            set
+            {
+                if (value != this._CopilotTime)
+                {
+                    this._CopilotTime = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public DateTime? DateOfSim
+        {
+            get
+            {
+                if (_DateOfSim.HasValue)
+                {
+                    if (_DateOfSim.Value.Ticks > DateTime.MinValue.Ticks)
+                    {
+                        return _DateOfSim.Value;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            set
+            {
+                if (value != this._DateOfSim)
+                {
+                    this._DateOfSim = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public int? DayLandings
+        {
+            get
+            {
+                if (_DayLandings.HasValue)
+                {
+                    if (_DayLandings.Value > 0)
+                    {
+                        return _DayLandings.Value;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            set
+            {
+                if (value != this._DayLandings)
+                {
+                    this._DayLandings = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public string DepartureAirport
+        {
+            get
+            {
+                return _DepartureAirport;
+            }
+            set
+            {
+                if (value != this._DepartureAirport)
+                {
+                    this._DepartureAirport = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public string DestinationAirport
+        {
+            get
+            {
+                return _DestinationAirport;
+            }
+            set
+            {
+                if (value != this._DestinationAirport)
+                {
+                    this._DestinationAirport = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public TimeSpan? DualTime
+        {
+            get
+            {
+                if (_DualTime.HasValue)
+                {
+                    if (_DualTime.Value.Ticks > TimeSpan.Zero.Ticks)
+                    {
+                        return _DualTime.Value;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            set
+            {
+                if (value != this._DualTime)
+                {
+                    this._DualTime = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         public DateTime? FlightDate
         {
             get
@@ -108,21 +295,203 @@ namespace SimpleEASALogbook
                 }
             }
         }
-        public string DepartureAirport
+
+        public TimeSpan? IFRTime
         {
             get
             {
-                return _DepartureAirport;
+                if (_IFRTime.HasValue)
+                {
+                    if (_IFRTime.Value.Ticks > TimeSpan.Zero.Ticks)
+                    {
+                        return _IFRTime.Value;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
             }
             set
             {
-                if (value != this._DepartureAirport)
+                if (value != this._IFRTime)
                 {
-                    this._DepartureAirport = value;
+                    this._IFRTime = value;
                     NotifyPropertyChanged();
                 }
             }
         }
+
+        public TimeSpan? InstructorTime
+        {
+            get
+            {
+                if (_InstructorTime.HasValue)
+                {
+                    if (_InstructorTime.Value.Ticks > TimeSpan.Zero.Ticks)
+                    {
+                        return _InstructorTime.Value;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            set
+            {
+                if (value != this._InstructorTime)
+                {
+                    this._InstructorTime = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public TimeSpan? MEPTime
+        {
+            get
+            {
+                if (_MEPTime.HasValue)
+                {
+                    if (_MEPTime.Value.Ticks > TimeSpan.Zero.Ticks)
+                    {
+                        return _MEPTime.Value;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            set
+            {
+                if (value != this._MEPTime)
+                {
+                    this._MEPTime = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public TimeSpan? MultiPilotTime
+        {
+            get
+            {
+                if (_MultiPilotTime.HasValue)
+                {
+                    if (_MultiPilotTime.Value.Ticks > TimeSpan.Zero.Ticks)
+                    {
+                        return _MultiPilotTime.Value;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            set
+            {
+                if (value != this._MultiPilotTime)
+                {
+                    this._MultiPilotTime = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public bool NextPageThereafter
+        {
+            get
+            {
+                return _NextPageThereafter;
+            }
+            set
+            {
+                if (value != this._NextPageThereafter)
+                {
+                    this._NextPageThereafter = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public int? NightLandings
+        {
+            get
+            {
+                if (_NightLandings.HasValue)
+                {
+                    if (_NightLandings.Value > 0)
+                    {
+                        return _NightLandings.Value;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            set
+            {
+                if (value != this._NightLandings)
+                {
+                    this._NightLandings = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public TimeSpan? NightTime
+        {
+            get
+            {
+                if (_NightTime.HasValue)
+                {
+                    if (_NightTime.Value.Ticks > TimeSpan.Zero.Ticks)
+                    {
+                        return _NightTime.Value;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            set
+            {
+                if (value != this._NightTime)
+                {
+                    this._NightTime = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         public TimeSpan? OffBlockTime
         {
             get
@@ -152,21 +521,7 @@ namespace SimpleEASALogbook
                 }
             }
         }
-        public string DestinationAirport
-        {
-            get
-            {
-                return _DestinationAirport;
-            }
-            set
-            {
-                if (value != this._DestinationAirport)
-                {
-                    this._DestinationAirport = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
+
         public TimeSpan? OnBlockTime
         {
             get
@@ -196,291 +551,7 @@ namespace SimpleEASALogbook
                 }
             }
         }
-        public string TypeOfAircraft
-        {
-            get
-            {
-                return _TypeOfAircraft;
-            }
-            set
-            {
-                if (value != this._TypeOfAircraft)
-                {
-                    this._TypeOfAircraft = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-        public string AircraftRegistration
-        {
-            get
-            {
-                return _AircraftRegistration;
-            }
-            set
-            {
-                if (value != this._AircraftRegistration)
-                {
-                    this._AircraftRegistration = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-        public TimeSpan? SEPTime
-        {
-            get
-            {
-                if (_SEPTime.HasValue)
-                {
-                    if (_SEPTime.Value.Ticks > TimeSpan.Zero.Ticks)
-                    {
-                        return _SEPTime.Value;
 
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                if (value != this._SEPTime)
-                {
-                    this._SEPTime = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-        public TimeSpan? MEPTime
-        {
-            get
-            {
-                if (_MEPTime.HasValue)
-                {
-                    if (_MEPTime.Value.Ticks > TimeSpan.Zero.Ticks)
-                    {
-                        return _MEPTime.Value;
-
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                if (value != this._MEPTime)
-                {
-                    this._MEPTime = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-        public TimeSpan? MultiPilotTime
-        {
-            get
-            {
-                if (_MultiPilotTime.HasValue)
-                {
-                    if (_MultiPilotTime.Value.Ticks > TimeSpan.Zero.Ticks)
-                    {
-                        return _MultiPilotTime.Value;
-
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                if (value != this._MultiPilotTime)
-                {
-                    this._MultiPilotTime = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-        public TimeSpan? TotalTimeOfFlight
-        {
-            get
-            {
-                if (_TotalTimeOfFlight.HasValue)
-                {
-                    if (_TotalTimeOfFlight.Value.Ticks > TimeSpan.Zero.Ticks)
-                    {
-                        return _TotalTimeOfFlight.Value;
-
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                if (value != this._TotalTimeOfFlight)
-                {
-                    this._TotalTimeOfFlight = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-        public string PilotInCommand
-        {
-            get
-            {
-                return _PilotInCommand;
-            }
-            set
-            {
-                if (value != this._PilotInCommand)
-                {
-                    this._PilotInCommand = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-        public int? DayLandings
-        {
-            get
-            {
-                if (_DayLandings.HasValue)
-                {
-                    if (_DayLandings.Value > 0)
-                    {
-                        return _DayLandings.Value;
-
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                if (value != this._DayLandings)
-                {
-                    this._DayLandings = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-        public int? NightLandings
-        {
-            get
-            {
-                if (_NightLandings.HasValue)
-                {
-                    if (_NightLandings.Value > 0)
-                    {
-                        return _NightLandings.Value;
-
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                if (value != this._NightLandings)
-                {
-                    this._NightLandings = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-        public TimeSpan? NightTime
-        {
-            get
-            {
-                if (_NightTime.HasValue)
-                {
-                    if (_NightTime.Value.Ticks > TimeSpan.Zero.Ticks)
-                    {
-                        return _NightTime.Value;
-
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                if (value != this._NightTime)
-                {
-                    this._NightTime = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-        public TimeSpan? IFRTime
-        {
-            get
-            {
-                if (_IFRTime.HasValue)
-                {
-                    if (_IFRTime.Value.Ticks > TimeSpan.Zero.Ticks)
-                    {
-                        return _IFRTime.Value;
-
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                if (value != this._IFRTime)
-                {
-                    this._IFRTime = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
         public TimeSpan? PICTime
         {
             get
@@ -490,7 +561,6 @@ namespace SimpleEASALogbook
                     if (_PICTime.Value.Ticks > TimeSpan.Zero.Ticks)
                     {
                         return _PICTime.Value;
-
                     }
                     else
                     {
@@ -511,76 +581,48 @@ namespace SimpleEASALogbook
                 }
             }
         }
-        public TimeSpan? CopilotTime
-        {
-            get
-            {
-                if (_CopilotTime.HasValue)
-                {
-                    if (_CopilotTime.Value.Ticks > TimeSpan.Zero.Ticks)
-                    {
-                        return _CopilotTime.Value;
 
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-                else
-                {
-                    return null;
-                }
+        public string PilotInCommand
+        {
+            get
+            {
+                return _PilotInCommand;
             }
             set
             {
-                if (value != this._CopilotTime)
+                if (value != this._PilotInCommand)
                 {
-                    this._CopilotTime = value;
+                    this._PilotInCommand = value;
                     NotifyPropertyChanged();
                 }
             }
         }
-        public TimeSpan? DualTime
-        {
-            get
-            {
-                if (_DualTime.HasValue)
-                {
-                    if (_DualTime.Value.Ticks > TimeSpan.Zero.Ticks)
-                    {
-                        return _DualTime.Value;
 
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-                else
-                {
-                    return null;
-                }
+        public string Remarks
+        {
+            get
+            {
+                return _Remarks;
             }
             set
             {
-                if (value != this._DualTime)
+                if (value != this._Remarks)
                 {
-                    this._DualTime = value;
+                    this._Remarks = value;
                     NotifyPropertyChanged();
                 }
             }
         }
-        public TimeSpan? InstructorTime
-        {
-            get
-            {
-                if (_InstructorTime.HasValue)
-                {
-                    if (_InstructorTime.Value.Ticks > TimeSpan.Zero.Ticks)
-                    {
-                        return _InstructorTime.Value;
 
+        public TimeSpan? SEPTime
+        {
+            get
+            {
+                if (_SEPTime.HasValue)
+                {
+                    if (_SEPTime.Value.Ticks > TimeSpan.Zero.Ticks)
+                    {
+                        return _SEPTime.Value;
                     }
                     else
                     {
@@ -594,57 +636,14 @@ namespace SimpleEASALogbook
             }
             set
             {
-                if (value != this._InstructorTime)
+                if (value != this._SEPTime)
                 {
-                    this._InstructorTime = value;
+                    this._SEPTime = value;
                     NotifyPropertyChanged();
                 }
             }
         }
-        public DateTime? DateOfSim
-        {
-            get
-            {
-                if (_DateOfSim.HasValue)
-                {
-                    if (_DateOfSim.Value.Ticks > DateTime.MinValue.Ticks)
-                    {
-                        return _DateOfSim.Value;
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                if (value != this._DateOfSim)
-                {
-                    this._DateOfSim = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-        public string TypeOfSim
-        {
-            get
-            {
-                return _TypeOfSim;
-            }
-            set
-            {
-                if (value != this._TypeOfSim)
-                {
-                    this._TypeOfSim = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
+
         public TimeSpan? SimTime
         {
             get
@@ -654,7 +653,6 @@ namespace SimpleEASALogbook
                     if (_SimTime.Value.Ticks > TimeSpan.Zero.Ticks)
                     {
                         return _SimTime.Value;
-
                     }
                     else
                     {
@@ -675,272 +673,69 @@ namespace SimpleEASALogbook
                 }
             }
         }
-        public string Remarks
+
+        public TimeSpan? TotalTimeOfFlight
         {
             get
             {
-                return _Remarks;
+                if (_TotalTimeOfFlight.HasValue)
+                {
+                    if (_TotalTimeOfFlight.Value.Ticks > TimeSpan.Zero.Ticks)
+                    {
+                        return _TotalTimeOfFlight.Value;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
             }
             set
             {
-                if (value != this._Remarks)
+                if (value != this._TotalTimeOfFlight)
                 {
-                    this._Remarks = value;
+                    this._TotalTimeOfFlight = value;
                     NotifyPropertyChanged();
                 }
             }
         }
-        public bool NextPageThereafter
+
+        public string TypeOfAircraft
         {
             get
             {
-                return _NextPageThereafter;
+                return _TypeOfAircraft;
             }
             set
             {
-                if (value != this._NextPageThereafter)
+                if (value != this._TypeOfAircraft)
                 {
-                    this._NextPageThereafter = value;
+                    this._TypeOfAircraft = value;
                     NotifyPropertyChanged();
                 }
             }
         }
-        public string getDateString()
+
+        public string TypeOfSim
         {
-            if (_FlightDate.HasValue)
+            get
             {
-                if (_FlightDate.Value.Ticks > DateTime.MinValue.Ticks)
-                {
-                    return _FlightDate.Value.ToShortDateString()/*.Substring(0, 8)*/;
-                }
-                else
-                {
-                    return "";
-                }
+                return _TypeOfSim;
             }
-            else
+            set
             {
-                return "";
+                if (value != this._TypeOfSim)
+                {
+                    this._TypeOfSim = value;
+                    NotifyPropertyChanged();
+                }
             }
         }
-        public string getDepartureString()
-        {
-            return _DepartureAirport;
-        }
-        public string getOffBlockTimeString()
-        {
-            if (_OffBlockTime.HasValue)
-            {
-                if (_OffBlockTime.Value.Ticks > TimeSpan.Zero.Ticks)
-                {
-                    return _OffBlockTime.ToString().Substring(0, 5);
-                }
-                else
-                {
-                    return "";
-                }
-            }
-            else
-            {
-                return "";
-            }
-        }
-        public string getDestinationString()
-        {
-            return _DestinationAirport;
-        }
-        public string getOnBlockTimeString()
-        {
-            if (_OnBlockTime.HasValue)
-            {
-                if (_OnBlockTime.Value.Ticks > TimeSpan.Zero.Ticks)
-                {
-                    return _OnBlockTime.ToString().Substring(0, 5);
-                }
-                else
-                {
-                    return "";
-                }
-            }
-            else
-            {
-                return "";
-            }
-        }
-        public string getTypeOfAircraftString()
-        {
-            return _TypeOfAircraft;
-        }
-        public string getRegistrationString()
-        {
-            return _AircraftRegistration;
-        }
-        public string getSEPTimeString()
-        {
-            if (_SEPTime.HasValue)
-            {
-                if (_SEPTime.Value.Ticks > TimeSpan.Zero.Ticks)
-                {
-                    return _SEPTime.ToString().Substring(0, 5);
-                }
-                else
-                {
-                    return "";
-                }
-            }
-            else
-            {
-                return "";
-            }
-        }
-        public string getMEPTimeString()
-        {
-            if (_MEPTime.HasValue)
-            {
-                if (_MEPTime.Value.Ticks > TimeSpan.Zero.Ticks)
-                {
-                    return _MEPTime.ToString().Substring(0, 5);
-                }
-                else
-                {
-                    return "";
-                }
-            }
-            else
-            {
-                return "";
-            }
-        }
-        public string getMultiPilotTimeString()
-        {
-            if (_MultiPilotTime.HasValue)
-            {
-                if (_MultiPilotTime.Value.Ticks > TimeSpan.Zero.Ticks)
-                {
-                    return _MultiPilotTime.ToString().Substring(0, 5);
-                }
-                else
-                {
-                    return "";
-                }
-            }
-            else
-            {
-                return "";
-            }
-        }
-        public string getTotalTimeString()
-        {
-            if (_TotalTimeOfFlight.HasValue)
-            {
-                if (_TotalTimeOfFlight.Value.Ticks > TimeSpan.Zero.Ticks)
-                {
-                    return _TotalTimeOfFlight.ToString().Substring(0, 5);
-                }
-                else
-                {
-                    return "";
-                }
-            }
-            else
-            {
-                return "";
-            }
-        }
-        public string getPICNameString()
-        {
-            return _PilotInCommand;
-        }
-        public string getDayLDGString()
-        {
-            if (_DayLandings.HasValue)
-            {
-                if (_DayLandings.Value > 0)
-                {
-                    return _DayLandings.ToString();
-                }
-                else
-                {
-                    return "";
-                }
-            }
-            else
-            {
-                return "";
-            }
-        }
-        public string getNightLDGString()
-        {
-            if (_NightLandings.HasValue)
-            {
-                if (_NightLandings.Value > 0)
-                {
-                    return _NightLandings.ToString();
-                }
-                else
-                {
-                    return "";
-                }
-            }
-            else
-            {
-                return "";
-            }
-        }
-        public string getNightTimeString()
-        {
-            if (_NightTime.HasValue)
-            {
-                if (_NightTime.Value.Ticks > TimeSpan.Zero.Ticks)
-                {
-                    return _NightTime.ToString().Substring(0, 5);
-                }
-                else
-                {
-                    return "";
-                }
-            }
-            else
-            {
-                return "";
-            }
-        }
-        public string getIFRTimeString()
-        {
-            if (_IFRTime.HasValue)
-            {
-                if (_IFRTime.Value.Ticks > TimeSpan.Zero.Ticks)
-                {
-                    return _IFRTime.ToString().Substring(0, 5);
-                }
-                else
-                {
-                    return "";
-                }
-            }
-            else
-            {
-                return "";
-            }
-        }
-        public string getPICTimeString()
-        {
-            if (_PICTime.HasValue)
-            {
-                if (_PICTime.Value.Ticks > TimeSpan.Zero.Ticks)
-                {
-                    return _PICTime.ToString().Substring(0, 5);
-                }
-                else
-                {
-                    return "";
-                }
-            }
-            else
-            {
-                return "";
-            }
-        }
+
         public string getCopilotTimeString()
         {
             if (_CopilotTime.HasValue)
@@ -959,6 +754,55 @@ namespace SimpleEASALogbook
                 return "";
             }
         }
+
+        public string getDateString()
+        {
+            if (_FlightDate.HasValue)
+            {
+                if (_FlightDate.Value.Ticks > DateTime.MinValue.Ticks)
+                {
+                    return _FlightDate.Value.ToShortDateString()/*.Substring(0, 8)*/;
+                }
+                else
+                {
+                    return "";
+                }
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        public string getDayLDGString()
+        {
+            if (_DayLandings.HasValue)
+            {
+                if (_DayLandings.Value > 0)
+                {
+                    return _DayLandings.ToString();
+                }
+                else
+                {
+                    return "";
+                }
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        public string getDepartureString()
+        {
+            return _DepartureAirport;
+        }
+
+        public string getDestinationString()
+        {
+            return _DestinationAirport;
+        }
+
         public string getDualTimeString()
         {
             if (_DualTime.HasValue)
@@ -977,6 +821,26 @@ namespace SimpleEASALogbook
                 return "";
             }
         }
+
+        public string getIFRTimeString()
+        {
+            if (_IFRTime.HasValue)
+            {
+                if (_IFRTime.Value.Ticks > TimeSpan.Zero.Ticks)
+                {
+                    return _IFRTime.ToString().Substring(0, 5);
+                }
+                else
+                {
+                    return "";
+                }
+            }
+            else
+            {
+                return "";
+            }
+        }
+
         public string getInstructorTimeString()
         {
             if (_InstructorTime.HasValue)
@@ -995,6 +859,186 @@ namespace SimpleEASALogbook
                 return "";
             }
         }
+
+        public string getMEPTimeString()
+        {
+            if (_MEPTime.HasValue)
+            {
+                if (_MEPTime.Value.Ticks > TimeSpan.Zero.Ticks)
+                {
+                    return _MEPTime.ToString().Substring(0, 5);
+                }
+                else
+                {
+                    return "";
+                }
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        public string getMultiPilotTimeString()
+        {
+            if (_MultiPilotTime.HasValue)
+            {
+                if (_MultiPilotTime.Value.Ticks > TimeSpan.Zero.Ticks)
+                {
+                    return _MultiPilotTime.ToString().Substring(0, 5);
+                }
+                else
+                {
+                    return "";
+                }
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        public string getNightLDGString()
+        {
+            if (_NightLandings.HasValue)
+            {
+                if (_NightLandings.Value > 0)
+                {
+                    return _NightLandings.ToString();
+                }
+                else
+                {
+                    return "";
+                }
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        public string getNightTimeString()
+        {
+            if (_NightTime.HasValue)
+            {
+                if (_NightTime.Value.Ticks > TimeSpan.Zero.Ticks)
+                {
+                    return _NightTime.ToString().Substring(0, 5);
+                }
+                else
+                {
+                    return "";
+                }
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        public string getOffBlockTimeString()
+        {
+            if (_OffBlockTime.HasValue)
+            {
+                if (_OffBlockTime.Value.Ticks > TimeSpan.Zero.Ticks)
+                {
+                    return _OffBlockTime.ToString().Substring(0, 5);
+                }
+                else
+                {
+                    return "";
+                }
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        public string getOnBlockTimeString()
+        {
+            if (_OnBlockTime.HasValue)
+            {
+                if (_OnBlockTime.Value.Ticks > TimeSpan.Zero.Ticks)
+                {
+                    return _OnBlockTime.ToString().Substring(0, 5);
+                }
+                else
+                {
+                    return "";
+                }
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        public string getPageBreakString()
+        {
+            if (_NextPageThereafter)
+            {
+                return "pagebreak";
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        public string getPICNameString()
+        {
+            return _PilotInCommand;
+        }
+
+        public string getPICTimeString()
+        {
+            if (_PICTime.HasValue)
+            {
+                if (_PICTime.Value.Ticks > TimeSpan.Zero.Ticks)
+                {
+                    return _PICTime.ToString().Substring(0, 5);
+                }
+                else
+                {
+                    return "";
+                }
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        public string getRegistrationString()
+        {
+            return _AircraftRegistration;
+        }
+
+        public string getRemarksString()
+        {
+            return _Remarks;
+        }
+
+        public string getSEPTimeString()
+        {
+            if (_SEPTime.HasValue)
+            {
+                if (_SEPTime.Value.Ticks > TimeSpan.Zero.Ticks)
+                {
+                    return _SEPTime.ToString().Substring(0, 5);
+                }
+                else
+                {
+                    return "";
+                }
+            }
+            else
+            {
+                return "";
+            }
+        }
+
         public string getSimDateString()
         {
             if (_DateOfSim.HasValue)
@@ -1013,10 +1057,7 @@ namespace SimpleEASALogbook
                 return "";
             }
         }
-        public string getSimTypeString()
-        {
-            return _TypeOfSim;
-        }
+
         public string getSimTimeString()
         {
             if (_SimTime.HasValue)
@@ -1035,19 +1076,41 @@ namespace SimpleEASALogbook
                 return "";
             }
         }
-        public string getRemarksString()
+
+        public string getSimTypeString()
         {
-            return _Remarks;
+            return _TypeOfSim;
         }
-        public string getPageBreakString()
+
+        public string getTotalTimeString()
         {
-            if (_NextPageThereafter)
+            if (_TotalTimeOfFlight.HasValue)
             {
-                return "pagebreak";
+                if (_TotalTimeOfFlight.Value.Ticks > TimeSpan.Zero.Ticks)
+                {
+                    return _TotalTimeOfFlight.ToString().Substring(0, 5);
+                }
+                else
+                {
+                    return "";
+                }
             }
             else
             {
                 return "";
+            }
+        }
+
+        public string getTypeOfAircraftString()
+        {
+            return _TypeOfAircraft;
+        }
+
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
     }

@@ -6,36 +6,35 @@ using System.Threading;
 
 namespace SimpleEASALogbook
 {
-    class Import_EASA_CSV
+    internal class Import_EASA_CSV
     {
-        DateTime StartDate = DateTime.MinValue;
-        string FROM = "";
-        TimeSpan beginTime = TimeSpan.Zero;
-        string TO = "";
-        TimeSpan endTime = TimeSpan.Zero;
-        string Aircraft = "";
-        string Type = "";
-        TimeSpan SETime = TimeSpan.Zero;
-        TimeSpan METime = TimeSpan.Zero;
-        TimeSpan MultiPilotTime = TimeSpan.Zero;
-        TimeSpan TotalTimeOfFlight = TimeSpan.Zero;
-        string PIC = "";
-        int DayLanding = 0;
-        int NightLanding = 0;
-        TimeSpan NightTime = TimeSpan.Zero;
-        TimeSpan IFRTime = TimeSpan.Zero;
-        TimeSpan PICTime = TimeSpan.Zero;
-        TimeSpan CopilotTime = TimeSpan.Zero;
-        TimeSpan DualTime = TimeSpan.Zero;
-        TimeSpan InstructorTime = TimeSpan.Zero;
-        DateTime date_of_sim = DateTime.MinValue;
-        string Type_of_sim = "";
-        TimeSpan sim_time = TimeSpan.Zero;
-        string remarks = "";
-        bool nextpageafter = false;
-        bool _ErrorOccured = false;
-
-        List<Flight> Flights = new List<Flight>();
+        private bool _ErrorOccured = false;
+        private string Aircraft = "";
+        private TimeSpan beginTime = TimeSpan.Zero;
+        private TimeSpan CopilotTime = TimeSpan.Zero;
+        private DateTime date_of_sim = DateTime.MinValue;
+        private int DayLanding = 0;
+        private TimeSpan DualTime = TimeSpan.Zero;
+        private TimeSpan endTime = TimeSpan.Zero;
+        private List<Flight> Flights = new List<Flight>();
+        private string FROM = "";
+        private TimeSpan IFRTime = TimeSpan.Zero;
+        private TimeSpan InstructorTime = TimeSpan.Zero;
+        private TimeSpan METime = TimeSpan.Zero;
+        private TimeSpan MultiPilotTime = TimeSpan.Zero;
+        private bool nextpageafter = false;
+        private int NightLanding = 0;
+        private TimeSpan NightTime = TimeSpan.Zero;
+        private string PIC = "";
+        private TimeSpan PICTime = TimeSpan.Zero;
+        private string remarks = "";
+        private TimeSpan SETime = TimeSpan.Zero;
+        private TimeSpan sim_time = TimeSpan.Zero;
+        private DateTime StartDate = DateTime.MinValue;
+        private string TO = "";
+        private TimeSpan TotalTimeOfFlight = TimeSpan.Zero;
+        private string Type = "";
+        private string Type_of_sim = "";
 
         public Import_EASA_CSV(string stringToParse)
         {
@@ -67,7 +66,17 @@ namespace SimpleEASALogbook
             }
         }
 
-        Flight CreateFlight(string[] csvline)
+        public bool GetError()
+        {
+            return _ErrorOccured;
+        }
+
+        public List<Flight> GetFlightList()
+        {
+            return Flights;
+        }
+
+        private Flight CreateFlight(string[] csvline)
         {
             DateTime.TryParse(csvline[0], out StartDate);
             FROM = csvline[1];
@@ -104,14 +113,6 @@ namespace SimpleEASALogbook
             }
 
             return new Flight(StartDate, FROM, beginTime, TO, endTime, Type, Aircraft, SETime, METime, MultiPilotTime, TotalTimeOfFlight, PIC, DayLanding, NightLanding, NightTime, IFRTime, PICTime, CopilotTime, DualTime, InstructorTime, date_of_sim, Type_of_sim, sim_time, remarks, nextpageafter);
-        }
-        public List<Flight> GetFlightList()
-        {
-            return Flights;
-        }
-        public bool GetError()
-        {
-            return _ErrorOccured;
         }
     }
 }

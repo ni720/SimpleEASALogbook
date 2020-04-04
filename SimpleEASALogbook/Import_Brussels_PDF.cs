@@ -6,40 +6,66 @@ using System.Text.RegularExpressions;
 
 namespace SimpleEASALogbook
 {
-    class Import_Brussels_PDF
+    internal class Import_Brussels_PDF
     {
-        List<Flight> Flights = new List<Flight>();
-        bool _ErrorOccured = false;
+        private bool _ErrorOccured = false;
+        private string aircraft = "";
+        private DateTime begin, end;
+        private TimeSpan begin_time = TimeSpan.Zero;
+        private TimeSpan CoPilotTime = TimeSpan.Zero;
+        private TimeSpan end_time = TimeSpan.Zero;
+        private List<Flight> Flights = new List<Flight>();
+        private string from = "";
+        private TimeSpan IFRTime = TimeSpan.Zero;
+        private TimeSpan InstructorTime = TimeSpan.Zero;
+        private int ldg_day = 0;
+        private int ldg_night = 0;
+        private TimeSpan multiPilotTime = TimeSpan.Zero;
+
+        // is not stated in the pdf. total time is taken instead
+        private TimeSpan nightTime = TimeSpan.Zero;
+
+        private string PIC = "";
+        private TimeSpan PICTime = TimeSpan.Zero;
+        private string remarks = "";
+
+        // is not parsed
+        private TimeSpan SimTime = TimeSpan.Zero;
+
+        private string to = "";
+        private string type = "";
 
         public Import_Brussels_PDF(string textToParse)
         {
-
             CultureInfo provider = CultureInfo.InvariantCulture;
-            int ldg_day = 0;
-            int ldg_night = 0;
-            string from = "";
-            string to = "";
-            string aircraft = "";
-            string type = "";
-            string PIC = "";
-            string remarks = "";
-            DateTime begin, end;
-            TimeSpan begin_time = TimeSpan.Zero;
-            TimeSpan end_time = TimeSpan.Zero;
-            TimeSpan multiPilotTime = TimeSpan.Zero;
-            TimeSpan CoPilotTime = TimeSpan.Zero;
-            TimeSpan nightTime = TimeSpan.Zero;
-            TimeSpan IFRTime = TimeSpan.Zero;
-            TimeSpan PICTime = TimeSpan.Zero;
-            TimeSpan InstructorTime = TimeSpan.Zero;
-            TimeSpan SimTime = TimeSpan.Zero;
+
             try
             {
-
                 Regex regexAllFlights = new Regex(@"\d\d\w\w\w\d\d\d\d\D*\w\w\w\ *\d\d\:\d\d\ *\w\w\w\ *\d\d\:\d\d\ *\d\d\d\ *\w\w\w\w\w\ .*");
                 Regex regexSimFLigts = new Regex(@"\d\d\/\d\d/\d\d\ *\d\d\d\ *\d\:\d\d\ .*");
+
                 foreach (Match flightmatch in regexAllFlights.Matches(textToParse))
                 {
+                    // default values have to be re-initialized for each flight
+                    ldg_day = 0;
+                    ldg_night = 0;
+                    from = "";
+                    to = "";
+                    aircraft = "";
+                    type = "";
+                    PIC = "";
+                    remarks = "";
+                    begin = DateTime.MinValue;
+                    end = DateTime.MinValue;
+                    begin_time = TimeSpan.Zero;
+                    end_time = TimeSpan.Zero;
+                    multiPilotTime = TimeSpan.Zero;
+                    CoPilotTime = TimeSpan.Zero;
+                    nightTime = TimeSpan.Zero;
+                    IFRTime = TimeSpan.Zero;
+                    PICTime = TimeSpan.Zero;
+                    SimTime = TimeSpan.Zero;
+
                     begin = DateTime.ParseExact(flightmatch.Value.Substring(0, 9), "ddMMMyyyy", provider);
                     TimeSpan.TryParseExact(flightmatch.Value.Replace(" ", "").Substring(12, 5), "hh\\:mm", provider, out begin_time);
                     TimeSpan.TryParseExact(flightmatch.Value.Replace(" ", "").Substring(20, 5), "hh\\:mm", provider, out end_time);
@@ -70,6 +96,12 @@ namespace SimpleEASALogbook
                 }
                 foreach (Match flightmatch in regexSimFLigts.Matches(textToParse))
                 {
+                    // default values have to be re-initialized for each flight
+                    type = "";
+                    remarks = "";
+                    begin = DateTime.MinValue;
+                    SimTime = TimeSpan.Zero;
+
                     begin = DateTime.ParseExact(flightmatch.Value.Substring(0, 8), "dd/MM/yy", provider);
                     type = flightmatch.Value.Replace(" ", "").Substring(8, 3);
                     TimeSpan.TryParseExact(flightmatch.Value.Replace(" ", "").Substring(11, 4), "h\\:mm", provider, out SimTime);
@@ -83,7 +115,6 @@ namespace SimpleEASALogbook
                     File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " Import_Brussels_PDF: found no Flights to parse.\n");
                 }
             }
-
             catch (Exception e)
             {
                 File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " Import_Brussels_PDF:\n" + e.ToString() + "\n");
@@ -91,13 +122,14 @@ namespace SimpleEASALogbook
             }
         }
 
-        public List<Flight> GetFlightList()
-        {
-            return Flights;
-        }
         public bool GetError()
         {
             return _ErrorOccured;
+        }
+
+        public List<Flight> GetFlightList()
+        {
+            return Flights;
         }
     }
 }

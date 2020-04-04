@@ -3,42 +3,31 @@ using System.Collections.Generic;
 
 namespace SimpleEASALogbook
 {
-    class Export_EASA_HTML
+    internal class Export_EASA_HTML
     {
-        static string stringBuilder = "";
-        static TimeSpan total = TimeSpan.Zero;
-        static TimeSpan night = TimeSpan.Zero;
-        static TimeSpan ifr = TimeSpan.Zero;
-        static TimeSpan pictime = TimeSpan.Zero;
-        static TimeSpan copi = TimeSpan.Zero;
-        static TimeSpan dual = TimeSpan.Zero;
-        static TimeSpan instructor = TimeSpan.Zero;
-        static TimeSpan simtime = TimeSpan.Zero;
-        static int dayldg = 0;
-        static int nghtldg = 0;
-        static List<Flight> pageFlights = new List<Flight>();
+        private TimeSpan copi = TimeSpan.Zero;
+        private int dayldg = 0;
+        private TimeSpan dual = TimeSpan.Zero;
+        private string HTMLFooter = "</body>\n\n</html>";
+        private string HTMLHeader = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n\n<html>\n<head>\n\t\n\t<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"/>\n\t<title>EASA Logbook</title>\n\t<meta name=\"generator\" content=\"LibreOffice 6.3.4.2 (Linux)\"/>\n\t\n\t<style type=\"text/css\">\n\t\tbody,div,p { font-family:\"Liberation Sans\"; font-size:x-small;}\n  \t\ttable,thead,tbody,tfoot,tr,th,td { border: 1px solid black; border-collapse: separate;font-size:x-small; }\n\t\t@media print {\n        table {page-break-after:always;}\n\t</style>\n\t\n</head>\n\n<body>";
+        private TimeSpan ifr = TimeSpan.Zero;
+        private TimeSpan instructor = TimeSpan.Zero;
+        private int linesOnPage = 18;
+        private int nghtldg = 0;
+        private TimeSpan night = TimeSpan.Zero;
+        private List<Flight> pageFlights = new List<Flight>();
+        private string PageHeader = "<table cellspacing=\"0\" border=\"0\">\n\t<colgroup width=\"76\"></colgroup>\n\t<colgroup span=\"4\" width=\"38\"></colgroup>\n\t<colgroup span=\"2\" width=\"76\"></colgroup>\n\t<colgroup span=\"6\" width=\"38\"></colgroup>\n\t<colgroup width=\"76\"></colgroup>\n\t<colgroup span=\"14\" width=\"38\"></colgroup>\n\t<colgroup span=\"2\" width=\"76\"></colgroup>\n\t<colgroup span=\"2\" width=\"38\"></colgroup>\n\t<colgroup width=\"151\"></colgroup>\n\t<tr>\n\t\t<td height=\"11\" align=\"center\" valign=middle >1</td>\n\t\t<td colspan=2 align=\"center\" valign=middle >2</td>\n\t\t<td colspan=2 align=\"center\" valign=middle >3</td>\n\t\t<td colspan=2 align=\"center\" valign=middle >4</td>\n\t\t<td colspan=4 align=\"center\" valign=middle >5</td>\n\t\t<td colspan=2 align=\"center\" valign=middle >6</td>\n\t\t<td align=\"center\" valign=middle >7</td>\n\t\t<td colspan=2 align=\"center\" valign=middle >8</td>\n\t\t<td colspan=4 align=\"center\" valign=middle >9</td>\n\t\t<td colspan=8 align=\"center\" valign=middle >10</td>\n\t\t<td colspan=4 align=\"center\" valign=middle >11</td>\n\t\t<td align=\"center\" valign=middle >12</td>\n\t</tr>\n\t<tr>\n\t\t<td rowspan=2 height=\"38\" align=\"center\" valign=middle>Date<br>(dd.mm.yy)</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Departure</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Arrival</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Aircraft</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Single Pilot Time</td>\n\t\t<td colspan=2 rowspan=2 align=\"center\" valign=middle>Multi-Pilot Time</td>\n\t\t<td colspan=2 rowspan=2 align=\"center\" valign=middle>Total Time of Flight</td>\n\t\t<td rowspan=2 align=\"center\" valign=middle>Name PIC</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Landings</td>\n\t\t<td colspan=4 align=\"center\" valign=middle>Operational condition time</td>\n\t\t<td colspan=8 align=\"center\" valign=middle>Pilot Function Time</td>\n\t\t<td colspan=4 align=\"center\" valign=middle>FSTD Session</td>\n\t\t<td rowspan=2 align=\"center\" valign=middle>Remarks and Endorsements</td>\n\t</tr>\n\t<tr>\n\t\t<td align=\"center\" valign=middle>Place</td>\n\t\t<td align=\"center\" valign=middle>Time</td>\n\t\t<td align=\"center\" valign=middle>Place</td>\n\t\t<td align=\"center\" valign=middle>Time</td>\n\t\t<td align=\"center\" valign=middle>Make, Model, Variant</td>\n\t\t<td align=\"center\" valign=middle>Registration</td>\n\t\t<td align=\"center\" valign=middle>SE</td>\n\t\t<td align=\"center\" valign=middle>ME</td>\n\t\t<td align=\"center\" valign=middle>Day</td>\n\t\t<td align=\"center\" valign=middle>Night</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Night</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>IFR</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Pilot – in Command</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Co-Pilot</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Dual</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Instructor</td>\n\t\t<td align=\"center\" valign=middle>Date</td>\n\t\t<td align=\"center\" valign=middle>Type</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Total of Session</td>\n\t\t</tr>";
+
+        // EASA Logbook has 18 lines per page
+        private int pagenumber = 0;
+
+        private TimeSpan pictime = TimeSpan.Zero;
+        private TimeSpan simtime = TimeSpan.Zero;
+        private string stringBuilder = "";
+        private TimeSpan total = TimeSpan.Zero;
 
         public Export_EASA_HTML(List<Flight> flights)
         {
-            stringBuilder = "";
-            total = TimeSpan.Zero;
-            night = TimeSpan.Zero;
-            ifr = TimeSpan.Zero;
-            pictime = TimeSpan.Zero;
-            copi = TimeSpan.Zero;
-            dual = TimeSpan.Zero;
-            instructor = TimeSpan.Zero;
-            simtime = TimeSpan.Zero;
-            dayldg = 0;
-            nghtldg = 0;
-            pageFlights = new List<Flight>();
-
-            int linesOnPage = 18;
-            int pagenumber = 0;
-            string HTMLHeader = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n\n<html>\n<head>\n\t\n\t<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"/>\n\t<title>EASA Logbook</title>\n\t<meta name=\"generator\" content=\"LibreOffice 6.3.4.2 (Linux)\"/>\n\t\n\t<style type=\"text/css\">\n\t\tbody,div,p { font-family:\"Liberation Sans\"; font-size:x-small;}\n  \t\ttable,thead,tbody,tfoot,tr,th,td { border: 1px solid black; border-collapse: separate;font-size:x-small; }\n\t\t@media print {\n        table {page-break-after:always;}\n\t</style>\n\t\n</head>\n\n<body>";
-            string HTMLFooter = "</body>\n\n</html>";
-            string PageHeader = "<table cellspacing=\"0\" border=\"0\">\n\t<colgroup width=\"76\"></colgroup>\n\t<colgroup span=\"4\" width=\"38\"></colgroup>\n\t<colgroup span=\"2\" width=\"76\"></colgroup>\n\t<colgroup span=\"6\" width=\"38\"></colgroup>\n\t<colgroup width=\"76\"></colgroup>\n\t<colgroup span=\"14\" width=\"38\"></colgroup>\n\t<colgroup span=\"2\" width=\"76\"></colgroup>\n\t<colgroup span=\"2\" width=\"38\"></colgroup>\n\t<colgroup width=\"151\"></colgroup>\n\t<tr>\n\t\t<td height=\"11\" align=\"center\" valign=middle >1</td>\n\t\t<td colspan=2 align=\"center\" valign=middle >2</td>\n\t\t<td colspan=2 align=\"center\" valign=middle >3</td>\n\t\t<td colspan=2 align=\"center\" valign=middle >4</td>\n\t\t<td colspan=4 align=\"center\" valign=middle >5</td>\n\t\t<td colspan=2 align=\"center\" valign=middle >6</td>\n\t\t<td align=\"center\" valign=middle >7</td>\n\t\t<td colspan=2 align=\"center\" valign=middle >8</td>\n\t\t<td colspan=4 align=\"center\" valign=middle >9</td>\n\t\t<td colspan=8 align=\"center\" valign=middle >10</td>\n\t\t<td colspan=4 align=\"center\" valign=middle >11</td>\n\t\t<td align=\"center\" valign=middle >12</td>\n\t</tr>\n\t<tr>\n\t\t<td rowspan=2 height=\"38\" align=\"center\" valign=middle>Date<br>(dd.mm.yy)</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Departure</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Arrival</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Aircraft</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Single Pilot Time</td>\n\t\t<td colspan=2 rowspan=2 align=\"center\" valign=middle>Multi-Pilot Time</td>\n\t\t<td colspan=2 rowspan=2 align=\"center\" valign=middle>Total Time of Flight</td>\n\t\t<td rowspan=2 align=\"center\" valign=middle>Name PIC</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Landings</td>\n\t\t<td colspan=4 align=\"center\" valign=middle>Operational condition time</td>\n\t\t<td colspan=8 align=\"center\" valign=middle>Pilot Function Time</td>\n\t\t<td colspan=4 align=\"center\" valign=middle>FSTD Session</td>\n\t\t<td rowspan=2 align=\"center\" valign=middle>Remarks and Endorsements</td>\n\t</tr>\n\t<tr>\n\t\t<td align=\"center\" valign=middle>Place</td>\n\t\t<td align=\"center\" valign=middle>Time</td>\n\t\t<td align=\"center\" valign=middle>Place</td>\n\t\t<td align=\"center\" valign=middle>Time</td>\n\t\t<td align=\"center\" valign=middle>Make, Model, Variant</td>\n\t\t<td align=\"center\" valign=middle>Registration</td>\n\t\t<td align=\"center\" valign=middle>SE</td>\n\t\t<td align=\"center\" valign=middle>ME</td>\n\t\t<td align=\"center\" valign=middle>Day</td>\n\t\t<td align=\"center\" valign=middle>Night</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Night</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>IFR</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Pilot – in Command</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Co-Pilot</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Dual</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Instructor</td>\n\t\t<td align=\"center\" valign=middle>Date</td>\n\t\t<td align=\"center\" valign=middle>Type</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Total of Session</td>\n\t\t</tr>";
-
             stringBuilder += HTMLHeader;
             stringBuilder += PageHeader;
 
@@ -63,6 +52,7 @@ namespace SimpleEASALogbook
                         pagenumber++;
                         for (int k = 0; k < linesOnPage - (j % linesOnPage); k++)
                         {
+                            // add empty line
                             stringBuilder += EasaOutputLine(new Flight(DateTime.MinValue, "", null, "", null, "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, DateTime.MinValue, "", TimeSpan.Zero, "", false));
                         }
                         j = 0;
@@ -72,6 +62,7 @@ namespace SimpleEASALogbook
                     }
                 }
             }
+            // add empty lines on last page
             pagenumber++;
             for (int k = 0; k < linesOnPage - (j % linesOnPage); k++)
             {
@@ -121,52 +112,51 @@ namespace SimpleEASALogbook
             }
 
             stringbuilder_pageFooter += "<tr>\n<td colspan=7 rowspan=3 height=\"113\" align=\"left\" valign=bottom><br>Page " + pagenumber.ToString() + "</td>\n\t\t<td colspan=4 align=\"left\" valign=bottom>TOTAL THIS PAGE</td>\n\t\t<td colspan=2 align=\"center\" valign=bottom >";
-            stringbuilder_pageFooter += ((int)total_page.TotalHours).ToString() + ":" + total_page.Minutes.ToString() + "</td>\n";
+            stringbuilder_pageFooter += ((int)total_page.TotalHours).ToString() + ":" + total_page.Minutes.ToString("00") + "</td>\n";
             stringbuilder_pageFooter += "<td align=\"left\" valign=bottom><br></td>\n";
             stringbuilder_pageFooter += "<td align=\"right\" valign=bottom >";
             stringbuilder_pageFooter += dayldg_page.ToString() + "</td>\n";
             stringbuilder_pageFooter += "<td align=\"right\" valign=bottom >";
             stringbuilder_pageFooter += nghtldg_page.ToString() + "</td>\n";
             stringbuilder_pageFooter += "<td colspan=2 align=\"center\" valign=bottom >";
-            stringbuilder_pageFooter += ((int)night_page.TotalHours).ToString() + ":" + night_page.Minutes.ToString() + "</td>\n";
+            stringbuilder_pageFooter += ((int)night_page.TotalHours).ToString() + ":" + night_page.Minutes.ToString("00") + "</td>\n";
             stringbuilder_pageFooter += "<td colspan=2 align=\"center\" valign=bottom >";
-            stringbuilder_pageFooter += ((int)ifr_page.TotalHours).ToString() + ":" + ifr_page.Minutes.ToString() + "</td>\n";
+            stringbuilder_pageFooter += ((int)ifr_page.TotalHours).ToString() + ":" + ifr_page.Minutes.ToString("00") + "</td>\n";
             stringbuilder_pageFooter += "<td colspan=2 align=\"center\" valign=bottom >";
-            stringbuilder_pageFooter += ((int)pictime_page.TotalHours).ToString() + ":" + pictime_page.Minutes.ToString() + "</td>\n";
+            stringbuilder_pageFooter += ((int)pictime_page.TotalHours).ToString() + ":" + pictime_page.Minutes.ToString("00") + "</td>\n";
             stringbuilder_pageFooter += "<td colspan=2 align=\"center\" valign=bottom >";
-            stringbuilder_pageFooter += ((int)copi_page.TotalHours).ToString() + ":" + copi_page.Minutes.ToString() + "</td>\n";
+            stringbuilder_pageFooter += ((int)copi_page.TotalHours).ToString() + ":" + copi_page.Minutes.ToString("00") + "</td>\n";
             stringbuilder_pageFooter += "<td colspan=2 align=\"center\" valign=bottom >";
-            stringbuilder_pageFooter += ((int)dual_page.TotalHours).ToString() + ":" + dual_page.Minutes.ToString() + "</td>\n";
+            stringbuilder_pageFooter += ((int)dual_page.TotalHours).ToString() + ":" + dual_page.Minutes.ToString("00") + "</td>\n";
             stringbuilder_pageFooter += "<td colspan=2 align=\"center\" valign=bottom >";
-            stringbuilder_pageFooter += ((int)instructor_page.TotalHours).ToString() + ":" + instructor_page.Minutes.ToString() + "</td>\n";
+            stringbuilder_pageFooter += ((int)instructor_page.TotalHours).ToString() + ":" + instructor_page.Minutes.ToString("00") + "</td>\n";
             stringbuilder_pageFooter += "\t\t<td align=\"left\" valign=bottom><br></td>\n\t\t<td align=\"left\" valign=bottom><br></td>\n";
             stringbuilder_pageFooter += "<td colspan=2 align=\"center\" valign=bottom >";
-            stringbuilder_pageFooter += ((int)simtime_page.TotalHours).ToString() + ":" + simtime_page.Minutes.ToString() + "</td>\n";
+            stringbuilder_pageFooter += ((int)simtime_page.TotalHours).ToString() + ":" + simtime_page.Minutes.ToString("00") + "</td>\n";
             stringbuilder_pageFooter += "<td rowspan=3 align=\"center\" valign=top><br><small>I certify that the entries in this log are true.</small><br><br><br>_____________________<br>PILOT'S SIGNATURE</td></tr>";
 
             stringbuilder_pageFooter += "<td colspan=4 align=\"left\" valign=bottom>TOTAL FROM PREVIOUS PAGES</td>\n\t\t<td colspan=2 align=\"center\" valign=bottom >";
-            stringbuilder_pageFooter += ((int)total.TotalHours).ToString() + ":" + total.Minutes.ToString() + "</td>\n";
+            stringbuilder_pageFooter += ((int)total.TotalHours).ToString() + ":" + total.Minutes.ToString("00") + "</td>\n";
             stringbuilder_pageFooter += "<td align=\"left\" valign=bottom><br></td>\n";
             stringbuilder_pageFooter += "<td align=\"right\" valign=bottom >";
             stringbuilder_pageFooter += dayldg.ToString() + "</td>\n";
             stringbuilder_pageFooter += "<td align=\"right\" valign=bottom >";
             stringbuilder_pageFooter += nghtldg.ToString() + "</td>\n";
             stringbuilder_pageFooter += "<td colspan=2 align=\"center\" valign=bottom >";
-            stringbuilder_pageFooter += ((int)night.TotalHours).ToString() + ":" + night.Minutes.ToString() + "</td>\n";
+            stringbuilder_pageFooter += ((int)night.TotalHours).ToString() + ":" + night.Minutes.ToString("00") + "</td>\n";
             stringbuilder_pageFooter += "<td colspan=2 align=\"center\" valign=bottom >";
-            stringbuilder_pageFooter += ((int)ifr.TotalHours).ToString() + ":" + ifr.Minutes.ToString() + "</td>\n";
+            stringbuilder_pageFooter += ((int)ifr.TotalHours).ToString() + ":" + ifr.Minutes.ToString("00") + "</td>\n";
             stringbuilder_pageFooter += "<td colspan=2 align=\"center\" valign=bottom >";
-            stringbuilder_pageFooter += ((int)pictime.TotalHours).ToString() + ":" + pictime.Minutes.ToString() + "</td>\n";
+            stringbuilder_pageFooter += ((int)pictime.TotalHours).ToString() + ":" + pictime.Minutes.ToString("00") + "</td>\n";
             stringbuilder_pageFooter += "<td colspan=2 align=\"center\" valign=bottom >";
-            stringbuilder_pageFooter += ((int)copi.TotalHours).ToString() + ":" + copi.Minutes.ToString() + "</td>\n";
+            stringbuilder_pageFooter += ((int)copi.TotalHours).ToString() + ":" + copi.Minutes.ToString("00") + "</td>\n";
             stringbuilder_pageFooter += "<td colspan=2 align=\"center\" valign=bottom >";
-            stringbuilder_pageFooter += ((int)dual.TotalHours).ToString() + ":" + dual.Minutes.ToString() + "</td>\n";
+            stringbuilder_pageFooter += ((int)dual.TotalHours).ToString() + ":" + dual.Minutes.ToString("00") + "</td>\n";
             stringbuilder_pageFooter += "<td colspan=2 align=\"center\" valign=bottom >";
-            stringbuilder_pageFooter += ((int)instructor.TotalHours).ToString() + ":" + instructor.Minutes.ToString() + "</td>\n";
+            stringbuilder_pageFooter += ((int)instructor.TotalHours).ToString() + ":" + instructor.Minutes.ToString("00") + "</td>\n";
             stringbuilder_pageFooter += "\t\t<td align=\"left\" valign=bottom><br></td>\n\t\t<td align=\"left\" valign=bottom><br></td>\n";
             stringbuilder_pageFooter += "<td colspan=2 align=\"center\" valign=bottom >";
-            stringbuilder_pageFooter += ((int)simtime.TotalHours).ToString() + ":" + simtime.Minutes.ToString() + "</td>\n</tr>\n";
-
+            stringbuilder_pageFooter += ((int)simtime.TotalHours).ToString() + ":" + simtime.Minutes.ToString("00") + "</td>\n</tr>\n";
 
             total = total.Add(total_page);
             night = night.Add(night_page);
@@ -180,27 +170,27 @@ namespace SimpleEASALogbook
             nghtldg += nghtldg_page;
 
             stringbuilder_pageFooter += "<td colspan=4 align=\"left\" valign=bottom>TOTAL TIME</td>\n\t\t<td colspan=2 align=\"center\" valign=bottom >";
-            stringbuilder_pageFooter += ((int)total.TotalHours).ToString() + ":" + total.Minutes.ToString() + "</td>\n";
+            stringbuilder_pageFooter += ((int)total.TotalHours).ToString() + ":" + total.Minutes.ToString("00") + "</td>\n";
             stringbuilder_pageFooter += "<td align=\"left\" valign=bottom><br></td>\n";
             stringbuilder_pageFooter += "<td align=\"right\" valign=bottom >";
             stringbuilder_pageFooter += dayldg.ToString() + "</td>\n";
             stringbuilder_pageFooter += "<td align=\"right\" valign=bottom >";
             stringbuilder_pageFooter += nghtldg.ToString() + "</td>\n";
             stringbuilder_pageFooter += "<td colspan=2 align=\"center\" valign=bottom >";
-            stringbuilder_pageFooter += ((int)night.TotalHours).ToString() + ":" + night.Minutes.ToString() + "</td>\n";
+            stringbuilder_pageFooter += ((int)night.TotalHours).ToString() + ":" + night.Minutes.ToString("00") + "</td>\n";
             stringbuilder_pageFooter += "<td colspan=2 align=\"center\" valign=bottom >";
-            stringbuilder_pageFooter += ((int)ifr.TotalHours).ToString() + ":" + ifr.Minutes.ToString() + "</td>\n";
+            stringbuilder_pageFooter += ((int)ifr.TotalHours).ToString() + ":" + ifr.Minutes.ToString("00") + "</td>\n";
             stringbuilder_pageFooter += "<td colspan=2 align=\"center\" valign=bottom >";
-            stringbuilder_pageFooter += ((int)pictime.TotalHours).ToString() + ":" + pictime.Minutes.ToString() + "</td>\n";
+            stringbuilder_pageFooter += ((int)pictime.TotalHours).ToString() + ":" + pictime.Minutes.ToString("00") + "</td>\n";
             stringbuilder_pageFooter += "<td colspan=2 align=\"center\" valign=bottom >";
-            stringbuilder_pageFooter += ((int)copi.TotalHours).ToString() + ":" + copi.Minutes.ToString() + "</td>\n";
+            stringbuilder_pageFooter += ((int)copi.TotalHours).ToString() + ":" + copi.Minutes.ToString("00") + "</td>\n";
             stringbuilder_pageFooter += "<td colspan=2 align=\"center\" valign=bottom >";
-            stringbuilder_pageFooter += ((int)dual.TotalHours).ToString() + ":" + dual.Minutes.ToString() + "</td>\n";
+            stringbuilder_pageFooter += ((int)dual.TotalHours).ToString() + ":" + dual.Minutes.ToString("00") + "</td>\n";
             stringbuilder_pageFooter += "<td colspan=2 align=\"center\" valign=bottom >";
-            stringbuilder_pageFooter += ((int)instructor.TotalHours).ToString() + ":" + instructor.Minutes.ToString() + "</td>\n";
+            stringbuilder_pageFooter += ((int)instructor.TotalHours).ToString() + ":" + instructor.Minutes.ToString("00") + "</td>\n";
             stringbuilder_pageFooter += "\t\t<td align=\"left\" valign=bottom><br></td>\n\t\t<td align=\"left\" valign=bottom><br></td>\n";
             stringbuilder_pageFooter += "<td colspan=2 align=\"center\" valign=bottom >";
-            stringbuilder_pageFooter += ((int)simtime.TotalHours).ToString() + ":" + simtime.Minutes.ToString() + "</td>\n</tr>\n";
+            stringbuilder_pageFooter += ((int)simtime.TotalHours).ToString() + ":" + simtime.Minutes.ToString("00") + "</td>\n</tr>\n";
 
             return stringbuilder_pageFooter;
         }
@@ -247,7 +237,6 @@ namespace SimpleEASALogbook
             stringbuilder += "<td align=\"center\" valign=middle>";
             stringbuilder += flight.TypeOfAircraft + "</td>\n";
 
-
             stringbuilder += "<td align=\"center\" valign=middle>";
             stringbuilder += flight.AircraftRegistration + "</td>\n";
 
@@ -287,7 +276,7 @@ namespace SimpleEASALogbook
             }
             else
             {
-                stringbuilder += flight.MultiPilotTime.Value.Minutes.ToString() + "</td>\n";
+                stringbuilder += flight.MultiPilotTime.Value.Minutes.ToString("00") + "</td>\n";
             }
 
             stringbuilder += "<td align=\"center\" valign=middle>";
@@ -306,7 +295,7 @@ namespace SimpleEASALogbook
             }
             else
             {
-                stringbuilder += flight.TotalTimeOfFlight.Value.Minutes.ToString() + "</td>\n";
+                stringbuilder += flight.TotalTimeOfFlight.Value.Minutes.ToString("00") + "</td>\n";
             }
 
             stringbuilder += "<td align=\"center\" valign=middle>";
@@ -348,7 +337,7 @@ namespace SimpleEASALogbook
             }
             else
             {
-                stringbuilder += flight.NightTime.Value.Minutes.ToString() + "</td>\n";
+                stringbuilder += flight.NightTime.Value.Minutes.ToString("00") + "</td>\n";
             }
 
             stringbuilder += "<td align=\"center\" valign=middle>";
@@ -367,9 +356,8 @@ namespace SimpleEASALogbook
             }
             else
             {
-                stringbuilder += flight.IFRTime.Value.Minutes.ToString() + "</td>\n";
+                stringbuilder += flight.IFRTime.Value.Minutes.ToString("00") + "</td>\n";
             }
-
 
             stringbuilder += "<td align=\"center\" valign=middle>";
             if (!flight.PICTime.HasValue || flight.PICTime.Equals(TimeSpan.Zero))
@@ -387,7 +375,7 @@ namespace SimpleEASALogbook
             }
             else
             {
-                stringbuilder += flight.PICTime.Value.Minutes.ToString() + "</td>\n";
+                stringbuilder += flight.PICTime.Value.Minutes.ToString("00") + "</td>\n";
             }
 
             stringbuilder += "<td align=\"center\" valign=middle>";
@@ -406,7 +394,7 @@ namespace SimpleEASALogbook
             }
             else
             {
-                stringbuilder += flight.CopilotTime.Value.Minutes.ToString() + "</td>\n";
+                stringbuilder += flight.CopilotTime.Value.Minutes.ToString("00") + "</td>\n";
             }
 
             stringbuilder += "<td align=\"center\" valign=middle>";
@@ -425,7 +413,7 @@ namespace SimpleEASALogbook
             }
             else
             {
-                stringbuilder += flight.DualTime.Value.Minutes.ToString() + "</td>\n";
+                stringbuilder += flight.DualTime.Value.Minutes.ToString("00") + "</td>\n";
             }
 
             stringbuilder += "<td align=\"center\" valign=middle>";
@@ -444,7 +432,7 @@ namespace SimpleEASALogbook
             }
             else
             {
-                stringbuilder += flight.InstructorTime.Value.Minutes.ToString() + "</td>\n";
+                stringbuilder += flight.InstructorTime.Value.Minutes.ToString("00") + "</td>\n";
             }
 
             stringbuilder += "<td align=\"center\" valign=middle>";
@@ -475,13 +463,14 @@ namespace SimpleEASALogbook
             }
             else
             {
-                stringbuilder += flight.SimTime.Value.Minutes.ToString() + "</td>\n";
+                stringbuilder += flight.SimTime.Value.Minutes.ToString("00") + "</td>\n";
             }
 
             stringbuilder += "<td align=\"center\" valign=middle>";
             stringbuilder += flight.Remarks + "</td>\n";
             return stringbuilder;
         }
+
         public string GetHTML()
         {
             return stringBuilder;

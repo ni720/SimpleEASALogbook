@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 
-
 // credits to: https://github.com/microsoftarchive/msdn-code-gallery-community-s-z/blob/master/SQL%20Server%20Table%20Trigger%20practical%20example%20with%20Entity%20Framework/%5BC%23%5D-SQL%20Server%20Table%20Trigger%20practical%20example%20with%20Entity%20Framework/C%23/Operations_cs/SortableBindingList.cs
 
 namespace SimpleEASALogbook
@@ -12,34 +11,45 @@ namespace SimpleEASALogbook
         private bool _isSorted;
         private ListSortDirection _sortDirection = ListSortDirection.Ascending;
         private PropertyDescriptor _sortProperty;
+
         public SortableBindingList()
         {
         }
+
         public SortableBindingList(IList<T> list) : base(list)
         {
         }
-        protected override bool SupportsSortingCore
-        {
-            get { return true; }
-        }
+
         protected override bool IsSortedCore
         {
             get { return _isSorted; }
         }
+
         protected override ListSortDirection SortDirectionCore
         {
             get { return _sortDirection; }
         }
+
         protected override PropertyDescriptor SortPropertyCore
         {
             get { return _sortProperty; }
         }
-        protected override void RemoveSortCore()
+
+        protected override bool SupportsSortingCore
         {
-            _sortDirection = ListSortDirection.Ascending;
-            _sortProperty = null;
-            _isSorted = false; //thanks Luca
+            get { return true; }
         }
+
+        public List<Flight> GetFlights()
+        {
+            return Items as List<Flight>;
+        }
+
+        public void Sort(string propertyName, ListSortDirection direction)
+        {
+            this.ApplySortCore(TypeDescriptor.GetProperties(typeof(T))[propertyName], direction);
+        }
+
         protected override void ApplySortCore(PropertyDescriptor prop, ListSortDirection direction)
         {
             _sortProperty = prop;
@@ -54,6 +64,14 @@ namespace SimpleEASALogbook
             //fire an event that the list has been changed.
             OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
         }
+
+        protected override void RemoveSortCore()
+        {
+            _sortDirection = ListSortDirection.Ascending;
+            _sortProperty = null;
+            _isSorted = false; //thanks Luca
+        }
+
         private int Compare(T lhs, T rhs)
         {
             var result = OnComparison(lhs, rhs);
@@ -62,36 +80,7 @@ namespace SimpleEASALogbook
                 result = -result;
             return result;
         }
-        private int OnComparison(T lhs, T rhs)
-        {
-            object lhsValue = lhs == null ? null : _sortProperty.GetValue(lhs);
-            object rhsValue = rhs == null ? null : _sortProperty.GetValue(rhs);
 
-            // apply different sorting logic when sorting by flight date
-            if (_sortProperty.Name.Equals("FlightDate"))
-            {
-                return CompareFLTDate(lhs, rhs);
-            }
-            if (lhsValue == null)
-            {
-                return (rhsValue == null) ? 0 : -1; //nulls are equal
-            }
-            if (rhsValue == null)
-            {
-                return 1; //first has value, second doesn't
-            }
-            if (lhsValue.Equals(rhsValue))
-            {
-
-                return 0; //both are the same
-            }
-            if (lhsValue is IComparable)
-            {
-                return ((IComparable)lhsValue).CompareTo(rhsValue);
-            }
-            //not comparable, compare ToString
-            return lhsValue.ToString().CompareTo(rhsValue.ToString());
-        }
         // this makes is possible to sort per date.
         // flight date over sim date. and offblocktime within flight dates.
         private int CompareFLTDate(object x, object y)
@@ -132,7 +121,6 @@ namespace SimpleEASALogbook
                 {
                     b = rhs.FlightDate.Value;
                 }
-
             }
             if (lhs.OffBlockTime.HasValue)
             {
@@ -171,13 +159,35 @@ namespace SimpleEASALogbook
             // The orders are equivalent.
             return 0;
         }
-        public void Sort(string propertyName, ListSortDirection direction)
+
+        private int OnComparison(T lhs, T rhs)
         {
-            this.ApplySortCore(TypeDescriptor.GetProperties(typeof(T))[propertyName], direction);
-        }
-        public List<Flight> GetFlights()
-        {
-            return Items as List<Flight>;
+            object lhsValue = lhs == null ? null : _sortProperty.GetValue(lhs);
+            object rhsValue = rhs == null ? null : _sortProperty.GetValue(rhs);
+
+            // apply different sorting logic when sorting by flight date
+            if (_sortProperty.Name.Equals("FlightDate"))
+            {
+                return CompareFLTDate(lhs, rhs);
+            }
+            if (lhsValue == null)
+            {
+                return (rhsValue == null) ? 0 : -1; //nulls are equal
+            }
+            if (rhsValue == null)
+            {
+                return 1; //first has value, second doesn't
+            }
+            if (lhsValue.Equals(rhsValue))
+            {
+                return 0; //both are the same
+            }
+            if (lhsValue is IComparable)
+            {
+                return ((IComparable)lhsValue).CompareTo(rhsValue);
+            }
+            //not comparable, compare ToString
+            return lhsValue.ToString().CompareTo(rhsValue.ToString());
         }
     }
 }

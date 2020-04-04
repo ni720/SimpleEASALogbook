@@ -2,9 +2,10 @@
 
 namespace SimpleEASALogbook
 {
-    class Export_EASA_CSV
+    internal class Export_EASA_CSV
     {
-        protected string stringbuilder = "";
+        private string stringbuilder = "";
+
         public Export_EASA_CSV(List<Flight> flights)
         {
             foreach (Flight flight in flights)
@@ -37,6 +38,7 @@ namespace SimpleEASALogbook
                 stringbuilder += "\n";
             }
         }
+
         public string GetCSV()
         {
             return stringbuilder;
