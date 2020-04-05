@@ -80,14 +80,14 @@ namespace SimpleEASALogbook
 
             if (isMono)
             {
-                if (!File.Exists("/usr/bin/pdftotext"))
+                if (!File.Exists("pdftotext"))
                 {
-                    MessageBox.Show("pdftotext has to be installed in /usr/bin/pdftotext", "Error!");
+                    MessageBox.Show("pdftotext has to be copied into the folder of Simple EASA Logbook", "Error!");
                     return;
                 }
                 else
                 {
-                    PDFToTextPath = "/usr/bin/pdftotext";
+                    PDFToTextPath = "pdftotext";
                 }
             }
             else
@@ -104,7 +104,7 @@ namespace SimpleEASALogbook
                 {
                     foreach (string FilePathName in openFileDialog1.FileNames)
                     {
-                        ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = PDFToTextPath, Arguments = "-layout " + FilePathName + " temp_pdf_to_text.txt", };
+                        ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = PDFToTextPath, Arguments = "-table " + FilePathName + " temp_pdf_to_text.txt", };
                         Process proc = new Process() { StartInfo = startInfo, };
                         proc.Start();
                         proc.WaitForExit();
@@ -1075,7 +1075,7 @@ namespace SimpleEASALogbook
                 // to make behaviour the same as with mono, the "newrow" has caused too many problems
                 dataGridView1.AllowUserToAddRows = false;
                 dataGridView1.AllowUserToDeleteRows = false;
-                dataGridView1.AllowUserToResizeColumns = false;
+                dataGridView1.AllowUserToResizeColumns = true;
                 dataGridView1.AllowUserToResizeRows = false;
                 dataGridView1.AllowUserToOrderColumns = false;
                 dataGridView1.AutoGenerateColumns = false;
@@ -1214,14 +1214,14 @@ namespace SimpleEASALogbook
             bool _ErrorOccured = false;
             if (isMono)
             {
-                if (!File.Exists("/usr/bin/pdftotext"))
+                if (!File.Exists("pdftotext"))
                 {
-                    MessageBox.Show("pdftotext has to be installed in /usr/bin/pdftotext", "Error!");
+                    MessageBox.Show("pdftotext has to be copied into the folder of Simple EASA Logbook", "Error!");
                     return;
                 }
                 else
                 {
-                    PDFToTextPath = "/usr/bin/pdftotext";
+                    PDFToTextPath = "pdftotext";
                 }
             }
             else
