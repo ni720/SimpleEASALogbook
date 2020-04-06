@@ -26,10 +26,7 @@ namespace SimpleEASALogbook
         private TimeSpan nightTime = TimeSpan.Zero;
         private string PIC = "";
         private TimeSpan PICTime = TimeSpan.Zero;           // always zero because no test data available
-
-        // always zero because no test data available
         private string remarks = "";
-
         private TimeSpan SimTime = TimeSpan.Zero;
         private string to = "";
         private TimeSpan TotalTime = TimeSpan.Zero;

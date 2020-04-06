@@ -82,7 +82,7 @@ namespace SimpleEASALogbook
             {
                 if (!File.Exists("pdftotext"))
                 {
-                    MessageBox.Show("pdftotext has to be copied into the folder of Simple EASA Logbook", "Error!");
+                    MessageBox.Show("pdftotext binary has to be placed in the folder of SimpleEASALogbook. Download commandline tools from: http://www.xpdfreader.com/download.html", "Error!");
                     return;
                 }
                 else
@@ -901,6 +901,7 @@ namespace SimpleEASALogbook
         private void EASALogToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openFileDialog1.Multiselect = false;
+            openFileDialog1.FileName = "";
             openFileDialog1.Filter = "EASA Logbook conform CSV|*.csv";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -1216,7 +1217,7 @@ namespace SimpleEASALogbook
             {
                 if (!File.Exists("pdftotext"))
                 {
-                    MessageBox.Show("pdftotext has to be copied into the folder of Simple EASA Logbook", "Error!");
+                    MessageBox.Show("pdftotext binary has to be placed in the folder of SimpleEASALogbook. Download commandline tools from: http://www.xpdfreader.com/download.html", "Error!");
                     return;
                 }
                 else
