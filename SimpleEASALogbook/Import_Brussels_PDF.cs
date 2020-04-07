@@ -115,7 +115,7 @@ namespace SimpleEASALogbook
                         IFRTime = TimeSpan.Zero;
                         multiPilotTime = TimeSpan.Zero;
                     }
-                    Flights.Add(new Flight(Date, from, begin_time, to, end_time, type, aircraft, TimeSpan.Zero, TimeSpan.Zero, multiPilotTime, TotalTime, PIC, ldg_day, ldg_night, nightTime, IFRTime, PICTime, CoPilotTime, DualTime, InstructorTime, DateTime.MinValue, "", TimeSpan.Zero, remarks, false));
+                    Flights.Add(new Flight(Date, from, begin_time, to, end_time, type, aircraft, false, false, multiPilotTime, TotalTime, PIC, ldg_day, ldg_night, nightTime, IFRTime, PICTime, CoPilotTime, DualTime, InstructorTime, DateTime.MinValue, "", TimeSpan.Zero, remarks, false));
                 }
                 foreach (Match flightmatch in regexSimFLigts.Matches(textToParse))
                 {
@@ -130,7 +130,7 @@ namespace SimpleEASALogbook
                     TimeSpan.TryParseExact(flightmatch.Value.Replace(" ", "").Substring(11, 4), "h\\:mm", provider, out SimTime);
                     remarks = flightmatch.Value.Substring(28).Trim();
 
-                    Flights.Add(new Flight(Date, "", TimeSpan.Zero, "", TimeSpan.Zero, "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, Date, type, SimTime, remarks, false));
+                    Flights.Add(new Flight(Date, "", TimeSpan.Zero, "", TimeSpan.Zero, "", "", false, false, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, Date, type, SimTime, remarks, false));
                 }
                 if (Flights.Count < 1)
                 {

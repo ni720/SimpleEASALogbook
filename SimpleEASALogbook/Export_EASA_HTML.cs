@@ -53,7 +53,7 @@ namespace SimpleEASALogbook
                         for (int k = 0; k < linesOnPage - (j % linesOnPage); k++)
                         {
                             // add empty line
-                            stringBuilder += EasaOutputLine(new Flight(DateTime.MinValue, "", null, "", null, "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, DateTime.MinValue, "", TimeSpan.Zero, "", false));
+                            stringBuilder += EasaOutputLine(new Flight());
                         }
                         j = 0;
                         stringBuilder += CalculatePageFooter(pageFlights, pagenumber);
@@ -66,7 +66,7 @@ namespace SimpleEASALogbook
             pagenumber++;
             for (int k = 0; k < linesOnPage - (j % linesOnPage); k++)
             {
-                stringBuilder += EasaOutputLine(new Flight(DateTime.MinValue, "", null, "", null, "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, DateTime.MinValue, "", TimeSpan.Zero, "", false));
+                stringBuilder += EasaOutputLine(new Flight());
             }
             stringBuilder += CalculatePageFooter(pageFlights, pagenumber);
             stringBuilder += HTMLFooter;
@@ -241,23 +241,23 @@ namespace SimpleEASALogbook
             stringbuilder += flight.AircraftRegistration + "</td>\n";
 
             stringbuilder += "<td align=\"center\" valign=middle>";
-            if (!flight.SEPTime.HasValue || flight.SEPTime.Equals(TimeSpan.Zero))
+            if (!flight.SEPTime)
             {
                 stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += flight.SEPTime.Value.ToString("%h\\:mm") + "</td>\n";
+                stringbuilder += "X" + "</td>\n";
             }
 
             stringbuilder += "<td align=\"center\" valign=middle>";
-            if (!flight.MEPTime.HasValue || flight.MEPTime.Equals(TimeSpan.Zero))
+            if (!flight.MEPTime)
             {
                 stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += flight.MEPTime.Value.ToString("%h\\:mm") + "</td>\n";
+                stringbuilder += "X" + "</td>\n";
             }
 
             stringbuilder += "<td align=\"center\" valign=middle>";

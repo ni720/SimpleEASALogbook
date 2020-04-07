@@ -26,7 +26,7 @@ namespace SimpleEASALogbook
 
         private Nullable<TimeSpan> _InstructorTime = null;
 
-        private Nullable<TimeSpan> _MEPTime = null;
+        private bool _MEPTime = false;
 
         private Nullable<TimeSpan> _MultiPilotTime = null;
 
@@ -46,7 +46,7 @@ namespace SimpleEASALogbook
 
         private string _Remarks = "";
 
-        private Nullable<TimeSpan> _SEPTime = null;
+        private bool _SEPTime = false;
 
         private Nullable<TimeSpan> _SimTime = null;
 
@@ -56,7 +56,7 @@ namespace SimpleEASALogbook
 
         private string _TypeOfSim = "";
 
-        public Flight(DateTime? date, string dep, TimeSpan? offblock, string dest, TimeSpan? onblock, string type, string reg, TimeSpan septime, TimeSpan meptime, TimeSpan multitime, TimeSpan totaltime, string pic, int ldgday, int ldgnight, TimeSpan nighttime, TimeSpan ifrtime, TimeSpan pictime, TimeSpan copitime, TimeSpan dualtime, TimeSpan instructortime, DateTime? dateofsim, string typeofsim, TimeSpan simtime, string remarks, bool nextpage)
+        public Flight(DateTime? date, string dep, TimeSpan? offblock, string dest, TimeSpan? onblock, string type, string reg, bool septime, bool meptime, TimeSpan multitime, TimeSpan totaltime, string pic, int ldgday, int ldgnight, TimeSpan nighttime, TimeSpan ifrtime, TimeSpan pictime, TimeSpan copitime, TimeSpan dualtime, TimeSpan instructortime, DateTime? dateofsim, string typeofsim, TimeSpan simtime, string remarks, bool nextpage)
         {
             if (date.HasValue)
             { FlightDate = date; }
@@ -87,6 +87,59 @@ namespace SimpleEASALogbook
             _SimTime = simtime;
             _Remarks = remarks;
             _NextPageThereafter = nextpage;
+        }
+
+        public Flight()
+        {
+            _AircraftRegistration = "";
+
+            _CopilotTime = null;
+
+            _DateOfSim = null;
+
+            _DayLandings = null;
+
+            _DepartureAirport = "";
+
+            _DestinationAirport = "";
+
+            _DualTime = null;
+
+            _FlightDate = null;
+
+            _IFRTime = null;
+
+            _InstructorTime = null;
+
+            _MEPTime = false;
+
+            _MultiPilotTime = null;
+
+            _NextPageThereafter = false;
+
+            _NightLandings = null;
+
+            _NightTime = null;
+
+            _OffBlockTime = null;
+
+            _OnBlockTime = null;
+
+            _PICTime = null;
+
+            _PilotInCommand = "";
+
+            _Remarks = "";
+
+            _SEPTime = false;
+
+            _SimTime = null;
+
+            _TotalTimeOfFlight = null;
+
+            _TypeOfAircraft = "";
+
+            _TypeOfSim = "";
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -356,25 +409,11 @@ namespace SimpleEASALogbook
             }
         }
 
-        public TimeSpan? MEPTime
+        public bool MEPTime
         {
             get
             {
-                if (_MEPTime.HasValue)
-                {
-                    if (_MEPTime.Value.Ticks > TimeSpan.Zero.Ticks)
-                    {
-                        return _MEPTime.Value;
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-                else
-                {
-                    return null;
-                }
+                return _MEPTime;
             }
             set
             {
@@ -614,25 +653,11 @@ namespace SimpleEASALogbook
             }
         }
 
-        public TimeSpan? SEPTime
+        public bool SEPTime
         {
             get
             {
-                if (_SEPTime.HasValue)
-                {
-                    if (_SEPTime.Value.Ticks > TimeSpan.Zero.Ticks)
-                    {
-                        return _SEPTime.Value;
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-                else
-                {
-                    return null;
-                }
+                return _SEPTime;
             }
             set
             {
@@ -862,16 +887,9 @@ namespace SimpleEASALogbook
 
         public string getMEPTimeString()
         {
-            if (_MEPTime.HasValue)
+            if (_MEPTime)
             {
-                if (_MEPTime.Value.Ticks > TimeSpan.Zero.Ticks)
-                {
-                    return _MEPTime.ToString().Substring(0, 5);
-                }
-                else
-                {
-                    return "";
-                }
+                return "X";
             }
             else
             {
@@ -1022,16 +1040,9 @@ namespace SimpleEASALogbook
 
         public string getSEPTimeString()
         {
-            if (_SEPTime.HasValue)
+            if (_SEPTime)
             {
-                if (_SEPTime.Value.Ticks > TimeSpan.Zero.Ticks)
-                {
-                    return _SEPTime.ToString().Substring(0, 5);
-                }
-                else
-                {
-                    return "";
-                }
+                return "X";
             }
             else
             {

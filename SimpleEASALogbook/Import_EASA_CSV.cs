@@ -20,7 +20,7 @@ namespace SimpleEASALogbook
         private string FROM = "";
         private TimeSpan IFRTime = TimeSpan.Zero;
         private TimeSpan InstructorTime = TimeSpan.Zero;
-        private TimeSpan METime = TimeSpan.Zero;
+        private bool METime = false;
         private TimeSpan MultiPilotTime = TimeSpan.Zero;
         private bool nextpageafter = false;
         private int NightLanding = 0;
@@ -28,7 +28,7 @@ namespace SimpleEASALogbook
         private string PIC = "";
         private TimeSpan PICTime = TimeSpan.Zero;
         private string remarks = "";
-        private TimeSpan SETime = TimeSpan.Zero;
+        private bool SETime = false;
         private TimeSpan sim_time = TimeSpan.Zero;
         private DateTime StartDate = DateTime.MinValue;
         private string TO = "";
@@ -85,8 +85,22 @@ namespace SimpleEASALogbook
             TimeSpan.TryParse(csvline[4], out endTime);
             Type = csvline[5];
             Aircraft = csvline[6];
-            TimeSpan.TryParse(csvline[7], out SETime);
-            TimeSpan.TryParse(csvline[8], out METime);
+            if (csvline[7].Equals("X"))
+            {
+                SETime = true;
+            }
+            else
+            {
+                SETime = false;
+            }
+            if (csvline[8].Equals("X"))
+            {
+                METime = true;
+            }
+            else
+            {
+                METime = false;
+            }
             TimeSpan.TryParse(csvline[9], out MultiPilotTime);
             TimeSpan.TryParse(csvline[10], out TotalTimeOfFlight);
             PIC = csvline[11];

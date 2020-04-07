@@ -80,18 +80,18 @@ namespace SimpleEASALogbook
                         // is SIM-flight
                         if (flightmatch.Value.Trim().EndsWith("/"))
                         {
-                            Flights.Add(new Flight(null, "", null, "", null, "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, begin, type, duration, aircraft, false));
+                            Flights.Add(new Flight(null, "", null, "", null, "", "", false, false, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, begin, type, duration, aircraft, false));
                         }
                         else //no SIM
                         {
                             // with landing
                             if (landings.Matches(flightmatch.Value).Count > 0)
                             {
-                                Flights.Add(new Flight(date, from, offblock, to, onblock, type, aircraft, TimeSpan.Zero, TimeSpan.Zero, duration, duration, PIC, 1, 0, TimeSpan.Zero, duration, TimeSpan.Zero, duration, TimeSpan.Zero, TimeSpan.Zero, null, "", TimeSpan.Zero, "", false));
+                                Flights.Add(new Flight(date, from, offblock, to, onblock, type, aircraft, false, false, duration, duration, PIC, 1, 0, TimeSpan.Zero, duration, TimeSpan.Zero, duration, TimeSpan.Zero, TimeSpan.Zero, null, "", TimeSpan.Zero, "", false));
                             }
                             else // without landing
                             {
-                                Flights.Add(new Flight(date, from, offblock, to, onblock, type, aircraft, TimeSpan.Zero, TimeSpan.Zero, duration, duration, PIC, 0, 0, TimeSpan.Zero, duration, TimeSpan.Zero, duration, TimeSpan.Zero, TimeSpan.Zero, null, "", TimeSpan.Zero, "", false));
+                                Flights.Add(new Flight(date, from, offblock, to, onblock, type, aircraft, false, false, duration, duration, PIC, 0, 0, TimeSpan.Zero, duration, TimeSpan.Zero, duration, TimeSpan.Zero, TimeSpan.Zero, null, "", TimeSpan.Zero, "", false));
                             }
                         }
                     }

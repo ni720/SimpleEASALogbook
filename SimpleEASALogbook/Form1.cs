@@ -146,17 +146,16 @@ namespace SimpleEASALogbook
             {
                 if (dataGridView1.CurrentCell.RowIndex < 1)
                 {
-                    FlightList.Insert(dataGridView1.RowCount + 1, new Flight(DateTime.MinValue, "", null, "", null, "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, DateTime.MinValue, "", TimeSpan.Zero, "", false));
+                    FlightList.Insert(dataGridView1.RowCount - 1, new Flight());
                 }
                 else
                 {
-                    FlightList.Insert(dataGridView1.CurrentCell.RowIndex + 1, new Flight(DateTime.MinValue, "", null, "", null, "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, DateTime.MinValue, "", TimeSpan.Zero, "", false));
+                    FlightList.Insert(dataGridView1.CurrentCell.RowIndex + 1, new Flight());
                 }
             }
             else
             {
-                // ibindinglist does not accept null value Flight
-                FlightList.Insert(dataGridView1.CurrentCell.RowIndex, new Flight(DateTime.MinValue, "", null, "", null, "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, DateTime.MinValue, "", TimeSpan.Zero, "", false));
+                FlightList.Insert(dataGridView1.CurrentCell.RowIndex, new Flight());
             }
             this.dataGridView1.RowCount = BindedFlightList.Count;
             dataGridView1.Refresh();    // refresh the datagridview
@@ -300,7 +299,7 @@ namespace SimpleEASALogbook
             if (e.Value != null)
             {
                 // show totalhours to make it possible in sumrow to show more than 24hrs in one cell
-                if (e.ColumnIndex == 7 || e.ColumnIndex == 8 || e.ColumnIndex == 9 || e.ColumnIndex == 10 || e.ColumnIndex == 14 || e.ColumnIndex == 15 || e.ColumnIndex == 16 || e.ColumnIndex == 17 || e.ColumnIndex == 18 || e.ColumnIndex == 19 || e.ColumnIndex == 22)
+                if (e.ColumnIndex == 9 || e.ColumnIndex == 10 || e.ColumnIndex == 14 || e.ColumnIndex == 15 || e.ColumnIndex == 16 || e.ColumnIndex == 17 || e.ColumnIndex == 18 || e.ColumnIndex == 19 || e.ColumnIndex == 22)
                 {
                     TimeSpan temp = (TimeSpan)e.Value;
                     if (temp.TotalHours > 24)
@@ -536,30 +535,16 @@ namespace SimpleEASALogbook
                     break;
 
                 case 7:
-                    if (e.Value == null)
+                    if (bool.TryParse(e.Value.ToString(), out bool SEPTime))
                     {
-                        BindedFlightList[e.RowIndex].SEPTime = null;
-                    }
-                    else
-                    {
-                        if (TryParseTimeSpan(e.Value.ToString(), out tmp_time))
-                        {
-                            BindedFlightList[e.RowIndex].SEPTime = tmp_time;
-                        }
+                        BindedFlightList[e.RowIndex].SEPTime = SEPTime;
                     }
                     break;
 
                 case 8:
-                    if (e.Value == null)
+                    if (bool.TryParse(e.Value.ToString(), out bool MEPTime))
                     {
-                        BindedFlightList[e.RowIndex].MEPTime = null;
-                    }
-                    else
-                    {
-                        if (TryParseTimeSpan(e.Value.ToString(), out tmp_time))
-                        {
-                            BindedFlightList[e.RowIndex].MEPTime = tmp_time;
-                        }
+                        BindedFlightList[e.RowIndex].MEPTime = MEPTime;
                     }
                     break;
 
@@ -780,7 +765,7 @@ namespace SimpleEASALogbook
             e.Control.KeyPress -= new KeyPressEventHandler(Cell_KeyPress_Allow_Digits_only);
 
             // cells with digits and separators
-            if (dataGridView1.CurrentCell.ColumnIndex == 0 || dataGridView1.CurrentCell.ColumnIndex == 2 || dataGridView1.CurrentCell.ColumnIndex == 4 || dataGridView1.CurrentCell.ColumnIndex == 7 || dataGridView1.CurrentCell.ColumnIndex == 8 || dataGridView1.CurrentCell.ColumnIndex == 9 || dataGridView1.CurrentCell.ColumnIndex == 10 || dataGridView1.CurrentCell.ColumnIndex == 14 || dataGridView1.CurrentCell.ColumnIndex == 15 || dataGridView1.CurrentCell.ColumnIndex == 16 || dataGridView1.CurrentCell.ColumnIndex == 17 || dataGridView1.CurrentCell.ColumnIndex == 18 || dataGridView1.CurrentCell.ColumnIndex == 19 || dataGridView1.CurrentCell.ColumnIndex == 20 || dataGridView1.CurrentCell.ColumnIndex == 21 || dataGridView1.CurrentCell.ColumnIndex == 22)
+            if (dataGridView1.CurrentCell.ColumnIndex == 0 || dataGridView1.CurrentCell.ColumnIndex == 2 || dataGridView1.CurrentCell.ColumnIndex == 4 || dataGridView1.CurrentCell.ColumnIndex == 9 || dataGridView1.CurrentCell.ColumnIndex == 10 || dataGridView1.CurrentCell.ColumnIndex == 14 || dataGridView1.CurrentCell.ColumnIndex == 15 || dataGridView1.CurrentCell.ColumnIndex == 16 || dataGridView1.CurrentCell.ColumnIndex == 17 || dataGridView1.CurrentCell.ColumnIndex == 18 || dataGridView1.CurrentCell.ColumnIndex == 19 || dataGridView1.CurrentCell.ColumnIndex == 20 || dataGridView1.CurrentCell.ColumnIndex == 21 || dataGridView1.CurrentCell.ColumnIndex == 22)
             {
                 if (e.Control is TextBox tb)
                 {
@@ -1089,8 +1074,6 @@ namespace SimpleEASALogbook
 
                 dataGridView1.Columns[2].DefaultCellStyle.Format = "%h\\:mm";
                 dataGridView1.Columns[4].DefaultCellStyle.Format = "%h\\:mm";
-                dataGridView1.Columns[7].DefaultCellStyle.Format = "%h\\:mm";
-                dataGridView1.Columns[8].DefaultCellStyle.Format = "%h\\:mm";
                 dataGridView1.Columns[9].DefaultCellStyle.Format = "%h\\:mm";
                 dataGridView1.Columns[10].DefaultCellStyle.Format = "%h\\:mm";
                 dataGridView1.Columns[14].DefaultCellStyle.Format = "%h\\:mm";
@@ -1106,7 +1089,7 @@ namespace SimpleEASALogbook
                 // if database empty or not existing
                 if (FlightList.Count < 1)
                 {
-                    FlightList.Add(new Flight(DateTime.MinValue, "", TimeSpan.Zero, "", TimeSpan.Zero, "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, DateTime.MinValue, "", TimeSpan.Zero, "", false));
+                    FlightList.Add(new Flight());
                     dataGridView1.RowCount = BindedFlightList.Count;
                     dataGridView1.Refresh();    // refresh the dgv for mono
                 }
@@ -1333,7 +1316,7 @@ namespace SimpleEASALogbook
             ActiveForm.Refresh();
             FlightList.Clear();
             BindedFlightList.Clear();
-            FlightList.Add(new Flight(DateTime.MinValue, "", null, "", null, "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, DateTime.MinValue, "", TimeSpan.Zero, "", false));
+            FlightList.Add(new Flight());
             BindedFlightList.Add(Summarize(FlightList));
             dataGridView1.RowCount = BindedFlightList.Count;
             EnableControls(true);
@@ -1364,10 +1347,13 @@ namespace SimpleEASALogbook
                         }
                         if (columnIndex == 2 || columnIndex == 4)
                         {
-                            dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
-                            dataGridView1.RefreshEdit();
+                            if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null)
+                            {
+                                dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
+                                dataGridView1.RefreshEdit();
+                            }
                         }
-                        if (columnIndex == 7 || columnIndex == 8 || columnIndex == 9 || columnIndex == 14 || columnIndex == 15 || columnIndex == 16 || columnIndex == 17 || columnIndex == 18 || columnIndex == 19)
+                        if (columnIndex == 9 || columnIndex == 14 || columnIndex == 15 || columnIndex == 16 || columnIndex == 17 || columnIndex == 18 || columnIndex == 19)
                         {
                             if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null && dataGridView1.Rows[rowIndex].Cells[10].Value != null)
                             {
@@ -1436,7 +1422,7 @@ namespace SimpleEASALogbook
                                 dataGridView1.EndEdit();
                             }
                         }
-                        if (columnIndex == 7 || columnIndex == 8 || columnIndex == 9 || columnIndex == 14 || columnIndex == 15 || columnIndex == 16 || columnIndex == 17 || columnIndex == 18 || columnIndex == 19)
+                        if (columnIndex == 9 || columnIndex == 14 || columnIndex == 15 || columnIndex == 16 || columnIndex == 17 || columnIndex == 18 || columnIndex == 19)
                         {
                             if ((dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null) && (dataGridView1.Rows[rowIndex].Cells[10] != null))
                             {
@@ -1508,7 +1494,7 @@ namespace SimpleEASALogbook
         // import prev experience
         private void previousExpecienceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            BindedFlightList.Insert(0, new Flight(DateTime.MinValue, "", null, "", null, "", "", TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, DateTime.MinValue, "", TimeSpan.Zero, "previous experience", false));
+            BindedFlightList.Insert(0, new Flight(DateTime.MinValue, "", null, "", null, "", "", false, false, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, DateTime.MinValue, "", TimeSpan.Zero, "previous experience", false));
             dataGridView1.RowCount = BindedFlightList.Count;
         }
 
@@ -1611,14 +1597,6 @@ namespace SimpleEASALogbook
             TimeSpan SimTime = new TimeSpan();
             foreach (Flight tempFlight in flights)
             {
-                if (tempFlight.SEPTime.HasValue)
-                {
-                    SEPTime = SEPTime.Add(tempFlight.SEPTime.Value);
-                }
-                if (tempFlight.MEPTime.HasValue)
-                {
-                    MEPTime = MEPTime.Add(tempFlight.MEPTime.Value);
-                }
                 if (tempFlight.MultiPilotTime.HasValue)
                 {
                     multiPilotFlightTime = multiPilotFlightTime.Add(tempFlight.MultiPilotTime.Value);
@@ -1664,7 +1642,7 @@ namespace SimpleEASALogbook
                     SimTime = SimTime.Add(tempFlight.SimTime.Value);
                 }
             }
-            return new Flight(DateTime.MaxValue, null, null, null, null, null, null, SEPTime, MEPTime, multiPilotFlightTime, totalFlightTime, null, dayLdgs, nightLdgs, nightTime, ifrTime, PICTime, CopiTime, DualTime, InstructorTime, null, null, SimTime, "sum of all flights", false);
+            return new Flight(DateTime.MaxValue, null, null, null, null, null, null, false, false, multiPilotFlightTime, totalFlightTime, null, dayLdgs, nightLdgs, nightTime, ifrTime, PICTime, CopiTime, DualTime, InstructorTime, null, null, SimTime, "sum of all flights", false);
         }
 
         // allows the user to only enter some digits and become a date - can be misinterpreted
