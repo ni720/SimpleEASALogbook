@@ -106,7 +106,7 @@ namespace SimpleEASALogbook
                 {
                     foreach (string FilePathName in openFileDialog1.FileNames)
                     {
-                        ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = PDFToTextPath, Arguments = "-table " + FilePathName + " temp_pdf_to_text.txt", };
+                        ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = PDFToTextPath, Arguments = "-table " + FilePathName + " " + System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "temp_pdf_to_text.txt"), };
                         Process proc = new Process() { StartInfo = startInfo, };
                         proc.Start();
                         proc.WaitForExit();
@@ -133,6 +133,7 @@ namespace SimpleEASALogbook
                 }
                 catch (Exception exc)
                 {
+                    EnableControls(true);
                     File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_Brussels_PDF:\n" + exc.ToString() + "\n");
                     MessageBox.Show("An error occured during import, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -165,6 +166,10 @@ namespace SimpleEASALogbook
             if (dataGridView1.CurrentRow.Index < dataGridView1.RowCount - 1)
             {
                 dataGridView1.CurrentCell = dataGridView1.Rows[dataGridView1.CurrentRow.Index + 1].Cells[dataGridView1.CurrentCell.ColumnIndex];
+            }
+            if (isMono)
+            {
+                dataGridView1.CurrentCell = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[1];
             }
             EnableControls(true);
             toolStripStatusLabel1.Text = "   row added";
@@ -850,6 +855,7 @@ namespace SimpleEASALogbook
                 }
                 catch (Exception ey)
                 {
+                    EnableControls(true);
                     File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " ExportTo_EASA_HTML:\n" + ey.ToString() + "\n");
                     MessageBox.Show("An error occured during export, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -882,6 +888,7 @@ namespace SimpleEASALogbook
                 }
                 catch (Exception ey)
                 {
+                    EnableControls(true);
                     File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " ExportTo_EASA_CSV:\n" + ey.ToString() + "\n");
                     MessageBox.Show("An error occured during export, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -918,6 +925,7 @@ namespace SimpleEASALogbook
                 }
                 catch (Exception exc)
                 {
+                    EnableControls(true);
                     File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_EASA_CSV:\n" + exc.ToString() + "\n");
                     MessageBox.Show("An error occured during import, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -1005,6 +1013,7 @@ namespace SimpleEASALogbook
                 }
                 catch (Exception ey)
                 {
+                    EnableControls(true);
                     File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " ExportTo_EASA_PDF:\n" + ey.ToString() + "\n");
                     MessageBox.Show("An error occured during export, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -1015,6 +1024,10 @@ namespace SimpleEASALogbook
         // toggle enable / disable controls
         private void EnableControls(bool value)
         {
+            if(!value)
+            {
+                Form1.ActiveForm.Refresh();
+            }
             dataGridView1.Enabled = value;
             button1.Enabled = value;
             button2.Enabled = value;
@@ -1129,6 +1142,10 @@ namespace SimpleEASALogbook
                 {
                     dataGridView1.FirstDisplayedScrollingRowIndex = dataGridView1.Rows.Count - 2;
                     dataGridView1.CurrentCell = dataGridView1.Rows[dataGridView1.Rows.Count - 2].Cells[0];
+                    if(isMono)
+                    {
+                        dataGridView1.CurrentCell = dataGridView1.Rows[dataGridView1.Rows.Count - 2].Cells[1];
+                    }
                 }
 
                 toolStripStatusLabel1.Text = "finished loading, it took: " + Math.Round((DateTime.Now.Subtract(now).TotalMilliseconds)).ToString() + " millisecond(s).";
@@ -1236,7 +1253,7 @@ namespace SimpleEASALogbook
                 {
                     foreach (string FilePathName in openFileDialog1.FileNames)
                     {
-                        ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = PDFToTextPath, Arguments = "-raw " + FilePathName + " temp_pdf_to_text.txt", };
+                        ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = PDFToTextPath, Arguments = "-raw " + FilePathName + " "+ System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "temp_pdf_to_text.txt"), };
                         Process proc = new Process() { StartInfo = startInfo, };
                         proc.Start();
                         proc.WaitForExit();
@@ -1263,6 +1280,7 @@ namespace SimpleEASALogbook
                 }
                 catch (Exception exc)
                 {
+                    EnableControls(true);
                     File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_LH_PDF:\n" + exc.ToString() + "\n");
                     MessageBox.Show("An error occured during import, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -1317,6 +1335,7 @@ namespace SimpleEASALogbook
                 }
                 catch (Exception exc)
                 {
+                    EnableControls(true);
                     File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_MCC_PilotLog_CSV:\n" + exc.ToString() + "\n");
                     MessageBox.Show("An error occured during import, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
