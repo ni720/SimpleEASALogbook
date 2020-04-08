@@ -66,7 +66,7 @@ namespace SimpleEASALogbook
             }
             catch (Exception e)
             {
-                File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " autoFillCellValue: " + rowIndex + "x" + columnIndex + "\n" + e.ToString() + "\n");
+                File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " autoFillCellValue: " + rowIndex + "x" + columnIndex + "\n" + e.ToString() + "\n");
             }
         }
 
@@ -74,27 +74,27 @@ namespace SimpleEASALogbook
         private void brusselsPDFToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EnableControls(false);
-            MessageBox.Show("please note:\nimporters import flights incomplete or wrong even if they think everything is normal. please thoroughly check if everything was correctly imported.\n\nLimitations of the Brussels PDF importer:\nPIC times and Instructor times are not imported due to lack of testdata. please submit testdata to the developers if you have them.\nAll times are assumed to be copilot times.\n\n\nyou can choose multiple files at once to import", "DISCLAIMER",MessageBoxButtons.OK,MessageBoxIcon.Information);
+            MessageBox.Show("please note:\nimporters import flights incomplete or wrong even if they think everything is normal. please thoroughly check if everything was correctly imported.\n\nLimitations of the Brussels PDF importer:\nPIC times and Instructor times are not imported due to lack of testdata. please submit testdata to the developers if you have them.\nAll times are assumed to be copilot times.\n\n\nyou can choose multiple files at once to import", "DISCLAIMER", MessageBoxButtons.OK, MessageBoxIcon.Information);
             openFileDialog1.Multiselect = true;
             openFileDialog1.Filter = "Brussels conform PDF export|*.pdf";
-            string PDFToTextPath = "pdftotext.exe";
+            string PDFToTextPath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "pdftotext.exe");
             bool _ErrorOccured = false;
 
             if (isMono)
             {
-                if (!File.Exists("pdftotext"))
+                if (!File.Exists(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "pdftotext")))
                 {
                     MessageBox.Show("pdftotext binary has to be placed in the folder of SimpleEASALogbook. Download commandline tools from: http://www.xpdfreader.com/download.html", "Error!");
                     return;
                 }
                 else
                 {
-                    PDFToTextPath = "pdftotext";
+                    PDFToTextPath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "pdftotext");
                 }
             }
             else
             {
-                if (!File.Exists("pdftotext.exe"))
+                if (!File.Exists(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "pdftotext.exe")))
                 {
                     MessageBox.Show("pdftotext.exe has to be placed in the folder of SimpleEASALogbook. Download commandline tools from: http://www.xpdfreader.com/download.html", "Error!");
                     return;
@@ -110,12 +110,12 @@ namespace SimpleEASALogbook
                         Process proc = new Process() { StartInfo = startInfo, };
                         proc.Start();
                         proc.WaitForExit();
-                        Import_Brussels_PDF import = new Import_Brussels_PDF(File.ReadAllText("temp_pdf_to_text.txt").ToString());
+                        Import_Brussels_PDF import = new Import_Brussels_PDF(File.ReadAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "temp_pdf_to_text.txt")).ToString());
                         if (import.GetError())
                         {
                             _ErrorOccured = true;
                         }
-                        File.Delete("temp_pdf_to_text.txt");
+                        File.Delete(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "temp_pdf_to_text.txt"));
                         FlightList.AddRange(import.GetFlightList());
                     }
                     RenewSumRow();
@@ -133,7 +133,7 @@ namespace SimpleEASALogbook
                 }
                 catch (Exception exc)
                 {
-                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " Import_Brussels_PDF:\n" + exc.ToString() + "\n");
+                    File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_Brussels_PDF:\n" + exc.ToString() + "\n");
                     MessageBox.Show("An error occured during import, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -850,7 +850,7 @@ namespace SimpleEASALogbook
                 }
                 catch (Exception ey)
                 {
-                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " ExportTo_EASA_HTML:\n" + ey.ToString() + "\n");
+                    File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " ExportTo_EASA_HTML:\n" + ey.ToString() + "\n");
                     MessageBox.Show("An error occured during export, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -882,7 +882,7 @@ namespace SimpleEASALogbook
                 }
                 catch (Exception ey)
                 {
-                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " ExportTo_EASA_CSV:\n" + ey.ToString() + "\n");
+                    File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " ExportTo_EASA_CSV:\n" + ey.ToString() + "\n");
                     MessageBox.Show("An error occured during export, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -918,7 +918,7 @@ namespace SimpleEASALogbook
                 }
                 catch (Exception exc)
                 {
-                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " Import_EASA_CSV:\n" + exc.ToString() + "\n");
+                    File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_EASA_CSV:\n" + exc.ToString() + "\n");
                     MessageBox.Show("An error occured during import, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -948,14 +948,14 @@ namespace SimpleEASALogbook
             }
             else
             {
-                if (!File.Exists("wkhtmltopdf.exe"))
+                if (!File.Exists(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "wkhtmltopdf.exe")))
                 {
                     MessageBox.Show("No wkhtmltopdf.exe found, please put it in the same folder as this program is running form. (downlowad from wkhtmltopdf.org)", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 else
                 {
-                    pathToWKHTML = "wkhtmltopdf.exe";
+                    pathToWKHTML = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "wkhtmltopdf.exe");
                 }
             }
 
@@ -1005,7 +1005,7 @@ namespace SimpleEASALogbook
                 }
                 catch (Exception ey)
                 {
-                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " ExportTo_EASA_PDF:\n" + ey.ToString() + "\n");
+                    File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " ExportTo_EASA_PDF:\n" + ey.ToString() + "\n");
                     MessageBox.Show("An error occured during export, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -1184,11 +1184,11 @@ namespace SimpleEASALogbook
         // load table from "database" file
         private void LoadDB()
         {
-            if (File.Exists("EASALogbook.csv"))
+            if (File.Exists(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "EASALogbook.csv")))
             {
                 try
                 {
-                    Import_EASA_CSV import = new Import_EASA_CSV(File.ReadAllText("EASALogbook.csv").ToString());
+                    Import_EASA_CSV import = new Import_EASA_CSV(File.ReadAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "EASALogbook.csv")).ToString());
                     FlightList.AddRange(import.GetFlightList());
                     BindedFlightList.Sort("FlightDate", ListSortDirection.Ascending);
                     dataGridView1.RowCount = BindedFlightList.Count;
@@ -1196,7 +1196,7 @@ namespace SimpleEASALogbook
                 }
                 catch (Exception exc)
                 {
-                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " LoadDB:\n" + exc.ToString() + "\n");
+                    File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " LoadDB:\n" + exc.ToString() + "\n");
                 }
             }
         }
@@ -1208,23 +1208,23 @@ namespace SimpleEASALogbook
             MessageBox.Show("please note:\nimporters import flights incomplete or wrong even if they think everything is normal. please thoroughly check if everything was correctly imported.\n\n\nyou can choose multiple files at once to import", "DISCLAIMER", MessageBoxButtons.OK, MessageBoxIcon.Information);
             openFileDialog1.Multiselect = true;
             openFileDialog1.Filter = "Lufthansa conform PDF|*.pdf";
-            string PDFToTextPath = "pdftotext.exe";
+            string PDFToTextPath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "pdftotext.exe");
             bool _ErrorOccured = false;
             if (isMono)
             {
-                if (!File.Exists("pdftotext"))
+                if (!File.Exists(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "pdftotext")))
                 {
                     MessageBox.Show("pdftotext binary has to be placed in the folder of SimpleEASALogbook. Download commandline tools from: http://www.xpdfreader.com/download.html \nCaution the pdftotext version from libpoppler does not work due to the lack of the \"-table\" option", "Error!");
                     return;
                 }
                 else
                 {
-                    PDFToTextPath = "pdftotext";
+                    PDFToTextPath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "pdftotext");
                 }
             }
             else
             {
-                if (!File.Exists("pdftotext.exe"))
+                if (!File.Exists(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "pdftotext.exe")))
                 {
                     MessageBox.Show("pdftotext.exe has to be placed in the folder of SimpleEASALogbook. Download commandline tools from: http://www.xpdfreader.com/download.html", "Error!");
                     return;
@@ -1240,12 +1240,12 @@ namespace SimpleEASALogbook
                         Process proc = new Process() { StartInfo = startInfo, };
                         proc.Start();
                         proc.WaitForExit();
-                        Import_LH_PDF import = new Import_LH_PDF(File.ReadAllText("temp_pdf_to_text.txt").ToString());
+                        Import_LH_PDF import = new Import_LH_PDF(File.ReadAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "temp_pdf_to_text.txt")).ToString());
                         if (import.GetError())
                         {
                             _ErrorOccured = true;
                         }
-                        File.Delete("temp_pdf_to_text.txt");
+                        File.Delete(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "temp_pdf_to_text.txt"));
                         FlightList.AddRange(import.GetFlightList());
                     }
                     RenewSumRow();
@@ -1263,7 +1263,7 @@ namespace SimpleEASALogbook
                 }
                 catch (Exception exc)
                 {
-                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " Import_LH_PDF:\n" + exc.ToString() + "\n");
+                    File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_LH_PDF:\n" + exc.ToString() + "\n");
                     MessageBox.Show("An error occured during import, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -1317,7 +1317,7 @@ namespace SimpleEASALogbook
                 }
                 catch (Exception exc)
                 {
-                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " Import_MCC_PilotLog_CSV:\n" + exc.ToString() + "\n");
+                    File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_MCC_PilotLog_CSV:\n" + exc.ToString() + "\n");
                     MessageBox.Show("An error occured during import, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -1367,14 +1367,15 @@ namespace SimpleEASALogbook
                             if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null)
                             {
                                 // check is necessary to prevent off and onblock times for prev experience line
-                                if(dataGridView1.Rows[rowIndex].Cells[0].Value!= null)
+                                if (dataGridView1.Rows[rowIndex].Cells[0].Value != null)
                                 {
-                                    if(!dataGridView1.Rows[rowIndex].Cells[0].Value.Equals(DateTime.MinValue))
+                                    if (!dataGridView1.Rows[rowIndex].Cells[0].Value.Equals(DateTime.MinValue))
                                     {
                                         dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
                                         dataGridView1.RefreshEdit();
-                                    }                                  
-                                }else
+                                    }
+                                }
+                                else
                                 {
                                     dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
                                     dataGridView1.RefreshEdit();
@@ -1527,7 +1528,7 @@ namespace SimpleEASALogbook
             }
             catch (Exception y)
             {
-                File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " populateDataOnClick: " + rowIndex + "x" + columnIndex + "\n" + y.ToString() + "\n");
+                File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " populateDataOnClick: " + rowIndex + "x" + columnIndex + "\n" + y.ToString() + "\n");
             }
         }
 
@@ -1600,14 +1601,14 @@ namespace SimpleEASALogbook
                 BindedFlightList.Sort("FlightDate", ListSortDirection.Ascending);
                 List<Flight> temp = BindedFlightList.GetFlights();
                 Export_EASA_CSV export = new Export_EASA_CSV(temp);
-                File.WriteAllText("EASALogbook.csv", export.GetCSV());
+                File.WriteAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "EASALogbook.csv"), export.GetCSV());
                 BindedFlightList.Add(Summarize(FlightList));
                 dataGridView1.RowCount = BindedFlightList.Count;
                 dataGridView1.Refresh();
             }
             catch (Exception e)
             {
-                File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " SaveTable_3:\n" + e.ToString() + "\n");
+                File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " SaveTable_3:\n" + e.ToString() + "\n");
             }
         }
 

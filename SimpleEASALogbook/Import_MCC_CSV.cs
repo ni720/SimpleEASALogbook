@@ -67,14 +67,15 @@ namespace SimpleEASALogbook
                     catch (Exception ey)
                     {
                         _ErrorOccured = true;
-                        File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " MCC version: " + MCCVersion + " error parsing, skipping line: " + i.ToString() + "\n Import_MCC_pilotLog_CSV:\n" + ey.ToString() + "\n");
+
+                        File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " MCC version: " + MCCVersion + " error parsing, skipping line: " + i.ToString() + "\n Import_MCC_pilotLog_CSV:\n" + ey.ToString() + "\n");
                     }
                     i++;
                 }
                 if (Flights.Count < 1)
                 {
                     _ErrorOccured = true;
-                    File.AppendAllText("_easa_errorlog.txt", DateTime.Now.ToString() + " Import_MCC_CSV: found no Flights to parse.\n");
+                    File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_MCC_CSV: found no Flights to parse.\n");
                 }
             }
         }
