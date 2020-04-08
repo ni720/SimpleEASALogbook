@@ -30,16 +30,11 @@ namespace SimpleEASALogbook
 
         private Nullable<TimeSpan> _MultiPilotTime = null;
 
-        private bool _PageBreak = false;
-
         private Nullable<int> _NightLandings = null;
-
         private Nullable<TimeSpan> _NightTime = null;
-
         private Nullable<TimeSpan> _OffBlockTime = null;
-
         private Nullable<TimeSpan> _OnBlockTime = null;
-
+        private bool _PageBreak = false;
         private Nullable<TimeSpan> _PICTime = null;
 
         private string _PilotInCommand = "";
@@ -455,22 +450,6 @@ namespace SimpleEASALogbook
             }
         }
 
-        public bool PageBreak
-        {
-            get
-            {
-                return _PageBreak;
-            }
-            set
-            {
-                if (value != this._PageBreak)
-                {
-                    this._PageBreak = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-
         public int? NightLandings
         {
             get
@@ -586,6 +565,22 @@ namespace SimpleEASALogbook
                 if (value != this._OnBlockTime)
                 {
                     this._OnBlockTime = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public bool PageBreak
+        {
+            get
+            {
+                return _PageBreak;
+            }
+            set
+            {
+                if (value != this._PageBreak)
+                {
+                    this._PageBreak = value;
                     NotifyPropertyChanged();
                 }
             }

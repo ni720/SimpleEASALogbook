@@ -25,9 +25,9 @@ namespace SimpleEASALogbook
         //TimeSpan METime = TimeSpan.Zero;  // MCC Pilotlog does not correctly export MEP Time
         private TimeSpan MultiPilotTime = TimeSpan.Zero;
 
-        private bool pagebreak = false;
         private int NightLanding = 0;
         private TimeSpan NightTime = TimeSpan.Zero;
+        private bool pagebreak = false;
         private string PIC = "";
         private TimeSpan PICTime = TimeSpan.Zero;
         private string remarks = "";

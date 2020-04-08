@@ -22,9 +22,9 @@ namespace SimpleEASALogbook
         private TimeSpan InstructorTime = TimeSpan.Zero;
         private bool METime = false;
         private TimeSpan MultiPilotTime = TimeSpan.Zero;
-        private bool pagebreak = false;
         private int NightLanding = 0;
         private TimeSpan NightTime = TimeSpan.Zero;
+        private bool pagebreak = false;
         private string PIC = "";
         private TimeSpan PICTime = TimeSpan.Zero;
         private string remarks = "";

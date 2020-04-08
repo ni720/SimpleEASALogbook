@@ -9,7 +9,7 @@ namespace SimpleEASALogbook
         private int dayldg = 0;
         private TimeSpan dual = TimeSpan.Zero;
         private string HTMLFooter = "</body>\n\n</html>";
-        private string HTMLHeader = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n\n<html>\n<head>\n\t\n\t<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"/>\n\t<title>EASA Logbook</title>\n\t<meta name=\"generator\" content=\"LibreOffice 6.3.4.2 (Linux)\"/>\n\t\n\t<style type=\"text/css\">\n\t\tbody,div,p { font-family:\"Liberation Sans\"; font-size:x-small;}\n  \t\ttable,thead,tbody,tfoot,tr,th,td { border: 1px solid black; border-collapse: separate;font-size:x-small; }\n\t\t@media print {\n        table {page-break-after:always;}\n\t</style>\n\t\n</head>\n\n<body>";
+        private string HTMLHeader = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n\n<html>\n<head>\n\t\n\t<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"/>\n\t<title>EASA Logbook</title>\n\t<meta name=\"generator\" content=\"LibreOffice 6.3.4.2 (Linux)\"/>\n\t\n\t<style type=\"text/css\">\n\t\tbody,div,p { font-family:\"Liberation Sans\"; font-size:x-small;}\n  \t\ttable,thead,tbody,tfoot,tr,th,td { border: 1px solid black; border-collapse: separate;font-size:x-small; }\n\t\t@media print {\n        table {page-break-after:always;}\nbody > table:last-of-type{page-break-after:auto}\n\t</style>\n\t\n</head>\n\n<body>";
         private TimeSpan ifr = TimeSpan.Zero;
         private TimeSpan instructor = TimeSpan.Zero;
         private int linesOnPage = 18;
