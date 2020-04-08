@@ -1366,8 +1366,19 @@ namespace SimpleEASALogbook
                         {
                             if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null)
                             {
-                                dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
-                                dataGridView1.RefreshEdit();
+                                // check is necessary to prevent off and onblock times for prev experience line
+                                if(dataGridView1.Rows[rowIndex].Cells[0].Value!= null)
+                                {
+                                    if(!dataGridView1.Rows[rowIndex].Cells[0].Value.Equals(DateTime.MinValue))
+                                    {
+                                        dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
+                                        dataGridView1.RefreshEdit();
+                                    }                                  
+                                }else
+                                {
+                                    dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
+                                    dataGridView1.RefreshEdit();
+                                }
                             }
                         }
                         if (columnIndex == 9 || columnIndex == 14 || columnIndex == 15 || columnIndex == 16 || columnIndex == 17 || columnIndex == 18 || columnIndex == 19)
@@ -1432,7 +1443,17 @@ namespace SimpleEASALogbook
                         }
                         if (columnIndex == 2 || columnIndex == 4)
                         {
-                            if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null)
+                            // check is necessary to prevent off and onblock times for prev experience line
+                            if (dataGridView1.Rows[rowIndex].Cells[0].Value != null)
+                            {
+                                if (!dataGridView1.Rows[rowIndex].Cells[0].Value.Equals(DateTime.MinValue))
+                                {
+                                    dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
+                                    dataGridView1.RefreshEdit();
+                                    dataGridView1.EndEdit();
+                                }
+                            }
+                            else
                             {
                                 dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
                                 dataGridView1.RefreshEdit();
@@ -1501,6 +1522,8 @@ namespace SimpleEASALogbook
                         }
                     }
                 }
+                RenewSumRow();
+                dataGridView1.Refresh();
             }
             catch (Exception y)
             {

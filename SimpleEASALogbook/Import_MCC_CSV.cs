@@ -319,7 +319,7 @@ namespace SimpleEASALogbook
             if (csvline[28].Length > 0)
             {
                 int i = 0;
-                int.TryParse(csvline[30], out i);
+                int.TryParse(csvline[28], out i);
                 if (i > 0)
                 {
                     PICTime = TimeSpan.FromMinutes(int.Parse(csvline[28]));
