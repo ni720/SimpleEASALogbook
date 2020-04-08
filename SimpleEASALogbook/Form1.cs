@@ -73,6 +73,8 @@ namespace SimpleEASALogbook
         // Import Brussels PDF
         private void brusselsPDFToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            EnableControls(false);
+            MessageBox.Show("please note:\nimporters import flights incomplete or wrong even if they think everything is normal. please thoroughly check if everything was correctly imported.\n\nLimitations of the Brussels PDF importer:\nPIC times and Instructor times are not imported due to lack of testdata. please submit testdata to the developers if you have them.\nAll times are assumed to be copilot times.\n\n\nyou can choose multiple files at once to import", "DISCLAIMER",MessageBoxButtons.OK,MessageBoxIcon.Information);
             openFileDialog1.Multiselect = true;
             openFileDialog1.Filter = "Brussels conform PDF export|*.pdf";
             string PDFToTextPath = "pdftotext.exe";
@@ -135,6 +137,7 @@ namespace SimpleEASALogbook
                     MessageBox.Show("An error occured during import, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+            EnableControls(true);
         }
 
         // + button
@@ -802,6 +805,7 @@ namespace SimpleEASALogbook
         private void eASAHTMLToolStripMenuItem_Click(object sender, EventArgs e)
         {
             dataGridView1.EndEdit();
+            EnableControls(false);
             saveFileDialog1.Filter = "EASA conform HTML|*.html";
             saveFileDialog1.FileName = "Simple_EASA_Logbook.html";
 
@@ -850,12 +854,14 @@ namespace SimpleEASALogbook
                     MessageBox.Show("An error occured during export, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+            EnableControls(true);
         }
 
         // Export EASA CSV
         private void easaLogbookCSVToolStripMenuItem_Click(object sender, EventArgs e)
         {
             dataGridView1.EndEdit();
+            EnableControls(false);
             saveFileDialog1.Filter = "EASA Logbook conform CSV|*.csv";
             saveFileDialog1.FileName = "Simple_EASA_Logbook.csv";
 
@@ -880,11 +886,14 @@ namespace SimpleEASALogbook
                     MessageBox.Show("An error occured during export, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+            EnableControls(true);
         }
 
         // Import EASA CSV
         private void EASALogToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            EnableControls(false);
+            MessageBox.Show("please note:\nimporters import flights incomplete or wrong even if they think everything is normal. please thoroughly check if everything was correctly imported.", "DISCLAIMER", MessageBoxButtons.OK, MessageBoxIcon.Information);
             openFileDialog1.Multiselect = false;
             openFileDialog1.FileName = "";
             openFileDialog1.Filter = "EASA Logbook conform CSV|*.csv";
@@ -913,12 +922,14 @@ namespace SimpleEASALogbook
                     MessageBox.Show("An error occured during import, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+            EnableControls(true);
         }
 
         // Export EASA PDF
         private void eASAPDFToolStripMenuItem_Click(object sender, EventArgs e)
         {
             dataGridView1.EndEdit();
+            EnableControls(false);
             saveFileDialog1.Filter = "EASA conform PDF|*.pdf";
             saveFileDialog1.FileName = "Simple_EASA_Logbook.pdf";
 
@@ -998,6 +1009,7 @@ namespace SimpleEASALogbook
                     MessageBox.Show("An error occured during export, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+            EnableControls(true);
         }
 
         // toggle enable / disable controls
@@ -1192,6 +1204,8 @@ namespace SimpleEASALogbook
         // Import LH PDF
         private void LufthansaPDFToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            EnableControls(false);
+            MessageBox.Show("please note:\nimporters import flights incomplete or wrong even if they think everything is normal. please thoroughly check if everything was correctly imported.\n\n\nyou can choose multiple files at once to import", "DISCLAIMER", MessageBoxButtons.OK, MessageBoxIcon.Information);
             openFileDialog1.Multiselect = true;
             openFileDialog1.Filter = "Lufthansa conform PDF|*.pdf";
             string PDFToTextPath = "pdftotext.exe";
@@ -1200,7 +1214,7 @@ namespace SimpleEASALogbook
             {
                 if (!File.Exists("pdftotext"))
                 {
-                    MessageBox.Show("pdftotext binary has to be placed in the folder of SimpleEASALogbook. Download commandline tools from: http://www.xpdfreader.com/download.html", "Error!");
+                    MessageBox.Show("pdftotext binary has to be placed in the folder of SimpleEASALogbook. Download commandline tools from: http://www.xpdfreader.com/download.html \nCaution the pdftotext version from libpoppler does not work due to the lack of the \"-table\" option", "Error!");
                     return;
                 }
                 else
@@ -1253,6 +1267,7 @@ namespace SimpleEASALogbook
                     MessageBox.Show("An error occured during import, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+            EnableControls(true);
         }
 
         // this is a workaround because of a M$ bug? anyway if ibindinglist is assigned as datasource editing cells is initially not possible
@@ -1270,8 +1285,9 @@ namespace SimpleEASALogbook
         // Import MCCPilotLog CSV
         private void mCCPilotLogCSVToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            EnableControls(false);
+            MessageBox.Show("please note:\nimporters import flights incomplete or wrong even if they think everything is normal. please thoroughly check if everything was correctly imported.\n\nLimitations of the MCC-Pilot-Log-Importer:\nSome values are not imported, like Multi-/Singleengine time, 2nd pilot, 3rd pilot, etc..\nPlease check the CSV file and add those values in the remarks section.\n\n\nyou can choose multiple files at once to import", "DISCLAIMER", MessageBoxButtons.OK, MessageBoxIcon.Information);
             bool _ErrorOccured = false;
-            MessageBox.Show("MCC PilotLog does not correctly export SEP and MEP Times, therefore they can not be imported. you have to edit those manually. \"error parsing, skipping line: 0\" is normal due to the header line in MCC PilotLog CSV export", "Caution", MessageBoxButtons.OK, MessageBoxIcon.Information);
             openFileDialog1.Filter = "MCC PilotLog conform CSV|*.csv";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -1305,6 +1321,7 @@ namespace SimpleEASALogbook
                     MessageBox.Show("An error occured during import, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+            EnableControls(true);
         }
 
         // new database from menu
@@ -1494,8 +1511,11 @@ namespace SimpleEASALogbook
         // import prev experience
         private void previousExpecienceToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            EnableControls(false);
+            MessageBox.Show("please note:\nthis is not a real import function, in the first line of the table you simply add manually your added up flight hours", "DISCLAIMER", MessageBoxButtons.OK, MessageBoxIcon.Information);
             BindedFlightList.Insert(0, new Flight(DateTime.MinValue, "", null, "", null, "", "", false, false, TimeSpan.Zero, TimeSpan.Zero, "", 0, 0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, DateTime.MinValue, "", TimeSpan.Zero, "previous experience", false));
             dataGridView1.RowCount = BindedFlightList.Count;
+            EnableControls(true);
         }
 
         // open problems link
