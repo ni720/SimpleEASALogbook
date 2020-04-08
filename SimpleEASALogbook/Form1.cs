@@ -433,7 +433,7 @@ namespace SimpleEASALogbook
                         break;
 
                     case 24:
-                        e.Value = BindedFlightList[e.RowIndex].NextPageThereafter;
+                        e.Value = BindedFlightList[e.RowIndex].PageBreak;
                         break;
                 }
             }
@@ -750,9 +750,9 @@ namespace SimpleEASALogbook
                     break;
 
                 case 24:
-                    if (bool.TryParse(e.Value.ToString(), out bool nextpage))
+                    if (bool.TryParse(e.Value.ToString(), out bool pagebreak))
                     {
-                        BindedFlightList[e.RowIndex].NextPageThereafter = nextpage;
+                        BindedFlightList[e.RowIndex].PageBreak = pagebreak;
                     }
                     break;
             }
@@ -1119,7 +1119,7 @@ namespace SimpleEASALogbook
                     dataGridView1.CurrentCell = dataGridView1.Rows[dataGridView1.Rows.Count - 2].Cells[0];
                 }
 
-                toolStripStatusLabel1.Text = "finished loading, it took: " + Math.Round((DateTime.Now.Subtract(now).TotalSeconds)).ToString() + " second(s).";
+                toolStripStatusLabel1.Text = "finished loading, it took: " + Math.Round((DateTime.Now.Subtract(now).TotalMilliseconds)).ToString() + " millisecond(s).";
             }
         }
 

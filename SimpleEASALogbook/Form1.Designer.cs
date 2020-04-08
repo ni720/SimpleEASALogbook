@@ -657,7 +657,7 @@ namespace SimpleEASALogbook
             // 
             // Column25
             // 
-            this.Column25.DataPropertyName = "NextPageThereafter";
+            this.Column25.DataPropertyName = "PageBreak";
             this.Column25.HeaderText = "New page";
             this.Column25.Name = "Column25";
             this.Column25.Resizable = System.Windows.Forms.DataGridViewTriState.True;

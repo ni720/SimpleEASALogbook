@@ -22,7 +22,7 @@ namespace SimpleEASALogbook
         private TimeSpan InstructorTime = TimeSpan.Zero;
         private bool METime = false;
         private TimeSpan MultiPilotTime = TimeSpan.Zero;
-        private bool nextpageafter = false;
+        private bool pagebreak = false;
         private int NightLanding = 0;
         private TimeSpan NightTime = TimeSpan.Zero;
         private string PIC = "";
@@ -119,14 +119,14 @@ namespace SimpleEASALogbook
 
             if (csvline[24].Equals("pagebreak"))
             {
-                nextpageafter = true;
+                pagebreak = true;
             }
             else
             {
-                nextpageafter = false;
+                pagebreak = false;
             }
 
-            return new Flight(StartDate, FROM, beginTime, TO, endTime, Type, Aircraft, SETime, METime, MultiPilotTime, TotalTimeOfFlight, PIC, DayLanding, NightLanding, NightTime, IFRTime, PICTime, CopilotTime, DualTime, InstructorTime, date_of_sim, Type_of_sim, sim_time, remarks, nextpageafter);
+            return new Flight(StartDate, FROM, beginTime, TO, endTime, Type, Aircraft, SETime, METime, MultiPilotTime, TotalTimeOfFlight, PIC, DayLanding, NightLanding, NightTime, IFRTime, PICTime, CopilotTime, DualTime, InstructorTime, date_of_sim, Type_of_sim, sim_time, remarks, pagebreak);
         }
     }
 }

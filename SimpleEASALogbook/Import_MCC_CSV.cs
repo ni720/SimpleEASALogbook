@@ -25,7 +25,7 @@ namespace SimpleEASALogbook
         //TimeSpan METime = TimeSpan.Zero;  // MCC Pilotlog does not correctly export MEP Time
         private TimeSpan MultiPilotTime = TimeSpan.Zero;
 
-        private bool nextpageafter = false;
+        private bool pagebreak = false;
         private int NightLanding = 0;
         private TimeSpan NightTime = TimeSpan.Zero;
         private string PIC = "";
@@ -113,7 +113,7 @@ namespace SimpleEASALogbook
             Type_of_sim = "";
             sim_time = TimeSpan.Zero;
             remarks = "";
-            nextpageafter = false;
+            pagebreak = false;
             _SEPTime = false;
             _MEPTime = false;
 
@@ -217,12 +217,12 @@ namespace SimpleEASALogbook
             // SIM
             if (csvline[2].Contains("sim"))
             {
-                return new Flight(StartDate, "", TimeSpan.Zero, "", TimeSpan.Zero, "", "", _SEPTime, _MEPTime, TimeSpan.Zero, TimeSpan.Zero, "", DayLanding, NightLanding, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, date_of_sim, Type_of_sim, sim_time, remarks, nextpageafter);
+                return new Flight(StartDate, "", TimeSpan.Zero, "", TimeSpan.Zero, "", "", _SEPTime, _MEPTime, TimeSpan.Zero, TimeSpan.Zero, "", DayLanding, NightLanding, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, date_of_sim, Type_of_sim, sim_time, remarks, pagebreak);
             }
             // No SIM
             else
             {
-                return new Flight(StartDate, FROM, Starttime, TO, Endtime, Type, Aircraft, _SEPTime, _MEPTime, MultiPilotTime, TotalTimeOfFlight, PIC, DayLanding, NightLanding, NightTime, IFRTime, PICTime, CopilotTime, DualTime, InstructorTime, DateTime.MinValue, "", TimeSpan.Zero, remarks, nextpageafter);
+                return new Flight(StartDate, FROM, Starttime, TO, Endtime, Type, Aircraft, _SEPTime, _MEPTime, MultiPilotTime, TotalTimeOfFlight, PIC, DayLanding, NightLanding, NightTime, IFRTime, PICTime, CopilotTime, DualTime, InstructorTime, DateTime.MinValue, "", TimeSpan.Zero, remarks, pagebreak);
             }
         }
 
@@ -250,7 +250,7 @@ namespace SimpleEASALogbook
             Type_of_sim = "";
             sim_time = TimeSpan.Zero;
             remarks = "";
-            nextpageafter = false;
+            pagebreak = false;
             _SEPTime = false;
             _MEPTime = false;
 
@@ -329,12 +329,12 @@ namespace SimpleEASALogbook
             // SIM
             if (csvline[2].Contains("TRUE"))
             {
-                return new Flight(StartDate, "", null, "", null, "", "", _SEPTime, _MEPTime, TimeSpan.Zero, TimeSpan.Zero, "", DayLanding, NightLanding, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, date_of_sim, Type_of_sim, sim_time, remarks, nextpageafter);
+                return new Flight(StartDate, "", null, "", null, "", "", _SEPTime, _MEPTime, TimeSpan.Zero, TimeSpan.Zero, "", DayLanding, NightLanding, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, date_of_sim, Type_of_sim, sim_time, remarks, pagebreak);
             }
             // No SIM
             else
             {
-                return new Flight(StartDate, FROM, Starttime, TO, Endtime, Type, Aircraft, _SEPTime, _MEPTime, MultiPilotTime, TotalTimeOfFlight, PIC, DayLanding, NightLanding, NightTime, IFRTime, PICTime, CopilotTime, DualTime, InstructorTime, null, "", TimeSpan.MinValue, remarks, nextpageafter);
+                return new Flight(StartDate, FROM, Starttime, TO, Endtime, Type, Aircraft, _SEPTime, _MEPTime, MultiPilotTime, TotalTimeOfFlight, PIC, DayLanding, NightLanding, NightTime, IFRTime, PICTime, CopilotTime, DualTime, InstructorTime, null, "", TimeSpan.MinValue, remarks, pagebreak);
             }
         }
     }

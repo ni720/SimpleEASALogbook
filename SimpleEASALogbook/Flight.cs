@@ -30,7 +30,7 @@ namespace SimpleEASALogbook
 
         private Nullable<TimeSpan> _MultiPilotTime = null;
 
-        private bool _NextPageThereafter = false;
+        private bool _PageBreak = false;
 
         private Nullable<int> _NightLandings = null;
 
@@ -56,7 +56,7 @@ namespace SimpleEASALogbook
 
         private string _TypeOfSim = "";
 
-        public Flight(DateTime? date, string dep, TimeSpan? offblock, string dest, TimeSpan? onblock, string type, string reg, bool septime, bool meptime, TimeSpan multitime, TimeSpan totaltime, string pic, int ldgday, int ldgnight, TimeSpan nighttime, TimeSpan ifrtime, TimeSpan pictime, TimeSpan copitime, TimeSpan dualtime, TimeSpan instructortime, DateTime? dateofsim, string typeofsim, TimeSpan simtime, string remarks, bool nextpage)
+        public Flight(DateTime? date, string dep, TimeSpan? offblock, string dest, TimeSpan? onblock, string type, string reg, bool septime, bool meptime, TimeSpan multitime, TimeSpan totaltime, string pic, int ldgday, int ldgnight, TimeSpan nighttime, TimeSpan ifrtime, TimeSpan pictime, TimeSpan copitime, TimeSpan dualtime, TimeSpan instructortime, DateTime? dateofsim, string typeofsim, TimeSpan simtime, string remarks, bool pagebreak)
         {
             if (date.HasValue)
             { FlightDate = date; }
@@ -86,7 +86,7 @@ namespace SimpleEASALogbook
             _TypeOfSim = typeofsim;
             _SimTime = simtime;
             _Remarks = remarks;
-            _NextPageThereafter = nextpage;
+            _PageBreak = pagebreak;
         }
 
         public Flight()
@@ -115,7 +115,7 @@ namespace SimpleEASALogbook
 
             _MultiPilotTime = null;
 
-            _NextPageThereafter = false;
+            _PageBreak = false;
 
             _NightLandings = null;
 
@@ -455,17 +455,17 @@ namespace SimpleEASALogbook
             }
         }
 
-        public bool NextPageThereafter
+        public bool PageBreak
         {
             get
             {
-                return _NextPageThereafter;
+                return _PageBreak;
             }
             set
             {
-                if (value != this._NextPageThereafter)
+                if (value != this._PageBreak)
                 {
-                    this._NextPageThereafter = value;
+                    this._PageBreak = value;
                     NotifyPropertyChanged();
                 }
             }
@@ -994,7 +994,7 @@ namespace SimpleEASALogbook
 
         public string getPageBreakString()
         {
-            if (_NextPageThereafter)
+            if (_PageBreak)
             {
                 return "pagebreak";
             }

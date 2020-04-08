@@ -34,18 +34,8 @@ namespace SimpleEASALogbook
             int j = 0;
             for (int i = 0; i < flights.Count; i++)
             {
-                pageFlights.Add(flights[i]);
-                stringBuilder += EasaOutputLine(flights[i]);
-                j++;
-                if (j % linesOnPage == 0)
-                {
-                    pagenumber++;
-                    stringBuilder += CalculatePageFooter(pageFlights, pagenumber);
-                    stringBuilder += PageHeader;
-                    pageFlights = new List<Flight>();
-                }
                 // if saved pagebreak detected add empty lines
-                if (flights[i].NextPageThereafter)
+                if (flights[i].PageBreak)
                 {
                     if (j % linesOnPage > 0)
                     {
@@ -60,6 +50,16 @@ namespace SimpleEASALogbook
                         stringBuilder += PageHeader;
                         pageFlights = new List<Flight>();
                     }
+                }
+                pageFlights.Add(flights[i]);
+                stringBuilder += EasaOutputLine(flights[i]);
+                j++;
+                if (j % linesOnPage == 0)
+                {
+                    pagenumber++;
+                    stringBuilder += CalculatePageFooter(pageFlights, pagenumber);
+                    stringBuilder += PageHeader;
+                    pageFlights = new List<Flight>();
                 }
             }
             // add empty lines on last page
