@@ -68,12 +68,6 @@ namespace SimpleEASALogbook
             this.problemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -99,6 +93,12 @@ namespace SimpleEASALogbook
             this.Column23 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column24 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column25 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -204,7 +204,7 @@ namespace SimpleEASALogbook
             this.brusselsPDFToolStripMenuItem.Name = "brusselsPDFToolStripMenuItem";
             this.brusselsPDFToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
             this.brusselsPDFToolStripMenuItem.Text = "Brussels PDF";
-            this.brusselsPDFToolStripMenuItem.Click += new System.EventHandler(this.brusselsPDFToolStripMenuItem_Click);
+            this.brusselsPDFToolStripMenuItem.Click += new System.EventHandler(this.BrusselsPDFToolStripMenuItem_Click);
             // 
             // fliteBookToolStripMenuItem
             // 
@@ -225,7 +225,7 @@ namespace SimpleEASALogbook
             this.mCCPilotLogCSVToolStripMenuItem.Name = "mCCPilotLogCSVToolStripMenuItem";
             this.mCCPilotLogCSVToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
             this.mCCPilotLogCSVToolStripMenuItem.Text = "MCC PilotLog CSV";
-            this.mCCPilotLogCSVToolStripMenuItem.Click += new System.EventHandler(this.mCCPilotLogCSVToolStripMenuItem_Click);
+            this.mCCPilotLogCSVToolStripMenuItem.Click += new System.EventHandler(this.MCCPilotLogCSVToolStripMenuItem_Click);
             // 
             // lufthansaPDFToolStripMenuItem
             // 
@@ -239,7 +239,7 @@ namespace SimpleEASALogbook
             this.previousExpecienceToolStripMenuItem.Name = "previousExpecienceToolStripMenuItem";
             this.previousExpecienceToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
             this.previousExpecienceToolStripMenuItem.Text = "Previous Expecience";
-            this.previousExpecienceToolStripMenuItem.Click += new System.EventHandler(this.previousExpecienceToolStripMenuItem_Click);
+            this.previousExpecienceToolStripMenuItem.Click += new System.EventHandler(this.PreviousExpecienceToolStripMenuItem_Click);
             // 
             // exportToolStripMenuItem
             // 
@@ -259,21 +259,21 @@ namespace SimpleEASALogbook
             this.eASAHTMLToolStripMenuItem.Name = "eASAHTMLToolStripMenuItem";
             this.eASAHTMLToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.eASAHTMLToolStripMenuItem.Text = "EASA HTML";
-            this.eASAHTMLToolStripMenuItem.Click += new System.EventHandler(this.eASAHTMLToolStripMenuItem_Click);
+            this.eASAHTMLToolStripMenuItem.Click += new System.EventHandler(this.EASAHTMLToolStripMenuItem_Click);
             // 
             // easaLogbookCSVToolStripMenuItem
             // 
             this.easaLogbookCSVToolStripMenuItem.Name = "easaLogbookCSVToolStripMenuItem";
             this.easaLogbookCSVToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.easaLogbookCSVToolStripMenuItem.Text = "EASA Logbook CSV";
-            this.easaLogbookCSVToolStripMenuItem.Click += new System.EventHandler(this.easaLogbookCSVToolStripMenuItem_Click);
+            this.easaLogbookCSVToolStripMenuItem.Click += new System.EventHandler(this.EasaLogbookCSVToolStripMenuItem_Click);
             // 
             // eASAPDFToolStripMenuItem
             // 
             this.eASAPDFToolStripMenuItem.Name = "eASAPDFToolStripMenuItem";
             this.eASAPDFToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.eASAPDFToolStripMenuItem.Text = "EASA PDF";
-            this.eASAPDFToolStripMenuItem.Click += new System.EventHandler(this.eASAPDFToolStripMenuItem_Click);
+            this.eASAPDFToolStripMenuItem.Click += new System.EventHandler(this.EASAPDFToolStripMenuItem_Click);
             // 
             // mCCPilotLogCSVToolStripMenuItem1
             // 
@@ -312,7 +312,7 @@ namespace SimpleEASALogbook
             this.howToLogYourFlightToolStripMenuItem.Name = "howToLogYourFlightToolStripMenuItem";
             this.howToLogYourFlightToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.howToLogYourFlightToolStripMenuItem.Text = "How to log your flight";
-            this.howToLogYourFlightToolStripMenuItem.Click += new System.EventHandler(this.howToLogYourFlightToolStripMenuItem_Click);
+            this.howToLogYourFlightToolStripMenuItem.Click += new System.EventHandler(this.HowToLogYourFlightToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
@@ -324,14 +324,14 @@ namespace SimpleEASALogbook
             this.problemsToolStripMenuItem.Name = "problemsToolStripMenuItem";
             this.problemsToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.problemsToolStripMenuItem.Text = "Problems?";
-            this.problemsToolStripMenuItem.Click += new System.EventHandler(this.problemsToolStripMenuItem_Click);
+            this.problemsToolStripMenuItem.Click += new System.EventHandler(this.ProblemsToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.aboutToolStripMenuItem.Text = "About";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
             // 
             // dataGridView1
             // 
@@ -378,56 +378,16 @@ namespace SimpleEASALogbook
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView1.Size = new System.Drawing.Size(760, 481);
             this.dataGridView1.TabIndex = 2;
-            this.dataGridView1.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridView1_CellBeginEdit);
-            this.dataGridView1.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentDoubleClick);
+            this.dataGridView1.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.DataGridView1_CellBeginEdit);
+            this.dataGridView1.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellContentDoubleClick);
             this.dataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellDoubleClick);
             this.dataGridView1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellEndEdit);
-            this.dataGridView1.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView1_CellFormatting);
-            this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
-            this.dataGridView1.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridView1_CellValueNeeded);
-            this.dataGridView1.CellValuePushed += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridView1_CellValuePushed);
+            this.dataGridView1.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.DataGridView1_CellFormatting);
+            this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellValueChanged);
+            this.dataGridView1.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.DataGridView1_CellValueNeeded);
+            this.dataGridView1.CellValuePushed += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.DataGridView1_CellValuePushed);
             this.dataGridView1.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.DataGridView1_EditingControlShowing);
             this.dataGridView1.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.DataGridView1_RowPostPaint);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(12, 513);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "+";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.Button1_Click);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(94, 513);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 4;
-            this.button2.Text = "-";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.Button2_Click);
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(616, 513);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 23);
-            this.button5.TabIndex = 7;
-            this.button5.Text = "&save";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.Button5_Click);
-            // 
-            // button6
-            // 
-            this.button6.Location = new System.Drawing.Point(697, 513);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(75, 23);
-            this.button6.TabIndex = 8;
-            this.button6.Text = "✔ &close";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.Button6_Click);
             // 
             // Column1
             // 
@@ -664,6 +624,46 @@ namespace SimpleEASALogbook
             this.Column25.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.Column25.Width = 65;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(12, 513);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 3;
+            this.button1.Text = "+";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.Button1_Click);
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(94, 513);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 4;
+            this.button2.Text = "-";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.Button2_Click);
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(616, 513);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(75, 23);
+            this.button5.TabIndex = 7;
+            this.button5.Text = "&save";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.Button5_Click);
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(697, 513);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(75, 23);
+            this.button6.TabIndex = 8;
+            this.button6.Text = "✔ &close";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.Button6_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -680,7 +680,7 @@ namespace SimpleEASALogbook
             this.MinimumSize = new System.Drawing.Size(640, 480);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Simple EASA Logbook v0.1";
+            this.Text = "Simple EASA Logbook v0.2";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_OnLoad);
             this.Shown += new System.EventHandler(this.Form1_Shown);

@@ -31,7 +31,7 @@ namespace SimpleEASALogbook
         }
 
         // open About form
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             About about = new About();
             about.Show();
@@ -71,7 +71,7 @@ namespace SimpleEASALogbook
         }
 
         // Import Brussels PDF
-        private void brusselsPDFToolStripMenuItem_Click(object sender, EventArgs e)
+        private void BrusselsPDFToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EnableControls(false);
             MessageBox.Show("please note:\nimporters import flights incomplete or wrong even if they think everything is normal. please thoroughly check if everything was correctly imported.\n\nLimitations of the Brussels PDF importer:\nPIC times and Instructor times are not imported due to lack of testdata. please submit testdata to the developers if you have them.\nAll times are assumed to be copilot times.\n\n\nyou can choose multiple files at once to import", "DISCLAIMER", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -260,7 +260,7 @@ namespace SimpleEASALogbook
         }
 
         // disable edit in certain prev exp columns and in sumrow
-        private void dataGridView1_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        private void DataGridView1_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
             if (e != null && dataGridView1.CurrentRow != null && dataGridView1.Rows[e.RowIndex].Cells[0].Value != null)
             {
@@ -279,7 +279,7 @@ namespace SimpleEASALogbook
         }
 
         // mono sometimes needs cell-content doubleclick
-        private void dataGridView1_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+        private void DataGridView1_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (isMono)
             {
@@ -302,7 +302,7 @@ namespace SimpleEASALogbook
         }
 
         // display α & ∑ for prev experience and sum row, and allow timespans greater than 23:59 in sumrow
-        private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        private void DataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.Value != null)
             {
@@ -332,13 +332,13 @@ namespace SimpleEASALogbook
         }
 
         // update sum row
-        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void DataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             RenewSumRow();
         }
 
         // datagridview virtualmode -> get cellvalue from list
-        private void dataGridView1_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
+        private void DataGridView1_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
             if (BindedFlightList.Count > e.RowIndex)    // nullcheck for mono - 2do test if works
             {
@@ -448,7 +448,7 @@ namespace SimpleEASALogbook
         }
 
         // datagridview virtualmode -> update list from cellvalue
-        private void dataGridView1_CellValuePushed(object sender, DataGridViewCellValueEventArgs e)
+        private void DataGridView1_CellValuePushed(object sender, DataGridViewCellValueEventArgs e)
         {
             DateTime tmp_date;
             TimeSpan tmp_time;
@@ -807,7 +807,7 @@ namespace SimpleEASALogbook
         }
 
         // Export EASA HTML
-        private void eASAHTMLToolStripMenuItem_Click(object sender, EventArgs e)
+        private void EASAHTMLToolStripMenuItem_Click(object sender, EventArgs e)
         {
             dataGridView1.EndEdit();
             EnableControls(false);
@@ -864,7 +864,7 @@ namespace SimpleEASALogbook
         }
 
         // Export EASA CSV
-        private void easaLogbookCSVToolStripMenuItem_Click(object sender, EventArgs e)
+        private void EasaLogbookCSVToolStripMenuItem_Click(object sender, EventArgs e)
         {
             dataGridView1.EndEdit();
             EnableControls(false);
@@ -934,14 +934,14 @@ namespace SimpleEASALogbook
         }
 
         // Export EASA PDF
-        private void eASAPDFToolStripMenuItem_Click(object sender, EventArgs e)
+        private void EASAPDFToolStripMenuItem_Click(object sender, EventArgs e)
         {
             dataGridView1.EndEdit();
             EnableControls(false);
             saveFileDialog1.Filter = "EASA conform PDF|*.pdf";
             saveFileDialog1.FileName = "Simple_EASA_Logbook.pdf";
 
-            string pathToWKHTML = "";
+            string pathToWKHTML;
             if (isMono)
             {
                 if (!File.Exists("/usr/bin/wkhtmltopdf"))
@@ -1179,7 +1179,7 @@ namespace SimpleEASALogbook
         }
 
         // open help for flight logging
-        private void howToLogYourFlightToolStripMenuItem_Click(object sender, EventArgs e)
+        private void HowToLogYourFlightToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // in Mono simple URL opening sometimes does not work
             if (isMono)
@@ -1301,7 +1301,7 @@ namespace SimpleEASALogbook
         }
 
         // Import MCCPilotLog CSV
-        private void mCCPilotLogCSVToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MCCPilotLogCSVToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EnableControls(false);
             MessageBox.Show("please note:\nimporters import flights incomplete or wrong even if they think everything is normal. please thoroughly check if everything was correctly imported.\n\nLimitations of the MCC-Pilot-Log-Importer:\nSome values are not imported, like Multi-/Singleengine time, 2nd pilot, 3rd pilot, etc..\nPlease check the CSV file and add those values in the remarks section.\n\n\nyou can choose multiple files at once to import", "DISCLAIMER", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1552,7 +1552,7 @@ namespace SimpleEASALogbook
         }
 
         // import prev experience
-        private void previousExpecienceToolStripMenuItem_Click(object sender, EventArgs e)
+        private void PreviousExpecienceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EnableControls(false);
             MessageBox.Show("please note:\nthis is not a real import function, in the first line of the table you simply add manually your added up flight hours", "DISCLAIMER", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1562,7 +1562,7 @@ namespace SimpleEASALogbook
         }
 
         // open problems link
-        private void problemsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ProblemsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // in Mono simple URL opening sometimes does not work
             if (isMono)
@@ -1645,8 +1645,6 @@ namespace SimpleEASALogbook
         // summarize flight times
         private Flight Summarize(List<Flight> flights)
         {
-            TimeSpan SEPTime = new TimeSpan(0);
-            TimeSpan MEPTime = new TimeSpan(0);
             TimeSpan multiPilotFlightTime = new TimeSpan(0);
             TimeSpan totalFlightTime = new TimeSpan(0);
             int dayLdgs = 0;
