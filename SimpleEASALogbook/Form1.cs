@@ -85,6 +85,7 @@ namespace SimpleEASALogbook
                 if (!File.Exists(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "pdftotext")))
                 {
                     MessageBox.Show("pdftotext binary has to be placed in the folder of SimpleEASALogbook. Download commandline tools from: http://www.xpdfreader.com/download.html", "Error!");
+                    EnableControls(true);
                     return;
                 }
                 else
@@ -97,6 +98,7 @@ namespace SimpleEASALogbook
                 if (!File.Exists(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "pdftotext.exe")))
                 {
                     MessageBox.Show("pdftotext.exe has to be placed in the folder of SimpleEASALogbook. Download commandline tools from: http://www.xpdfreader.com/download.html", "Error!");
+                    EnableControls(true);
                     return;
                 }
             }
@@ -947,6 +949,7 @@ namespace SimpleEASALogbook
                 if (!File.Exists("/usr/bin/wkhtmltopdf"))
                 {
                     MessageBox.Show("No wkhtmltopdf found in /usr/bin, please install it", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    EnableControls(true);
                     return;
                 }
                 else
@@ -959,6 +962,7 @@ namespace SimpleEASALogbook
                 if (!File.Exists(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "wkhtmltopdf.exe")))
                 {
                     MessageBox.Show("No wkhtmltopdf.exe found, please put it in the same folder as this program is running form. (downlowad from wkhtmltopdf.org)", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    EnableControls(true);
                     return;
                 }
                 else
@@ -1234,6 +1238,7 @@ namespace SimpleEASALogbook
                 if (!File.Exists(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "pdftotext")))
                 {
                     MessageBox.Show("pdftotext binary has to be placed in the folder of SimpleEASALogbook. Download commandline tools from: http://www.xpdfreader.com/download.html \nCaution the pdftotext version from libpoppler does not work due to the lack of the \"-table\" option", "Error!");
+                    EnableControls(true);
                     return;
                 }
                 else
@@ -1246,6 +1251,7 @@ namespace SimpleEASALogbook
                 if (!File.Exists(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "pdftotext.exe")))
                 {
                     MessageBox.Show("pdftotext.exe has to be placed in the folder of SimpleEASALogbook. Download commandline tools from: http://www.xpdfreader.com/download.html", "Error!");
+                    EnableControls(true);
                     return;
                 }
             }
