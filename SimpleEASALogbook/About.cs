@@ -6,12 +6,12 @@ namespace SimpleEASALogbook
 {
     public partial class About : Form
     {
+        public static bool isMono = false;
+
         public About()
         {
             InitializeComponent();
         }
-
-        public static bool isMono = false;
 
         private static void IsRunningOnMono()
         {

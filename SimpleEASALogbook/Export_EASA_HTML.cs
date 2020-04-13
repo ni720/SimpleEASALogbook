@@ -12,15 +12,12 @@ namespace SimpleEASALogbook
         private string HTMLHeader = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n\n<html>\n<head>\n\t\n\t<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"/>\n\t<title>EASA Logbook</title>\n\t<meta name=\"generator\" content=\"LibreOffice 6.3.4.2 (Linux)\"/>\n\t\n\t<style type=\"text/css\">\n\t\tbody,div,p { font-family:\"Liberation Sans\"; font-size:x-small;}\n  \t\ttable,thead,tbody,tfoot,tr,th,td { border: 1px solid black; border-collapse: separate;font-size:x-small; }\n\t\t@media print {\n        table {page-break-after:always;}\nbody > table:last-of-type{page-break-after:auto}\n\t</style>\n\t\n</head>\n\n<body>";
         private TimeSpan ifr = TimeSpan.Zero;
         private TimeSpan instructor = TimeSpan.Zero;
-        private int linesOnPage = 18;
+        private int linesOnPage = 18;   // EASA Logbook has 18 lines per page
         private int nghtldg = 0;
         private TimeSpan night = TimeSpan.Zero;
         private List<Flight> pageFlights = new List<Flight>();
         private string PageHeader = "<table cellspacing=\"0\" border=\"0\">\n\t<colgroup width=\"76\"></colgroup>\n\t<colgroup span=\"4\" width=\"38\"></colgroup>\n\t<colgroup span=\"2\" width=\"76\"></colgroup>\n\t<colgroup span=\"6\" width=\"38\"></colgroup>\n\t<colgroup width=\"76\"></colgroup>\n\t<colgroup span=\"14\" width=\"38\"></colgroup>\n\t<colgroup span=\"2\" width=\"76\"></colgroup>\n\t<colgroup span=\"2\" width=\"38\"></colgroup>\n\t<colgroup width=\"151\"></colgroup>\n\t<tr>\n\t\t<td height=\"11\" align=\"center\" valign=middle >1</td>\n\t\t<td colspan=2 align=\"center\" valign=middle >2</td>\n\t\t<td colspan=2 align=\"center\" valign=middle >3</td>\n\t\t<td colspan=2 align=\"center\" valign=middle >4</td>\n\t\t<td colspan=4 align=\"center\" valign=middle >5</td>\n\t\t<td colspan=2 align=\"center\" valign=middle >6</td>\n\t\t<td align=\"center\" valign=middle >7</td>\n\t\t<td colspan=2 align=\"center\" valign=middle >8</td>\n\t\t<td colspan=4 align=\"center\" valign=middle >9</td>\n\t\t<td colspan=8 align=\"center\" valign=middle >10</td>\n\t\t<td colspan=4 align=\"center\" valign=middle >11</td>\n\t\t<td align=\"center\" valign=middle >12</td>\n\t</tr>\n\t<tr>\n\t\t<td rowspan=2 height=\"38\" align=\"center\" valign=middle>Date<br>(dd.mm.yy)</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Departure</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Arrival</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Aircraft</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Single Pilot Time</td>\n\t\t<td colspan=2 rowspan=2 align=\"center\" valign=middle>Multi-Pilot Time</td>\n\t\t<td colspan=2 rowspan=2 align=\"center\" valign=middle>Total Time of Flight</td>\n\t\t<td rowspan=2 align=\"center\" valign=middle>Name PIC</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Landings</td>\n\t\t<td colspan=4 align=\"center\" valign=middle>Operational condition time</td>\n\t\t<td colspan=8 align=\"center\" valign=middle>Pilot Function Time</td>\n\t\t<td colspan=4 align=\"center\" valign=middle>FSTD Session</td>\n\t\t<td rowspan=2 align=\"center\" valign=middle>Remarks and Endorsements</td>\n\t</tr>\n\t<tr>\n\t\t<td align=\"center\" valign=middle>Place</td>\n\t\t<td align=\"center\" valign=middle>Time</td>\n\t\t<td align=\"center\" valign=middle>Place</td>\n\t\t<td align=\"center\" valign=middle>Time</td>\n\t\t<td align=\"center\" valign=middle>Make, Model, Variant</td>\n\t\t<td align=\"center\" valign=middle>Registration</td>\n\t\t<td align=\"center\" valign=middle>SE</td>\n\t\t<td align=\"center\" valign=middle>ME</td>\n\t\t<td align=\"center\" valign=middle>Day</td>\n\t\t<td align=\"center\" valign=middle>Night</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Night</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>IFR</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Pilot – in Command</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Co-Pilot</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Dual</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Instructor</td>\n\t\t<td align=\"center\" valign=middle>Date</td>\n\t\t<td align=\"center\" valign=middle>Type</td>\n\t\t<td colspan=2 align=\"center\" valign=middle>Total of Session</td>\n\t\t</tr>";
-
-        // EASA Logbook has 18 lines per page
         private int pagenumber = 0;
-
         private TimeSpan pictime = TimeSpan.Zero;
         private TimeSpan simtime = TimeSpan.Zero;
         private string stringBuilder = "";
@@ -197,278 +194,278 @@ namespace SimpleEASALogbook
 
         public string EasaOutputLine(Flight flight)
         {
-            string stringbuilder = "";
-            stringbuilder += "<tr>\n<td height=\"19\" align=\"center\" valign=middle >";
+            string _stringbuilder = "";
+            _stringbuilder += "<tr>\n<td height=\"19\" align=\"center\" valign=middle >";
             if (!flight.FlightDate.HasValue || flight.FlightDate.Equals(DateTime.MinValue))
             {
-                stringbuilder += "</td>\n";
+                _stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += flight.FlightDate.Value.ToString("dd.MM.yy") + "</td>\n";
+                _stringbuilder += flight.FlightDate.Value.ToString("dd.MM.yy") + "</td>\n";
             }
 
-            stringbuilder += "<td align=\"center\" valign=middle>";
-            stringbuilder += flight.DepartureAirport + "</td>\n";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += flight.DepartureAirport + "</td>\n";
 
-            stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
             if (!flight.OffBlockTime.HasValue || flight.OffBlockTime.Equals(TimeSpan.Zero))
             {
-                stringbuilder += "</td>\n";
+                _stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += flight.OffBlockTime.Value.ToString("%h\\:mm") + "</td>\n";
+                _stringbuilder += flight.OffBlockTime.Value.ToString("%h\\:mm") + "</td>\n";
             }
 
-            stringbuilder += "<td align=\"center\" valign=middle>";
-            stringbuilder += flight.DestinationAirport + "</td>\n";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += flight.DestinationAirport + "</td>\n";
 
-            stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
             if (!flight.OnBlockTime.HasValue || flight.OnBlockTime.Equals(TimeSpan.Zero))
             {
-                stringbuilder += "</td>\n";
+                _stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += flight.OnBlockTime.Value.ToString("%h\\:mm") + "</td>\n";
+                _stringbuilder += flight.OnBlockTime.Value.ToString("%h\\:mm") + "</td>\n";
             }
 
-            stringbuilder += "<td align=\"center\" valign=middle>";
-            stringbuilder += flight.TypeOfAircraft + "</td>\n";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += flight.TypeOfAircraft + "</td>\n";
 
-            stringbuilder += "<td align=\"center\" valign=middle>";
-            stringbuilder += flight.AircraftRegistration + "</td>\n";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += flight.AircraftRegistration + "</td>\n";
 
-            stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
             if (!flight.SEPTime)
             {
-                stringbuilder += "</td>\n";
+                _stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += "X" + "</td>\n";
+                _stringbuilder += "X" + "</td>\n";
             }
 
-            stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
             if (!flight.MEPTime)
             {
-                stringbuilder += "</td>\n";
+                _stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += "X" + "</td>\n";
+                _stringbuilder += "X" + "</td>\n";
             }
 
-            stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
             if (!flight.MultiPilotTime.HasValue || flight.MultiPilotTime.Equals(TimeSpan.Zero))
             {
-                stringbuilder += "</td>\n";
+                _stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += flight.MultiPilotTime.Value.Hours.ToString() + "</td>\n";
+                _stringbuilder += flight.MultiPilotTime.Value.Hours.ToString() + "</td>\n";
             }
-            stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
             if (!flight.MultiPilotTime.HasValue || flight.MultiPilotTime.Equals(TimeSpan.Zero))
             {
-                stringbuilder += "</td>\n";
+                _stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += flight.MultiPilotTime.Value.Minutes.ToString("00") + "</td>\n";
+                _stringbuilder += flight.MultiPilotTime.Value.Minutes.ToString("00") + "</td>\n";
             }
 
-            stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
             if (!flight.TotalTimeOfFlight.HasValue || flight.TotalTimeOfFlight.Equals(TimeSpan.Zero))
             {
-                stringbuilder += "</td>\n";
+                _stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += flight.TotalTimeOfFlight.Value.Hours.ToString() + "</td>\n";
+                _stringbuilder += flight.TotalTimeOfFlight.Value.Hours.ToString() + "</td>\n";
             }
-            stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
             if (!flight.TotalTimeOfFlight.HasValue || flight.TotalTimeOfFlight.Equals(TimeSpan.Zero))
             {
-                stringbuilder += "</td>\n";
+                _stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += flight.TotalTimeOfFlight.Value.Minutes.ToString("00") + "</td>\n";
+                _stringbuilder += flight.TotalTimeOfFlight.Value.Minutes.ToString("00") + "</td>\n";
             }
 
-            stringbuilder += "<td align=\"center\" valign=middle>";
-            stringbuilder += flight.PilotInCommand + "</td>\n";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += flight.PilotInCommand + "</td>\n";
 
-            stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
             if (!flight.DayLandings.HasValue || flight.DayLandings < 1)
             {
-                stringbuilder += "</td>\n";
+                _stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += flight.DayLandings.Value + "</td>\n";
+                _stringbuilder += flight.DayLandings.Value + "</td>\n";
             }
 
-            stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
             if (!flight.NightLandings.HasValue || flight.NightLandings < 1)
             {
-                stringbuilder += "</td>\n";
+                _stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += flight.NightLandings.Value + "</td>\n";
+                _stringbuilder += flight.NightLandings.Value + "</td>\n";
             }
 
-            stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
             if (!flight.NightTime.HasValue || flight.NightTime.Equals(TimeSpan.Zero))
             {
-                stringbuilder += "</td>\n";
+                _stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += flight.NightTime.Value.Hours.ToString() + "</td>\n";
+                _stringbuilder += flight.NightTime.Value.Hours.ToString() + "</td>\n";
             }
-            stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
             if (!flight.NightTime.HasValue || flight.NightTime.Equals(TimeSpan.Zero))
             {
-                stringbuilder += "</td>\n";
+                _stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += flight.NightTime.Value.Minutes.ToString("00") + "</td>\n";
+                _stringbuilder += flight.NightTime.Value.Minutes.ToString("00") + "</td>\n";
             }
 
-            stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
             if (!flight.IFRTime.HasValue || flight.IFRTime.Equals(TimeSpan.Zero))
             {
-                stringbuilder += "</td>\n";
+                _stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += flight.IFRTime.Value.Hours.ToString() + "</td>\n";
+                _stringbuilder += flight.IFRTime.Value.Hours.ToString() + "</td>\n";
             }
-            stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
             if (!flight.IFRTime.HasValue || flight.IFRTime.Equals(TimeSpan.Zero))
             {
-                stringbuilder += "</td>\n";
+                _stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += flight.IFRTime.Value.Minutes.ToString("00") + "</td>\n";
+                _stringbuilder += flight.IFRTime.Value.Minutes.ToString("00") + "</td>\n";
             }
 
-            stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
             if (!flight.PICTime.HasValue || flight.PICTime.Equals(TimeSpan.Zero))
             {
-                stringbuilder += "</td>\n";
+                _stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += flight.PICTime.Value.Hours.ToString() + "</td>\n";
+                _stringbuilder += flight.PICTime.Value.Hours.ToString() + "</td>\n";
             }
-            stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
             if (!flight.PICTime.HasValue || flight.PICTime.Equals(TimeSpan.Zero))
             {
-                stringbuilder += "</td>\n";
+                _stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += flight.PICTime.Value.Minutes.ToString("00") + "</td>\n";
+                _stringbuilder += flight.PICTime.Value.Minutes.ToString("00") + "</td>\n";
             }
 
-            stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
             if (!flight.CopilotTime.HasValue || flight.CopilotTime.Equals(TimeSpan.Zero))
             {
-                stringbuilder += "</td>\n";
+                _stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += flight.CopilotTime.Value.Hours.ToString() + "</td>\n";
+                _stringbuilder += flight.CopilotTime.Value.Hours.ToString() + "</td>\n";
             }
-            stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
             if (!flight.CopilotTime.HasValue || flight.CopilotTime.Equals(TimeSpan.Zero))
             {
-                stringbuilder += "</td>\n";
+                _stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += flight.CopilotTime.Value.Minutes.ToString("00") + "</td>\n";
+                _stringbuilder += flight.CopilotTime.Value.Minutes.ToString("00") + "</td>\n";
             }
 
-            stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
             if (!flight.DualTime.HasValue || flight.DualTime.Equals(TimeSpan.Zero))
             {
-                stringbuilder += "</td>\n";
+                _stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += flight.DualTime.Value.Hours.ToString() + "</td>\n";
+                _stringbuilder += flight.DualTime.Value.Hours.ToString() + "</td>\n";
             }
-            stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
             if (!flight.DualTime.HasValue || flight.DualTime.Equals(TimeSpan.Zero))
             {
-                stringbuilder += "</td>\n";
+                _stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += flight.DualTime.Value.Minutes.ToString("00") + "</td>\n";
+                _stringbuilder += flight.DualTime.Value.Minutes.ToString("00") + "</td>\n";
             }
 
-            stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
             if (!flight.InstructorTime.HasValue || flight.InstructorTime.Equals(TimeSpan.Zero))
             {
-                stringbuilder += "</td>\n";
+                _stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += flight.InstructorTime.Value.Hours.ToString() + "</td>\n";
+                _stringbuilder += flight.InstructorTime.Value.Hours.ToString() + "</td>\n";
             }
-            stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
             if (!flight.InstructorTime.HasValue || flight.InstructorTime.Equals(TimeSpan.Zero))
             {
-                stringbuilder += "</td>\n";
+                _stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += flight.InstructorTime.Value.Minutes.ToString("00") + "</td>\n";
+                _stringbuilder += flight.InstructorTime.Value.Minutes.ToString("00") + "</td>\n";
             }
 
-            stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
             if (!flight.DateOfSim.HasValue || flight.DateOfSim.Equals(DateTime.MinValue))
             {
-                stringbuilder += "</td>\n";
+                _stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += flight.DateOfSim.Value.ToString("dd.MM.yy") + "</td>\n";
+                _stringbuilder += flight.DateOfSim.Value.ToString("dd.MM.yy") + "</td>\n";
             }
-            stringbuilder += "<td align=\"center\" valign=middle>";
-            stringbuilder += flight.TypeOfSim + "</td>\n";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += flight.TypeOfSim + "</td>\n";
 
-            stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
             if (!flight.SimTime.HasValue || flight.SimTime.Equals(TimeSpan.Zero))
             {
-                stringbuilder += "</td>\n";
+                _stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += flight.SimTime.Value.Hours.ToString() + "</td>\n";
+                _stringbuilder += flight.SimTime.Value.Hours.ToString() + "</td>\n";
             }
-            stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += "<td align=\"center\" valign=middle>";
             if (!flight.SimTime.HasValue || flight.SimTime.Equals(TimeSpan.Zero))
             {
-                stringbuilder += "</td>\n";
+                _stringbuilder += "</td>\n";
             }
             else
             {
-                stringbuilder += flight.SimTime.Value.Minutes.ToString("00") + "</td>\n";
+                _stringbuilder += flight.SimTime.Value.Minutes.ToString("00") + "</td>\n";
             }
 
-            stringbuilder += "<td align=\"center\" valign=middle>";
-            stringbuilder += flight.Remarks + "</td>\n";
-            return stringbuilder;
+            _stringbuilder += "<td align=\"center\" valign=middle>";
+            _stringbuilder += flight.Remarks + "</td>\n";
+            return _stringbuilder;
         }
 
         public string GetHTML()

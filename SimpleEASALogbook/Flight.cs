@@ -7,48 +7,29 @@ namespace SimpleEASALogbook
     public class Flight : INotifyPropertyChanged
     {
         private string _AircraftRegistration = "";
-
         private Nullable<TimeSpan> _CopilotTime = null;
-
         private Nullable<DateTime> _DateOfSim = null;
-
         private Nullable<int> _DayLandings = null;
-
         private string _DepartureAirport = "";
-
         private string _DestinationAirport = "";
-
         private Nullable<TimeSpan> _DualTime = null;
-
         private Nullable<DateTime> _FlightDate = null;
-
         private Nullable<TimeSpan> _IFRTime = null;
-
         private Nullable<TimeSpan> _InstructorTime = null;
-
         private bool _MEPTime = false;
-
         private Nullable<TimeSpan> _MultiPilotTime = null;
-
         private Nullable<int> _NightLandings = null;
         private Nullable<TimeSpan> _NightTime = null;
         private Nullable<TimeSpan> _OffBlockTime = null;
         private Nullable<TimeSpan> _OnBlockTime = null;
         private bool _PageBreak = false;
         private Nullable<TimeSpan> _PICTime = null;
-
         private string _PilotInCommand = "";
-
         private string _Remarks = "";
-
         private bool _SEPTime = false;
-
         private Nullable<TimeSpan> _SimTime = null;
-
         private Nullable<TimeSpan> _TotalTimeOfFlight = null;
-
         private string _TypeOfAircraft = "";
-
         private string _TypeOfSim = "";
 
         public Flight(DateTime? date, string dep, TimeSpan? offblock, string dest, TimeSpan? onblock, string type, string reg, bool septime, bool meptime, TimeSpan multitime, TimeSpan totaltime, string pic, int ldgday, int ldgnight, TimeSpan nighttime, TimeSpan ifrtime, TimeSpan pictime, TimeSpan copitime, TimeSpan dualtime, TimeSpan instructortime, DateTime? dateofsim, string typeofsim, TimeSpan simtime, string remarks, bool pagebreak)
@@ -83,7 +64,6 @@ namespace SimpleEASALogbook
             _Remarks = remarks;
             _PageBreak = pagebreak;
         }
-
         public Flight()
         {
             _AircraftRegistration = "";

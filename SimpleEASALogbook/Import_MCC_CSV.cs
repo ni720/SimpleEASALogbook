@@ -20,11 +20,7 @@ namespace SimpleEASALogbook
         private TimeSpan IFRTime = TimeSpan.Zero;
         private TimeSpan InstructorTime = TimeSpan.Zero;
         private string MCCVersion = "4";
-
-        //TimeSpan SETime = TimeSpan.Zero;  // MCC Pilotlog does not correctly export SEP Time
-        //TimeSpan METime = TimeSpan.Zero;  // MCC Pilotlog does not correctly export MEP Time
         private TimeSpan MultiPilotTime = TimeSpan.Zero;
-
         private int NightLanding = 0;
         private TimeSpan NightTime = TimeSpan.Zero;
         private bool pagebreak = false;

@@ -5,7 +5,6 @@ namespace SimpleEASALogbook
     internal class Export_EASA_CSV
     {
         private string stringbuilder = "";
-
         public Export_EASA_CSV(List<Flight> flights)
         {
             foreach (Flight flight in flights)
@@ -38,7 +37,6 @@ namespace SimpleEASALogbook
                 stringbuilder += "\n";
             }
         }
-
         public string GetCSV()
         {
             return stringbuilder;

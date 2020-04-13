@@ -162,7 +162,7 @@ namespace SimpleEASALogbook
                 FlightList.Insert(dataGridView1.CurrentCell.RowIndex, new Flight());
             }
             this.dataGridView1.RowCount = BindedFlightList.Count;
-            dataGridView1.Refresh();    // refresh the datagridview
+            dataGridView1.Refresh();
             if (dataGridView1.CurrentRow.Index < dataGridView1.RowCount - 1)
             {
                 dataGridView1.CurrentCell = dataGridView1.Rows[dataGridView1.CurrentRow.Index + 1].Cells[dataGridView1.CurrentCell.ColumnIndex];
@@ -227,14 +227,14 @@ namespace SimpleEASALogbook
             EnableControls(true);
         }
 
-        // end button
+        // end button - saving question will be at Form1_FormClosing event
         private void Button6_Click(object sender, EventArgs e)
         {
             EnableControls(false);
             Application.Exit();
         }
 
-        // only allow digits and separators
+        // only allow digits and separators in cells
         private void Cell_KeyPress_Allow_Digits_and_Separators(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != ':' && e.KeyChar != '/')
@@ -243,7 +243,7 @@ namespace SimpleEASALogbook
             }
         }
 
-        // only allow digits
+        // only allow digits in cells
         private void Cell_KeyPress_Allow_Digits_only(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
@@ -252,7 +252,7 @@ namespace SimpleEASALogbook
             }
         }
 
-        // exit from menu
+        // exit from menu - saving question will be at Form1_FormClosing event
         private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EnableControls(false);
@@ -1024,7 +1024,7 @@ namespace SimpleEASALogbook
         // toggle enable / disable controls
         private void EnableControls(bool value)
         {
-            if(!value)
+            if (!value)
             {
                 Form1.ActiveForm.Refresh();
             }
@@ -1059,12 +1059,13 @@ namespace SimpleEASALogbook
             // start time measurement
             var now = DateTime.Now;
 
+            // bind the list of flights to the datasource of datagridview1
             BindedFlightList = new SortableBindingList<Flight>(FlightList);
 
             // check if running mono
             IsRunningOnMono();
 
-            // waitform is using the same thread at the moment
+            // waitform is using the same thread at the moment - this is bad but no time to do better now
             using (WaitForm _waitForm = new WaitForm())
             {
                 _waitForm.Show();
@@ -1142,7 +1143,7 @@ namespace SimpleEASALogbook
                 {
                     dataGridView1.FirstDisplayedScrollingRowIndex = dataGridView1.Rows.Count - 2;
                     dataGridView1.CurrentCell = dataGridView1.Rows[dataGridView1.Rows.Count - 2].Cells[0];
-                    if(isMono)
+                    if (isMono)
                     {
                         dataGridView1.CurrentCell = dataGridView1.Rows[dataGridView1.Rows.Count - 2].Cells[1];
                     }
@@ -1152,7 +1153,7 @@ namespace SimpleEASALogbook
             }
         }
 
-        // move all if form is resized
+        // move all controls if form is resized
         private void Form1_OnResize(object sender, EventArgs e)
         {
             // nullcheck for mono-framework
@@ -1201,6 +1202,7 @@ namespace SimpleEASALogbook
         // load table from "database" file
         private void LoadDB()
         {
+            // the database relies on the normal easa_csv import/export functions
             if (File.Exists(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "EASALogbook.csv")))
             {
                 try
@@ -1253,7 +1255,7 @@ namespace SimpleEASALogbook
                 {
                     foreach (string FilePathName in openFileDialog1.FileNames)
                     {
-                        ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = PDFToTextPath, Arguments = "-raw " + FilePathName + " "+ System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "temp_pdf_to_text.txt"), };
+                        ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = PDFToTextPath, Arguments = "-raw " + FilePathName + " " + System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "temp_pdf_to_text.txt"), };
                         Process proc = new Process() { StartInfo = startInfo, };
                         proc.Start();
                         proc.WaitForExit();
@@ -1359,7 +1361,7 @@ namespace SimpleEASALogbook
             toolStripStatusLabel1.Text = "   new database!";
         }
 
-        // to easily populate with data
+        // to easily populate cells with data
         private void PopulateDataOnClick(int rowIndex, int columnIndex)
         {
             //  filter out columnheader clicks
@@ -1581,6 +1583,7 @@ namespace SimpleEASALogbook
             }
         }
 
+        // recalculate the sum row
         private void RenewSumRow()
         {
             if (BindedFlightList.Count > 0)
@@ -1601,7 +1604,7 @@ namespace SimpleEASALogbook
             }
         }
 
-        // save the table via EASA export filter
+        // save the table via EASA export CSV filter
         private void SaveTable()
         {
             try

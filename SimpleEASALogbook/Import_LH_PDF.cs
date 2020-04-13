@@ -14,7 +14,7 @@ namespace SimpleEASALogbook
         {
             try
             {
-                // Jahr festlegen
+                // define year
                 string getyear = textToParse.Substring(textToParse.IndexOf("r Monat "), 20);
                 int year = int.Parse(getyear.Substring(13, 4));
                 int month = 0;
