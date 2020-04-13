@@ -773,7 +773,7 @@ namespace SimpleEASALogbook
             e.Control.KeyPress -= new KeyPressEventHandler(Cell_KeyPress_Allow_Digits_only);
 
             // cells with digits and separators
-            if (dataGridView1.CurrentCell.ColumnIndex == 0 || dataGridView1.CurrentCell.ColumnIndex == 2 || dataGridView1.CurrentCell.ColumnIndex == 4 || dataGridView1.CurrentCell.ColumnIndex == 9 || dataGridView1.CurrentCell.ColumnIndex == 10 || dataGridView1.CurrentCell.ColumnIndex == 14 || dataGridView1.CurrentCell.ColumnIndex == 15 || dataGridView1.CurrentCell.ColumnIndex == 16 || dataGridView1.CurrentCell.ColumnIndex == 17 || dataGridView1.CurrentCell.ColumnIndex == 18 || dataGridView1.CurrentCell.ColumnIndex == 19 || dataGridView1.CurrentCell.ColumnIndex == 20 || dataGridView1.CurrentCell.ColumnIndex == 21 || dataGridView1.CurrentCell.ColumnIndex == 22)
+            if (dataGridView1.CurrentCell.ColumnIndex == 0 || dataGridView1.CurrentCell.ColumnIndex == 2 || dataGridView1.CurrentCell.ColumnIndex == 4 || dataGridView1.CurrentCell.ColumnIndex == 9 || dataGridView1.CurrentCell.ColumnIndex == 10 || dataGridView1.CurrentCell.ColumnIndex == 14 || dataGridView1.CurrentCell.ColumnIndex == 15 || dataGridView1.CurrentCell.ColumnIndex == 16 || dataGridView1.CurrentCell.ColumnIndex == 17 || dataGridView1.CurrentCell.ColumnIndex == 18 || dataGridView1.CurrentCell.ColumnIndex == 19 || dataGridView1.CurrentCell.ColumnIndex == 20 || dataGridView1.CurrentCell.ColumnIndex == 22)
             {
                 if (e.Control is TextBox tb)
                 {
@@ -1392,14 +1392,20 @@ namespace SimpleEASALogbook
                                 {
                                     if (!dataGridView1.Rows[rowIndex].Cells[0].Value.Equals(DateTime.MinValue))
                                     {
-                                        dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
-                                        dataGridView1.RefreshEdit();
+                                        if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.Equals(TimeSpan.MinValue))
+                                        {
+                                            dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
+                                            dataGridView1.RefreshEdit();
+                                        }
                                     }
                                 }
                                 else
                                 {
-                                    dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
-                                    dataGridView1.RefreshEdit();
+                                    if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.Equals(TimeSpan.MinValue))
+                                    {
+                                        dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
+                                        dataGridView1.RefreshEdit();
+                                    }
                                 }
                             }
                         }
@@ -1470,16 +1476,22 @@ namespace SimpleEASALogbook
                             {
                                 if (!dataGridView1.Rows[rowIndex].Cells[0].Value.Equals(DateTime.MinValue))
                                 {
-                                    dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
-                                    dataGridView1.RefreshEdit();
-                                    dataGridView1.EndEdit();
+                                    if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.Equals(TimeSpan.MinValue))
+                                    {
+                                        dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
+                                        dataGridView1.RefreshEdit();
+                                        dataGridView1.EndEdit();
+                                    }
                                 }
                             }
                             else
                             {
-                                dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
-                                dataGridView1.RefreshEdit();
-                                dataGridView1.EndEdit();
+                                if (dataGridView1.Rows[rowIndex].Cells[columnIndex].Value == null || dataGridView1.Rows[rowIndex].Cells[columnIndex].Value.Equals(TimeSpan.MinValue))
+                                {
+                                    dataGridView1.Rows[rowIndex].Cells[columnIndex].Value = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
+                                    dataGridView1.RefreshEdit();
+                                    dataGridView1.EndEdit();
+                                }
                             }
                         }
                         if (columnIndex == 9 || columnIndex == 14 || columnIndex == 15 || columnIndex == 16 || columnIndex == 17 || columnIndex == 18 || columnIndex == 19)
