@@ -214,7 +214,7 @@ namespace SimpleEASALogbook
             // SIM
             if (csvline[2].Contains("sim"))
             {
-                return new Flight(StartDate, "", TimeSpan.Zero, "", TimeSpan.Zero, "", "", _SEPTime, _MEPTime, TimeSpan.Zero, TimeSpan.Zero, "", DayLanding, NightLanding, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, date_of_sim, Type_of_sim, sim_time, remarks, pagebreak);
+                return new Flight(StartDate, "", TimeSpan.Zero, "", TimeSpan.Zero, "", "", _SEPTime, _MEPTime, TimeSpan.Zero, TimeSpan.Zero, PIC, DayLanding, NightLanding, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, date_of_sim, Type_of_sim, sim_time, remarks + " " + Aircraft, pagebreak);
             }
             // No SIM
             else
@@ -326,7 +326,7 @@ namespace SimpleEASALogbook
             // SIM
             if (csvline[2].Contains("TRUE"))
             {
-                return new Flight(StartDate, "", null, "", null, "", "", _SEPTime, _MEPTime, TimeSpan.Zero, TimeSpan.Zero, "", DayLanding, NightLanding, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, date_of_sim, Type_of_sim, sim_time, remarks, pagebreak);
+                return new Flight(StartDate, "", null, "", null, "", "", _SEPTime, _MEPTime, TimeSpan.Zero, TimeSpan.Zero, PIC, DayLanding, NightLanding, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, date_of_sim, Type_of_sim, sim_time, remarks + " " + Aircraft, pagebreak);
             }
             // No SIM
             else
