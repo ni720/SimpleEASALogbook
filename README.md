@@ -24,7 +24,7 @@ Keeping this tool as simple as possible also should prevent bugs and errors, how
 ## Installation:
 *) unzip to a convenient location
 *) Windows .net framework should be already installed, just execute SimpleEASALogbook.exe
-*) Linux: install mono-framework and mark wkhtmltopdf and pdftotext as executable, then run mono SimpleEasaLogbook.exe
+*) Linux: install mono-framework and wkhtmltopdf, mark pdftotext as executable, then run mono SimpleEasaLogbook.exe
 *) Mac [untested]: install the mono framework an then in the console run mono SimpleEasaLogbook.exe
 
 
