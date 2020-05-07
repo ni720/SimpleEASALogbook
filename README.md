@@ -10,9 +10,9 @@ Also there shall be no vendor lock-in, exporting in various formats will be supp
 ## Features:
 * provide logging just like onthe EASA conform paper logbook
 * PDF export to an EASA conform format
-* various importers
-* various exporters
-* runs on windows and linux
+* various importers (MCC PilotLog CSV export, Brussels Airlines BlueOne PDF, Lufthansa Flugstundenuebersicht PDF, ...)
+* various exporters (Easa conform PDF and HTML, ...)
+* runs on windows and linux (mac untested)
 
 Keeping this tool as simple as possible also should prevent bugs and errors, however the simultaneous development for .net and mono environment causes some error potential.
 
@@ -32,5 +32,7 @@ Keeping this tool as simple as possible also should prevent bugs and errors, how
 ## Screenshots
 
 ![running under windows](win.png "running under windows")
+
 ![running under linux](linux.png "running under linux")
+
 ![pdf export](win_pdf_export.png "pdf export")
