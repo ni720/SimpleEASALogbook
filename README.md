@@ -22,6 +22,7 @@ Keeping this tool as simple as possible also should prevent bugs and errors, how
 
 
 ## Installation:
+* [Download latest release](https://github.com/ni720/SimpleEASALogbook/releases/download/0.2/SimpleEASALogbook_v0.2.zip)
 * unzip to a convenient location
 * Windows .net framework should be already installed, just execute SimpleEASALogbook.exe
 * Linux: install mono-framework and wkhtmltopdf, mark pdftotext as executable, then run mono SimpleEasaLogbook.exe
