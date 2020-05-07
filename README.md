@@ -32,3 +32,4 @@ Keeping this tool as simple as possible also should prevent bugs and errors, how
 
 ![running under windows](win.png "running under windows")
 ![running under linux](linux.png "running under linux")
+![pdf export](win_pdf_export.png "pdf export")
