@@ -35,4 +35,5 @@ Keeping this tool as simple as possible also should prevent bugs and errors, how
 
 ![running under linux](linux.png "running under linux")
 
+EASA conform PDF export example:
 ![pdf export](win_pdf_export.png "pdf export")
