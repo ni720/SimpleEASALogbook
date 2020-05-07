@@ -8,24 +8,24 @@ All the advanced aspects of a flight can still be entered in the remarks field (
 Also there shall be no vendor lock-in, exporting in various formats will be supported.
 
 ## Features:
-*) provide logging just like onthe EASA conform paper logbook
-*) PDF export to an EASA conform format
-*) various importers
-*) various exporters
-*) runs on windows and linux
+* provide logging just like onthe EASA conform paper logbook
+* PDF export to an EASA conform format
+* various importers
+* various exporters
+* runs on windows and linux
 
 Keeping this tool as simple as possible also should prevent bugs and errors, however the simultaneous development for .net and mono environment causes some error potential.
 
 ## Known bugs:
-*) the importers and exporters are only tested for co-pilots, since the devlopers lack the export data from captains of the supported programs. help us by providing your exports if you are a commander.
-*) not tested on OSX - if you happen to have a mac I would appreciate a screenshot and an report how the tool works on mac
+* the importers and exporters are only tested for co-pilots, since the devlopers lack the export data from captains of the supported programs. help us by providing your exports if you are a commander.
+* not tested on OSX - if you happen to have a mac I would appreciate a screenshot and an report how the tool works on mac
 
 
 ## Installation:
-*) unzip to a convenient location
-*) Windows .net framework should be already installed, just execute SimpleEASALogbook.exe
-*) Linux: install mono-framework and wkhtmltopdf, mark pdftotext as executable, then run mono SimpleEasaLogbook.exe
-*) Mac [untested]: install the mono framework an then in the console run mono SimpleEasaLogbook.exe
+* unzip to a convenient location
+* Windows .net framework should be already installed, just execute SimpleEASALogbook.exe
+* Linux: install mono-framework and wkhtmltopdf, mark pdftotext as executable, then run mono SimpleEasaLogbook.exe
+* Mac [untested]: install the mono framework an then in the console run mono SimpleEasaLogbook.exe
 
 
 ## Screenshots
