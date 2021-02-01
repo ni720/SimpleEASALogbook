@@ -10,9 +10,9 @@ Also there shall be no vendor lock-in, exporting in various formats will be supp
 ## Features:
 * provide logging just like onthe EASA conform paper logbook
 * PDF export to an EASA conform format
-* various importers
-* various exporters
-* runs on windows and linux
+* various importers (MCC PilotLog CSV export, Brussels Airlines BlueOne PDF, Lufthansa Flugstundenuebersicht PDF, ...)
+* various exporters (Easa conform PDF and HTML, ...)
+* runs on windows and linux (mac untested)
 
 Keeping this tool as simple as possible also should prevent bugs and errors, however the simultaneous development for .net and mono environment causes some error potential.
 
@@ -22,14 +22,18 @@ Keeping this tool as simple as possible also should prevent bugs and errors, how
 
 
 ## Installation:
+* [Download latest release](https://github.com/ni720/SimpleEASALogbook/releases/download/0.2/SimpleEASALogbook_v0.2.zip)
 * unzip to a convenient location
-* Windows .net framework should be already installed, just execute SimpleEASALogbook.exe
+* Windows: .net framework should be already installed, just execute SimpleEASALogbook.exe
 * Linux: install mono-framework and wkhtmltopdf, mark pdftotext as executable, then run mono SimpleEasaLogbook.exe
-* Mac [untested]: install the mono framework an then in the console run mono SimpleEasaLogbook.exe
+* Mac [untested]:[install the mono framework](https://www.mono-project.com/docs/about-mono/supported-platforms/macos/) an then in the console run mono SimpleEasaLogbook.exe
 
 
 ## Screenshots
 
 ![running under windows](win.png "running under windows")
+
 ![running under linux](linux.png "running under linux")
+
+EASA conform PDF export example:
 ![pdf export](win_pdf_export.png "pdf export")
