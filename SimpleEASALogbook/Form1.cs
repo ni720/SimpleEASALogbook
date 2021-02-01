@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -37,6 +38,7 @@ namespace SimpleEASALogbook
             about.Show();
             about.Focus();
             about.BringToFront();
+            MessageBox.Show(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location).ToString()));
         }
 
         // auto calculate totalflighttime
@@ -1257,20 +1259,26 @@ namespace SimpleEASALogbook
             }
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                string FileName = "";
                 try
                 {
                     foreach (string FilePathName in openFileDialog1.FileNames)
                     {
-                        ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = PDFToTextPath, Arguments = "-raw " + FilePathName + " " + System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "temp_pdf_to_text.txt"), };
+
+                        FileName = Path.GetFileNameWithoutExtension(FilePathName);
+                        
+                        FileName = Regex.Replace(FileName, @"[^A-Za-z0-9\-\u005F]+", "_");
+                        ProcessStartInfo startInfo = new ProcessStartInfo { FileName = PDFToTextPath, Arguments = "-raw " + FilePathName + " " + System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "temp_" + FileName + "_.txt"), };
                         Process proc = new Process() { StartInfo = startInfo, };
                         proc.Start();
                         proc.WaitForExit();
-                        Import_LH_PDF import = new Import_LH_PDF(File.ReadAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "temp_pdf_to_text.txt")).ToString());
+                       
+                        Import_LH_PDF import = new Import_LH_PDF(File.ReadAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "temp_" + FileName + "_.txt")).ToString(),FileName);
                         if (import.GetError())
                         {
                             _ErrorOccured = true;
                         }
-                        File.Delete(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "temp_pdf_to_text.txt"));
+                        File.Delete(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "temp_" + FileName + "_.txt"));
                         FlightList.AddRange(import.GetFlightList());
                     }
                     RenewSumRow();
@@ -1289,7 +1297,7 @@ namespace SimpleEASALogbook
                 catch (Exception exc)
                 {
                     EnableControls(true);
-                    File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_LH_PDF:\n" + exc.ToString() + "\n");
+                    File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_LH_PDF: " + FileName + ":\n" + exc.ToString() + "\n");
                     MessageBox.Show("An error occured during import, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }

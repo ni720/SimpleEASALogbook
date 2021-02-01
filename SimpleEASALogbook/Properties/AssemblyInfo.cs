@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die einer Assembly zugeordnet sind.
 [assembly: AssemblyTitle("SimpleEASALogbook")]
-[assembly: AssemblyDescription("Á simple EASA conform logbook for pilots")]
+[assembly: AssemblyDescription("A simple EASA conform logbook for pilots")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("SimpleEASALogbook")]

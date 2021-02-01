@@ -10,7 +10,7 @@ namespace SimpleEASALogbook
         private bool _ErrorOccured = false;
         private List<Flight> Flights = new List<Flight>();
 
-        public Import_LH_PDF(string textToParse)
+        public Import_LH_PDF(string textToParse, string fileName)
         {
             try
             {
@@ -34,7 +34,7 @@ namespace SimpleEASALogbook
 
                 Regex regexAllFlights = new Regex(@"\d\d\.\d\d\..*\/.*\/.*");
                 Regex landings = new Regex(@"\ L\ ");
-                Regex filter_dhFlights = new Regex(@"\w\w\w\ 01");
+                Regex filter_dhFlights = new Regex(@"\w\w\w\ 01\ ");
                 Regex times = new Regex(@"\d\d\:\d\d\-\d\d:\d\d");
                 Regex fromto = new Regex(@"\w\w\w\ \d*\:\d*\-\d*\:\d*\ \w\w\w");
                 Regex acft = new Regex(@"\ \w*\d*\ \/\w*\d*\ \/");
@@ -53,6 +53,10 @@ namespace SimpleEASALogbook
                         begin_hour = int.Parse(Time.Value.Substring(0, 2));
                         begin_min = int.Parse(Time.Value.Substring(3, 2));
                         end_hour = int.Parse(Time.Value.Substring(6, 2));
+                        if(end_hour > 23)
+                        {
+                            end_hour = 0;
+                        }
                         end_min = int.Parse(Time.Value.Substring(9, 2));
 
                         date = new DateTime(year, month, day);
@@ -72,10 +76,21 @@ namespace SimpleEASALogbook
                         to = FromTo.Value.Substring(FromTo.Value.Length - 3, 3);
 
                         Match ACFT = acft.Match(flightmatch.Value);
-                        aircraft = ACFT.Value.Substring(0, ACFT.Value.IndexOf("/")).Trim();
-                        type = ACFT.Value.Substring(ACFT.Value.IndexOf("/")).Replace("/", "").Trim();
+                        if(ACFT.Value.Length>1)
+                        {
+                            aircraft = ACFT.Value.Substring(0, ACFT.Value.IndexOf("/")).Trim();
+                            type = ACFT.Value.Substring(ACFT.Value.IndexOf("/")).Replace("/", "").Trim();
+                        }
+                        else
+                        {
+                            aircraft = "";
+                            type = "";
+                        }                       
+                       
 
                         PIC = flightmatch.Value.Substring(flightmatch.Value.LastIndexOf("/")).Replace("/", "").Trim();
+
+                        // for future use: if aircraft or type .length <1 --> its ground transport and should not be in the logbook
 
                         // is SIM-flight
                         if (flightmatch.Value.Trim().EndsWith("/"))
@@ -98,13 +113,13 @@ namespace SimpleEASALogbook
                 }
                 if (Flights.Count < 1)
                 {
-                    File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_LH_PDF: found no Flights to parse.\n");
+                    File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_LH_PDF: found no Flights to parse: " + fileName + "\n");
                     _ErrorOccured = true;
                 }
             }
             catch (Exception e)
             {
-                File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_LH_PDF:\n" + e.ToString() + "\n");
+                File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_LH_PDF:\n"+ fileName + ":\n" + e.ToString() + "\n");
                 _ErrorOccured = true;
             }
         }
