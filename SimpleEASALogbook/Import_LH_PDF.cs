@@ -34,7 +34,7 @@ namespace SimpleEASALogbook
 
                 Regex regexAllFlights = new Regex(@"\d\d\.\d\d\..*\/.*\/.*");
                 Regex landings = new Regex(@"\ L\ ");
-                Regex filter_dhFlights = new Regex(@"\w\w\w\ 01\ ");
+                Regex filter_dhFlights = new Regex(@"\w\w\w\ 01\ |\w\w\w\ 10\ ");
                 Regex times = new Regex(@"\d\d\:\d\d\-\d\d:\d\d");
                 Regex fromto = new Regex(@"\w\w\w\ \d*\:\d*\-\d*\:\d*\ \w\w\w");
                 Regex acft = new Regex(@"\ \w*\d*\ \/\w*\d*\ \/");
