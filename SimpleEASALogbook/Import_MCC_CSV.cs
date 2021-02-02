@@ -35,7 +35,7 @@ namespace SimpleEASALogbook
         private string Type = "";
         private string Type_of_sim = "";
 
-        public Import_MCC_CSV(string mcccsv)
+        public Import_MCC_CSV(string mcccsv, string fileName)
         {
             if (mcccsv.Contains("TIME_DEPSCH"))
             {
@@ -64,14 +64,14 @@ namespace SimpleEASALogbook
                     {
                         _ErrorOccured = true;
 
-                        File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " MCC version: " + MCCVersion + " error parsing, skipping line: " + i.ToString() + "\n Import_MCC_pilotLog_CSV:\n" + ey.ToString() + "\n");
+                        File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " MCC version: " + MCCVersion + " error parsing, skipping line: " + i.ToString() + "\n Import_MCC_PilotLog_CSV - file: " + fileName + ":\n" + ey.ToString() + "\n");
                     }
                     i++;
                 }
                 if (Flights.Count < 1)
                 {
                     _ErrorOccured = true;
-                    File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_MCC_CSV: found no Flights to parse.\n");
+                    File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_MCC_CSV - file: " + fileName + ", found no Flights to parse.\n");
                 }
             }
         }

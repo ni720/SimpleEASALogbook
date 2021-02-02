@@ -113,13 +113,13 @@ namespace SimpleEASALogbook
                 }
                 if (Flights.Count < 1)
                 {
-                    File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_LH_PDF: found no Flights to parse: " + fileName + "\n");
+                    File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_LH_PDF - file: " + fileName + ", found no Flights to parse.\n");
                     _ErrorOccured = true;
                 }
             }
             catch (Exception e)
             {
-                File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_LH_PDF:\n"+ fileName + ":\n" + e.ToString() + "\n");
+                File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_LH_PDF - file: "+ fileName + ":\n" + e.ToString() + "\n");
                 _ErrorOccured = true;
             }
         }

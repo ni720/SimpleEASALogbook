@@ -36,7 +36,7 @@ namespace SimpleEASALogbook
         private string Type = "";
         private string Type_of_sim = "";
 
-        public Import_EASA_CSV(string stringToParse)
+        public Import_EASA_CSV(string stringToParse, string fileName)
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
 
@@ -53,7 +53,7 @@ namespace SimpleEASALogbook
                     }
                     catch (Exception exc)
                     {
-                        File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + ": error parsing EASA CSV, skipping line: " + i.ToString() + "\n" + exc.ToString() + "\n");
+                        File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + ": error parsing EASA CSV - file: " + fileName + ", skipping line: " + i.ToString() + "\n" + exc.ToString() + "\n");
                         _ErrorOccured = true;
                     }
                     i++;
@@ -62,7 +62,7 @@ namespace SimpleEASALogbook
             if (Flights.Count < 1)
             {
                 _ErrorOccured = true;
-                File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_EASA_CSV: found no Flights to parse.\n");
+                File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_EASA_CSV - file: " + fileName + ", found no Flights to parse.\n");
             }
         }
 

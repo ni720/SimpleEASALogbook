@@ -32,7 +32,7 @@ namespace SimpleEASALogbook
         private TimeSpan TotalTime = TimeSpan.Zero;
         private string type = "";
 
-        public Import_Brussels_PDF(string textToParse)
+        public Import_Brussels_PDF(string textToParse, string fileName)
         {
             CultureInfo provider = CultureInfo.InvariantCulture;
 
@@ -135,12 +135,12 @@ namespace SimpleEASALogbook
                 if (Flights.Count < 1)
                 {
                     _ErrorOccured = true;
-                    File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_Brussels_PDF: found no Flights to parse.\n");
+                    File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_Brussels_PDF - file: " + fileName + ", found no Flights to parse.\n");
                 }
             }
             catch (Exception e)
             {
-                File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_Brussels_PDF:\n" + e.ToString() + "\n");
+                File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_Brussels_PDF - file: " + fileName + ":\n" + e.ToString() + "\n");
                 _ErrorOccured = true;
             }
         }

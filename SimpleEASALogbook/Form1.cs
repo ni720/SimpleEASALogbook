@@ -105,20 +105,25 @@ namespace SimpleEASALogbook
             }
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                string FileName = "";
+
                 try
                 {
                     foreach (string FilePathName in openFileDialog1.FileNames)
                     {
-                        ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = PDFToTextPath, Arguments = "-table " + FilePathName + " " + System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "temp_pdf_to_text.txt"), };
+                        FileName = Path.GetFileNameWithoutExtension(FilePathName);
+                        FileName = Regex.Replace(FileName, @"[^A-Za-z0-9\-\u005F]+", "_");
+
+                        ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = PDFToTextPath, Arguments = "-table " + FilePathName + " " + System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "temp_" + FileName + "_.txt"), };
                         Process proc = new Process() { StartInfo = startInfo, };
                         proc.Start();
                         proc.WaitForExit();
-                        Import_Brussels_PDF import = new Import_Brussels_PDF(File.ReadAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "temp_pdf_to_text.txt")).ToString());
+                        Import_Brussels_PDF import = new Import_Brussels_PDF(File.ReadAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "temp_" + FileName + "_.txt")).ToString(), FileName);
                         if (import.GetError())
                         {
                             _ErrorOccured = true;
                         }
-                        File.Delete(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "temp_pdf_to_text.txt"));
+                        File.Delete(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "temp_" + FileName + "_.txt"));
                         FlightList.AddRange(import.GetFlightList());
                     }
                     RenewSumRow();
@@ -137,7 +142,7 @@ namespace SimpleEASALogbook
                 catch (Exception exc)
                 {
                     EnableControls(true);
-                    File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_Brussels_PDF:\n" + exc.ToString() + "\n");
+                    File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_Brussels_PDF - file: " + FileName + ":\n" + exc.ToString() + "\n");
                     MessageBox.Show("An error occured during import, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -909,9 +914,14 @@ namespace SimpleEASALogbook
             openFileDialog1.Filter = "EASA Logbook conform CSV|*.csv";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                string FileName = "";
+
                 try
                 {
-                    Import_EASA_CSV import = new Import_EASA_CSV(File.ReadAllText(openFileDialog1.FileName).ToString());
+                    FileName = Path.GetFileNameWithoutExtension(openFileDialog1.FileName);
+                    FileName = Regex.Replace(FileName, @"[^A-Za-z0-9\-\u005F]+", "_");
+
+                    Import_EASA_CSV import = new Import_EASA_CSV(File.ReadAllText(openFileDialog1.FileName).ToString(), FileName);
                     FlightList.AddRange(import.GetFlightList());
                     BindedFlightList.Sort("FlightDate", ListSortDirection.Ascending);
                     RenewSumRow();
@@ -929,7 +939,7 @@ namespace SimpleEASALogbook
                 catch (Exception exc)
                 {
                     EnableControls(true);
-                    File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_EASA_CSV:\n" + exc.ToString() + "\n");
+                    File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_EASA_CSV - file: " + FileName + ":\n" + exc.ToString() + "\n");
                     MessageBox.Show("An error occured during import, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -1212,7 +1222,7 @@ namespace SimpleEASALogbook
             {
                 try
                 {
-                    Import_EASA_CSV import = new Import_EASA_CSV(File.ReadAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "EASALogbook.csv")).ToString());
+                    Import_EASA_CSV import = new Import_EASA_CSV(File.ReadAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "EASALogbook.csv")).ToString(), "EASALogbook.csv");
                     FlightList.AddRange(import.GetFlightList());
                     BindedFlightList.Sort("FlightDate", ListSortDirection.Ascending);
                     dataGridView1.RowCount = BindedFlightList.Count;
@@ -1263,16 +1273,15 @@ namespace SimpleEASALogbook
                 {
                     foreach (string FilePathName in openFileDialog1.FileNames)
                     {
-
                         FileName = Path.GetFileNameWithoutExtension(FilePathName);
-                        
                         FileName = Regex.Replace(FileName, @"[^A-Za-z0-9\-\u005F]+", "_");
+
                         ProcessStartInfo startInfo = new ProcessStartInfo { FileName = PDFToTextPath, Arguments = "-raw " + FilePathName + " " + System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "temp_" + FileName + "_.txt"), };
                         Process proc = new Process() { StartInfo = startInfo, };
                         proc.Start();
                         proc.WaitForExit();
-                       
-                        Import_LH_PDF import = new Import_LH_PDF(File.ReadAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "temp_" + FileName + "_.txt")).ToString(),FileName);
+
+                        Import_LH_PDF import = new Import_LH_PDF(File.ReadAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "temp_" + FileName + "_.txt")).ToString(), FileName);
                         if (import.GetError())
                         {
                             _ErrorOccured = true;
@@ -1296,7 +1305,7 @@ namespace SimpleEASALogbook
                 catch (Exception exc)
                 {
                     EnableControls(true);
-                    File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_LH_PDF: " + FileName + ":\n" + exc.ToString() + "\n");
+                    File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_LH_PDF - file: " + FileName + ":\n" + exc.ToString() + "\n");
                     MessageBox.Show("An error occured during import, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -1324,11 +1333,16 @@ namespace SimpleEASALogbook
             openFileDialog1.Filter = "MCC PilotLog conform CSV|*.csv";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                string FileName = "";
+
                 try
                 {
                     foreach (string FilePathName in openFileDialog1.FileNames)
                     {
-                        Import_MCC_CSV import = new Import_MCC_CSV(File.ReadAllText(FilePathName).ToString());
+                        FileName = Path.GetFileNameWithoutExtension(FilePathName);
+                        FileName = Regex.Replace(FileName, @"[^A-Za-z0-9\-\u005F]+", "_");
+
+                        Import_MCC_CSV import = new Import_MCC_CSV(File.ReadAllText(FilePathName).ToString(), FileName);
                         FlightList.AddRange(import.GetFlightList());
                         if (import.GetError())
                         {
@@ -1351,7 +1365,7 @@ namespace SimpleEASALogbook
                 catch (Exception exc)
                 {
                     EnableControls(true);
-                    File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_MCC_PilotLog_CSV:\n" + exc.ToString() + "\n");
+                    File.AppendAllText(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "_easa_errorlog.txt"), DateTime.Now.ToString() + " Import_MCC_PilotLog_CSV - file: " + FileName + ":\n" + exc.ToString() + "\n");
                     MessageBox.Show("An error occured during import, please check the \"_easa_errorlog.txt\" ", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
