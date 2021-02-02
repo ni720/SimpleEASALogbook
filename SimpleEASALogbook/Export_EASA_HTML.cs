@@ -111,9 +111,9 @@ namespace SimpleEASALogbook
             stringbuilder_pageFooter += "<tr>\n<td colspan=7 rowspan=3 height=\"113\" align=\"left\" valign=bottom><br>Page " + pagenumber.ToString() + "</td>\n\t\t<td colspan=4 align=\"left\" valign=bottom>TOTAL THIS PAGE</td>\n\t\t<td colspan=2 align=\"center\" valign=bottom >";
             stringbuilder_pageFooter += ((int)total_page.TotalHours).ToString() + ":" + total_page.Minutes.ToString("00") + "</td>\n";
             stringbuilder_pageFooter += "<td align=\"left\" valign=bottom><br></td>\n";
-            stringbuilder_pageFooter += "<td align=\"right\" valign=bottom >";
+            stringbuilder_pageFooter += "<td align=\"center\" valign=bottom >";
             stringbuilder_pageFooter += dayldg_page.ToString() + "</td>\n";
-            stringbuilder_pageFooter += "<td align=\"right\" valign=bottom >";
+            stringbuilder_pageFooter += "<td align=\"center\" valign=bottom >";
             stringbuilder_pageFooter += nghtldg_page.ToString() + "</td>\n";
             stringbuilder_pageFooter += "<td colspan=2 align=\"center\" valign=bottom >";
             stringbuilder_pageFooter += ((int)night_page.TotalHours).ToString() + ":" + night_page.Minutes.ToString("00") + "</td>\n";
@@ -135,9 +135,9 @@ namespace SimpleEASALogbook
             stringbuilder_pageFooter += "<td colspan=4 align=\"left\" valign=bottom>TOTAL FROM PREVIOUS PAGES</td>\n\t\t<td colspan=2 align=\"center\" valign=bottom >";
             stringbuilder_pageFooter += ((int)total.TotalHours).ToString() + ":" + total.Minutes.ToString("00") + "</td>\n";
             stringbuilder_pageFooter += "<td align=\"left\" valign=bottom><br></td>\n";
-            stringbuilder_pageFooter += "<td align=\"right\" valign=bottom >";
+            stringbuilder_pageFooter += "<td align=\"center\" valign=bottom >";
             stringbuilder_pageFooter += dayldg.ToString() + "</td>\n";
-            stringbuilder_pageFooter += "<td align=\"right\" valign=bottom >";
+            stringbuilder_pageFooter += "<td align=\"center\" valign=bottom >";
             stringbuilder_pageFooter += nghtldg.ToString() + "</td>\n";
             stringbuilder_pageFooter += "<td colspan=2 align=\"center\" valign=bottom >";
             stringbuilder_pageFooter += ((int)night.TotalHours).ToString() + ":" + night.Minutes.ToString("00") + "</td>\n";
@@ -169,9 +169,9 @@ namespace SimpleEASALogbook
             stringbuilder_pageFooter += "<td colspan=4 align=\"left\" valign=bottom>TOTAL TIME</td>\n\t\t<td colspan=2 align=\"center\" valign=bottom >";
             stringbuilder_pageFooter += ((int)total.TotalHours).ToString() + ":" + total.Minutes.ToString("00") + "</td>\n";
             stringbuilder_pageFooter += "<td align=\"left\" valign=bottom><br></td>\n";
-            stringbuilder_pageFooter += "<td align=\"right\" valign=bottom >";
+            stringbuilder_pageFooter += "<td align=\"center\" valign=bottom >";
             stringbuilder_pageFooter += dayldg.ToString() + "</td>\n";
-            stringbuilder_pageFooter += "<td align=\"right\" valign=bottom >";
+            stringbuilder_pageFooter += "<td align=\"center\" valign=bottom >";
             stringbuilder_pageFooter += nghtldg.ToString() + "</td>\n";
             stringbuilder_pageFooter += "<td colspan=2 align=\"center\" valign=bottom >";
             stringbuilder_pageFooter += ((int)night.TotalHours).ToString() + ":" + night.Minutes.ToString("00") + "</td>\n";
