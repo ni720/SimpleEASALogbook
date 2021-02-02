@@ -38,7 +38,6 @@ namespace SimpleEASALogbook
             about.Show();
             about.Focus();
             about.BringToFront();
-            MessageBox.Show(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location).ToString()));
         }
 
         // auto calculate totalflighttime
