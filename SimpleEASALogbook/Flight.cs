@@ -742,7 +742,7 @@ namespace SimpleEASALogbook
             {
                 if (_CopilotTime.Value.Ticks > TimeSpan.Zero.Ticks)
                 {
-                    return _CopilotTime.ToString().Substring(0, 5);
+                    return _CopilotTime.Value.ToString(@"%d\.hh\:mm");
                 }
                 else
                 {
@@ -809,7 +809,7 @@ namespace SimpleEASALogbook
             {
                 if (_DualTime.Value.Ticks > TimeSpan.Zero.Ticks)
                 {
-                    return _DualTime.ToString().Substring(0, 5);
+                    return _DualTime.Value.ToString(@"%d\.hh\:mm");
                 }
                 else
                 {
@@ -828,7 +828,7 @@ namespace SimpleEASALogbook
             {
                 if (_IFRTime.Value.Ticks > TimeSpan.Zero.Ticks)
                 {
-                    return _IFRTime.ToString().Substring(0, 5);
+                    return _IFRTime.Value.ToString(@"%d\.hh\:mm");
                 }
                 else
                 {
@@ -847,7 +847,7 @@ namespace SimpleEASALogbook
             {
                 if (_InstructorTime.Value.Ticks > TimeSpan.Zero.Ticks)
                 {
-                    return _InstructorTime.ToString().Substring(0, 5);
+                    return _InstructorTime.Value.ToString(@"%d\.hh\:mm");
                 }
                 else
                 {
@@ -878,7 +878,7 @@ namespace SimpleEASALogbook
             {
                 if (_MultiPilotTime.Value.Ticks > TimeSpan.Zero.Ticks)
                 {
-                    return _MultiPilotTime.ToString().Substring(0, 5);
+                    return _MultiPilotTime.Value.ToString(@"%d\.hh\:mm");
                 }
                 else
                 {
@@ -916,7 +916,7 @@ namespace SimpleEASALogbook
             {
                 if (_NightTime.Value.Ticks > TimeSpan.Zero.Ticks)
                 {
-                    return _NightTime.ToString().Substring(0, 5);
+                    return _NightTime.Value.ToString(@"%d\.hh\:mm");
                 }
                 else
                 {
@@ -990,7 +990,7 @@ namespace SimpleEASALogbook
             {
                 if (_PICTime.Value.Ticks > TimeSpan.Zero.Ticks)
                 {
-                    return _PICTime.ToString().Substring(0, 5);
+                    return _PICTime.Value.ToString(@"%d\.hh\:mm");
                 }
                 else
                 {
@@ -1050,7 +1050,7 @@ namespace SimpleEASALogbook
             {
                 if (_SimTime.Value.Ticks > TimeSpan.Zero.Ticks)
                 {
-                    return _SimTime.ToString().Substring(0, 5);
+                    return _SimTime.Value.ToString(@"%d\.hh\:mm");
                 }
                 else
                 {
@@ -1074,7 +1074,7 @@ namespace SimpleEASALogbook
             {
                 if (_TotalTimeOfFlight.Value.Ticks > TimeSpan.Zero.Ticks)
                 {
-                    return _TotalTimeOfFlight.ToString().Substring(0, 5);
+                    return _TotalTimeOfFlight.Value.ToString(@"%d\.hh\:mm");
                 }
                 else
                 {

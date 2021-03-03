@@ -819,6 +819,9 @@ namespace SimpleEASALogbook
         {
             dataGridView1.EndEdit();
             EnableControls(false);
+
+            DialogResult userPagesPreference = MessageBox.Show("Do you want to have one page per entry (yes) or two (no) ?", "Some Title", MessageBoxButtons.YesNo);
+
             saveFileDialog1.Filter = "EASA conform HTML|*.html";
             saveFileDialog1.FileName = "Simple_EASA_Logbook.html";
 
@@ -832,8 +835,9 @@ namespace SimpleEASALogbook
                     }
                     BindedFlightList.Sort("FlightDate", ListSortDirection.Ascending);
                     List<Flight> temp = new List<Flight>(BindedFlightList.GetFlights());
-                    // do not save the sum-row or empty rows
-                    for (int i = 0; i < temp.Count; i++)
+
+                    // do not save the sum-row
+                    for (int i = 0; i < FlightList.Count; i++)
                     {
                         if (temp[i].FlightDate.HasValue)
                         {
@@ -841,24 +845,20 @@ namespace SimpleEASALogbook
                             {
                                 temp.RemoveAt(i);
                             }
-                            else
-                            {
-                                if (temp[i].FlightDate.Value.Year < 1000 && !temp[i].Remarks.Contains("previous experience"))
-                                {
-                                    temp.RemoveAt(i);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (!temp[i].DateOfSim.HasValue)
-                            {
-                                temp.RemoveAt(i);
-                            }
                         }
                     }
-                    Export_EASA_HTML export = new Export_EASA_HTML(temp);
-                    File.WriteAllText(saveFileDialog1.FileName, export.GetHTML());
+
+                    if (userPagesPreference == DialogResult.Yes)
+                    {
+                        Export_EASA_HTML export = new Export_EASA_HTML(temp);
+                        File.WriteAllText(saveFileDialog1.FileName, export.GetHTML());
+                    }
+                    else if (userPagesPreference == DialogResult.No)
+                    {
+                        Export_EASA_HTML_2Pages export = new Export_EASA_HTML_2Pages(temp);
+                        File.WriteAllText(saveFileDialog1.FileName, export.GetHTML());
+                    }                    
+                    
                     MessageBox.Show(saveFileDialog1.FileName + " saved successfully", "success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ey)
