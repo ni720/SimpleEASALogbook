@@ -12,13 +12,12 @@ Also there shall be no vendor lock-in, exporting in various formats will be supp
 * PDF export to an EASA conform format
 * various importers (MCC PilotLog CSV export, Brussels Airlines BlueOne PDF, Lufthansa Flugstundenuebersicht PDF, ...)
 * various exporters (Easa conform PDF and HTML, ...)
-* runs on windows and linux (mac untested)
+* runs without installation on windows
 
-Keeping this tool as simple as possible also should prevent bugs and errors, however the simultaneous development for .net and mono environment causes some error potential.
 
 ## Known bugs:
 * the importers and exporters are only tested for co-pilots, since the devlopers lack the export data from captains of the supported programs. help us by providing your exports if you are a commander.
-* not tested on OSX - if you happen to have a mac I would appreciate a screenshot and an report how the tool works on mac
+* currently linux and mac-osx are not supported. This tool runs with .net WinForms which are deprecated in mono-project and therefore buggy. Help is appreciated - see issues
 
 
 ## Installation:
@@ -33,7 +32,5 @@ Keeping this tool as simple as possible also should prevent bugs and errors, how
 
 ![running under windows](win.png "running under windows")
 
-![running under linux](linux.png "running under linux")
-
 EASA conform PDF export example:
-![pdf export](win_pdf_export.png "pdf export")
+![pdf export](2pages_export.png "pdf export")
