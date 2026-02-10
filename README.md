@@ -1,3 +1,5 @@
+# This project is now discontinued, please use this logbook: https://github.com/vsimakhin/web-logbook
+
 # SimpleEASALogbook
 a minimalistic Logbook for Pilots
 
@@ -34,3 +36,4 @@ Also there shall be no vendor lock-in, exporting in various formats will be supp
 
 EASA conform PDF export example:
 ![pdf export](2pages_export.png "pdf export")
+
